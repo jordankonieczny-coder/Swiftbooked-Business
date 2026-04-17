@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(start chrome *)",
-      "Bash(python -c \"import json; d=json.load\\(open\\('.claude/settings.json'\\)\\); print\\('Valid JSON'\\); print\\('Hook command:', d['hooks']['PostToolUse'][0]['hooks'][0]['command']\\)\")"
+      "Bash(python -c \"import json; d=json.load\\(open\\('.claude/settings.json'\\)\\); print\\('Valid JSON'\\); print\\('Hook command:', d['hooks']['PostToolUse'][0]['hooks'][0]['command']\\)\")",
+      "Bash(gh --version)",
+      "Bash(gh auth *)"
     ]
   }
 }
