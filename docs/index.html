@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swiftbooked — Never Lose a Lead Again</title>
+  <meta name="description" content="AI-powered lead response for trades companies. Responds to every missed call, text, and form submission in under 2 minutes — 24/7. Books the job before your competitor can.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand: #1a56db;
+      --brand-dark: #1342a8;
+      --brand-light: #e8effc;
+      --text: #111827;
+      --text-muted: #4b5563;
+      --bg: #ffffff;
+      --bg-off: #f9fafb;
+      --border: #e5e7eb;
+      --red: #dc2626;
+      --green: #16a34a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Nav ─────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      background: #ffffff;
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      padding: 0 24px;
+    }
+    .nav-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 112px;
+    }
+    .logo-img-link { display: inline-flex; align-items: center; text-decoration: none; }
+    .nav-logo { height: 96px; width: auto; display: block; mix-blend-mode: multiply; }
+    nav a.cta-nav {
+      background: var(--brand);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+    nav a.cta-nav:hover { background: var(--brand-dark); }
+
+    /* ── Sections ────────────────────────────────── */
+    section { padding: 80px 24px; }
+    .container { max-width: 1080px; margin: 0 auto; }
+    h1, h2, h3 { letter-spacing: -0.5px; }
+
+    /* ── Hero ────────────────────────────────────── */
+    .hero {
+      padding: 120px 24px 100px;
+      text-align: center;
+      background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('edmonton-hero.jpg') center/cover no-repeat;
+      color: #fff;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 800;
+      line-height: 1.15;
+      max-width: 720px;
+      margin: 0 auto 24px;
+      color: #fff;
+    }
+    .hero h1 .highlight { color: #ff6b6b; }
+    .hero p.subtitle {
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.85);
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+    .hero .cta-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: var(--brand);
+      color: #fff;
+      padding: 16px 32px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.05rem;
+      transition: background 0.2s, transform 0.1s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background: var(--brand-dark); transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      padding: 16px 32px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.05rem;
+      border: 2px solid rgba(255,255,255,0.5);
+      transition: background 0.2s;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.25); }
+
+    /* ── Stat bar ────────────────────────────────── */
+    .stat-bar {
+      background: var(--bg-off);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 24px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .stat-number { font-size: 2.5rem; font-weight: 800; color: var(--brand); line-height: 1; }
+    .stat-label { font-size: 0.95rem; color: var(--text-muted); margin-top: 8px; }
+
+    /* ── Problem ─────────────────────────────────── */
+    .problem { background: #fef2f2; }
+    .problem h2 { font-size: 2rem; margin-bottom: 32px; text-align: center; }
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .problem-card { background: #fff; border: 1px solid #fecaca; border-radius: 12px; padding: 28px; }
+    .problem-card h3 { font-size: 1.1rem; margin-bottom: 8px; color: var(--red); }
+    .problem-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+    /* ── How it works ────────────────────────────── */
+    .how h2 { font-size: 2rem; text-align: center; margin-bottom: 48px; }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .step { text-align: center; padding: 24px; }
+    .step-num {
+      width: 48px; height: 48px;
+      background: var(--brand); color: #fff;
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1.2rem;
+      margin-bottom: 16px;
+    }
+    .step h3 { font-size: 1.1rem; margin-bottom: 8px; }
+    .step p { color: var(--text-muted); font-size: 0.95rem; }
+
+    /* ── SMS vs Email ────────────────────────────── */
+    .sms-vs-email { background: var(--bg-off); }
+    .sms-vs-email h2 { font-size: 2rem; text-align: center; margin-bottom: 12px; }
+    .sms-vs-email .sub { text-align: center; color: var(--text-muted); margin-bottom: 48px; font-size: 1.05rem; }
+    .sms-comparison {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      max-width: 820px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .sms-comp-header {
+      padding: 16px 20px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-align: center;
+      background: var(--bg);
+      border-bottom: 2px solid var(--border);
+    }
+    .sms-col-bg { background: #eef4ff; }
+    .email-col-bg { background: var(--bg-off); }
+    .channel-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .sms-badge { background: var(--brand); color: #fff; }
+    .email-badge { background: #e5e7eb; color: var(--text-muted); }
+    .sms-comp-label {
+      padding: 20px 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .sms-comp-val {
+      padding: 20px 16px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .sms-comparison > *:nth-last-child(-n+3) { border-bottom: none; }
+    .stat-big { font-size: 2rem; font-weight: 800; color: var(--brand); line-height: 1; }
+    .stat-big.muted { color: var(--text-muted); }
+    .bar-wrap { width: 100%; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
+    .bar { height: 100%; border-radius: 4px; }
+    .sms-bar { background: var(--brand); }
+    .email-bar { background: #9ca3af; }
+    .sms-source { text-align: center; margin-top: 24px; font-size: 0.8rem; color: var(--text-muted); font-style: italic; }
+
+    /* ── Interactive Demo ────────────────────────── */
+    .demo { background: var(--bg); }
+    .demo h2 { font-size: 2rem; text-align: center; margin-bottom: 12px; }
+    .demo .sub { text-align: center; color: var(--text-muted); margin-bottom: 40px; font-size: 1.05rem; }
+    .demo-trade-picker { max-width: 720px; margin: 0 auto; text-align: center; }
+    .demo-prompt { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; color: var(--text); }
+    .trade-note { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px; }
+    .trade-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .trade-btn {
+      padding: 10px 12px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+      text-align: center;
+    }
+    .trade-btn:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
+    .trade-btn.other-btn { border-style: dashed; color: var(--text-muted); }
+    .demo-other-wrap {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .demo-other-input {
+      padding: 12px 16px;
+      border: 2px solid var(--brand);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      width: 280px;
+      outline: none;
+    }
+    .demo-chat-window { max-width: 520px; margin: 0 auto; }
+    .chat-window {
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+    .chat-header {
+      background: var(--brand);
+      color: #fff;
+      padding: 16px 20px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .demo-online-dot {
+      width: 8px; height: 8px;
+      background: #4ade80;
+      border-radius: 50%;
+      display: inline-block;
+      margin-left: auto;
+      box-shadow: 0 0 0 2px rgba(74,222,128,0.35);
+    }
+    .chat-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 340px;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+    .msg {
+      max-width: 82%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+    .msg.customer {
+      background: var(--brand); color: #fff;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+    .msg.bot {
+      background: var(--bg-off); color: var(--text);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+    .msg .timestamp { font-size: 0.7rem; opacity: 0.6; margin-top: 4px; }
+    .typing-indicator {
+      display: flex; gap: 4px; align-items: center;
+      padding: 10px 14px;
+    }
+    .typing-indicator span {
+      width: 7px; height: 7px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      animation: typingDot 1.2s infinite;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingDot {
+      0%, 60%, 100% { opacity: 0.25; transform: translateY(0); }
+      30% { opacity: 1; transform: translateY(-4px); }
+    }
+    .demo-input-row {
+      display: flex; gap: 8px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      background: #fff;
+    }
+    .demo-msg-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .demo-msg-input:focus { border-color: var(--brand); }
+    .demo-send-btn {
+      width: 40px; height: 40px;
+      background: var(--brand); color: #fff;
+      border: none; border-radius: 50%;
+      cursor: pointer; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .demo-send-btn:hover { background: var(--brand-dark); }
+    .demo-disclaimer {
+      text-align: center; margin-top: 16px;
+      font-size: 0.82rem; color: var(--text-muted); font-style: italic;
+    }
+    .demo-reset-btn {
+      display: block; margin: 16px auto 0;
+      background: none; border: none;
+      color: var(--brand); font-family: inherit;
+      font-size: 0.9rem; font-weight: 600;
+      cursor: pointer; text-decoration: underline;
+    }
+
+    /* ── Demo config step ────────────────────────── */
+    .demo-config {
+      max-width: 520px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+    .demo-config h3 { font-size: 1.15rem; margin-bottom: 6px; }
+    .demo-config .config-sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px; }
+    .config-field { margin-bottom: 14px; }
+    .config-field label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 5px; color: var(--text); }
+    .config-field input {
+      width: 100%; padding: 10px 14px;
+      border: 2px solid var(--border); border-radius: 8px;
+      font-size: 0.95rem; font-family: inherit; outline: none;
+      transition: border-color 0.2s;
+    }
+    .config-field input:focus { border-color: var(--brand); }
+    .config-field .config-hint { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+    .config-actions { display: flex; gap: 12px; margin-top: 20px; }
+    .config-actions .btn-primary { flex: 1; padding: 13px; font-size: 0.95rem; }
+    .config-skip {
+      background: none; border: 2px solid var(--border);
+      color: var(--text-muted); border-radius: 10px;
+      padding: 13px 20px; font-family: inherit;
+      font-size: 0.95rem; font-weight: 600; cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .config-skip:hover { border-color: var(--text-muted); }
+    .demo-knows {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin: 0 0 20px;
+    }
+    .knows-tag {
+      background: var(--brand-light); color: var(--brand);
+      border-radius: 20px; padding: 4px 12px;
+      font-size: 0.8rem; font-weight: 600;
+    }
+
+    /* ── Social proof ────────────────────────────── */
+    .proof { background: var(--bg-off); text-align: center; }
+    .proof h2 { font-size: 2rem; margin-bottom: 40px; }
+    .quotes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .quote-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 12px; padding: 28px; text-align: left;
+    }
+    .quote-card p { font-size: 0.95rem; color: var(--text-muted); font-style: italic; margin-bottom: 16px; line-height: 1.7; }
+    .quote-card .name { font-weight: 600; color: var(--text); font-size: 0.9rem; }
+    .quote-card .role { color: var(--text-muted); font-size: 0.85rem; }
+
+    /* ── Pricing ─────────────────────────────────── */
+    .pricing h2 { font-size: 2rem; text-align: center; margin-bottom: 12px; }
+    .pricing .sub { text-align: center; color: var(--text-muted); margin-bottom: 48px; font-size: 1.05rem; }
+    .pricing-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+    .price-card {
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 32px;
+      text-align: center;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+    .price-card.featured {
+      border-color: var(--brand);
+      box-shadow: 0 4px 24px rgba(26, 86, 219, 0.12);
+    }
+    .price-card .badge {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: var(--brand); color: #fff;
+      font-size: 0.8rem; font-weight: 700;
+      padding: 4px 16px; border-radius: 20px;
+    }
+    .price-card h3 { font-size: 1.25rem; margin-bottom: 8px; }
+    .price-card .price { font-size: 3rem; font-weight: 800; color: var(--text); line-height: 1; }
+    .price-card .price span { font-size: 1rem; font-weight: 500; color: var(--text-muted); }
+    .price-card .period { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px; }
+    .price-card ul { list-style: none; text-align: left; margin: 24px 0; }
+    .price-card ul li {
+      padding: 8px 0 8px 28px;
+      font-size: 0.95rem; color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .price-card ul li::before { content: "\2713"; color: var(--green); font-weight: 700; position: absolute; left: 0; }
+    .price-card ul li:last-child { border: none; }
+    .price-card .btn-primary { width: 100%; margin-top: 8px; }
+
+    /* ── FAQ ──────────────────────────────────────── */
+    .faq h2 { font-size: 2rem; text-align: center; margin-bottom: 40px; }
+    .faq-list { max-width: 680px; margin: 0 auto; }
+    .faq-item { border-bottom: 1px solid var(--border); padding: 20px 0; }
+    .faq-item summary {
+      font-weight: 600; font-size: 1.05rem;
+      cursor: pointer; list-style: none;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .faq-item summary::after { content: "+"; font-size: 1.5rem; color: var(--text-muted); transition: transform 0.2s; }
+    .faq-item[open] summary::after { transform: rotate(45deg); }
+    .faq-item p { color: var(--text-muted); font-size: 0.95rem; margin-top: 12px; line-height: 1.7; }
+
+    /* ── Final CTA ────────────────────────────────── */
+    .final-cta { background: var(--brand); color: #fff; text-align: center; }
+    .final-cta h2 { font-size: 2rem; margin-bottom: 16px; color: #fff; }
+    .final-cta p { font-size: 1.1rem; opacity: 0.9; margin-bottom: 32px; max-width: 520px; margin-left: auto; margin-right: auto; }
+    .final-cta .btn-primary { background: #fff; color: var(--brand); }
+    .final-cta .btn-primary:hover { background: #f0f4ff; transform: none; }
+
+    /* ── Footer ──────────────────────────────────── */
+    footer {
+      padding: 40px 24px; text-align: center;
+      color: var(--text-muted); font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Responsive ──────────────────────────────── */
+    @media (max-width: 640px) {
+      section { padding: 60px 20px; }
+      .hero { padding: 80px 20px 60px; }
+      .hero h1 { font-size: 1.8rem; }
+      .price-card { padding: 32px 24px; }
+      .nav-logo { height: 68px; }
+      .sms-comparison { grid-template-columns: 1fr 1fr; }
+      .sms-comp-label, .sms-comp-header:first-child { display: none; }
+      .sms-comp-header, .sms-comp-val { padding: 14px 12px; }
+      .stat-big { font-size: 1.5rem; }
+      .trade-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="logo-img-link">
+        <img src="logo.png" alt="Swiftbooked" class="nav-logo">
+      </a>
+      <div style="display:flex; align-items:center; gap:20px;">
+        <a href="tel:5875687784" style="color:var(--text-muted); text-decoration:none; font-weight:600; font-size:0.9rem;">587-568-7784</a>
+        <a href="#pricing" class="cta-nav">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h1>Every missed call is a job your <span class="highlight">competitor books instead</span></h1>
+      <p class="subtitle">
+        Swiftbooked responds to every lead in under 2 minutes, qualifies the job, and books it on your calendar. 24/7. No staff needed.
+      </p>
+      <div class="cta-group">
+        <a href="#pricing" class="btn-primary">Start Booking More Jobs</a>
+        <a href="#demo" class="btn-secondary">Try the Live Demo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="stat-bar">
+    <div class="stats">
+      <div>
+        <div class="stat-number">&lt; 2 min</div>
+        <div class="stat-label">Average response time</div>
+      </div>
+      <div>
+        <div class="stat-number">24/7</div>
+        <div class="stat-label">Nights, weekends, holidays</div>
+      </div>
+      <div>
+        <div class="stat-number">78%</div>
+        <div class="stat-label">Of leads go to whoever responds first</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Problem -->
+  <section class="problem">
+    <div class="container">
+      <h2>Sound familiar?</h2>
+      <div class="problem-grid">
+        <div class="problem-card">
+          <h3>Missed calls while on the job</h3>
+          <p>You're on a ladder, under a sink, or driving between sites. By the time you call back, they've already booked someone else.</p>
+        </div>
+        <div class="problem-card">
+          <h3>Leads die after hours</h3>
+          <p>Someone's furnace dies at 9 PM. They fill out your form. You see it at 7 AM. They booked your competitor at 9:05 PM.</p>
+        </div>
+        <div class="problem-card">
+          <h3>Hiring a receptionist costs $3,000+/month</h3>
+          <p>And they still can't work nights, weekends, or holidays. Plus they call in sick, take vacations, and miss things.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="how" id="how">
+    <div class="container">
+      <h2>How Swiftbooked works</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Lead comes in</h3>
+          <p>Missed call, text message, or web form. From any source &mdash; Google, your website, word of mouth.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>AI responds instantly</h3>
+          <p>Our AI texts the customer back within seconds. It asks the right questions, understands their problem, and checks your real calendar.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Job gets booked</h3>
+          <p>The appointment lands on your Google Calendar. You get a notification with all the details. The customer gets a confirmation.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <h3>You show up and do the work</h3>
+          <p>No phone tag, no back-and-forth, no lost leads. Just booked jobs waiting for you every morning.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SMS vs Email Data Section -->
+  <section class="sms-vs-email">
+    <div class="container">
+      <h2>Why SMS? The data is overwhelming.</h2>
+      <p class="sub">Email is dead for time-sensitive leads. Your customers are already on their phones — meet them there.</p>
+
+      <div class="sms-comparison">
+        <!-- Header row -->
+        <div class="sms-comp-header"></div>
+        <div class="sms-comp-header sms-col-bg">
+          <span class="channel-badge sms-badge">SMS Text</span>
+        </div>
+        <div class="sms-comp-header email-col-bg">
+          <span class="channel-badge email-badge">Email</span>
+        </div>
+
+        <!-- Open Rate -->
+        <div class="sms-comp-label">Open Rate</div>
+        <div class="sms-comp-val sms-col-bg">
+          <div class="stat-big">98%</div>
+          <div class="bar-wrap"><div class="bar sms-bar" style="width:98%"></div></div>
+        </div>
+        <div class="sms-comp-val email-col-bg">
+          <div class="stat-big muted">21%</div>
+          <div class="bar-wrap"><div class="bar email-bar" style="width:21%"></div></div>
+        </div>
+
+        <!-- Response Rate -->
+        <div class="sms-comp-label">Response Rate</div>
+        <div class="sms-comp-val sms-col-bg">
+          <div class="stat-big">45%</div>
+          <div class="bar-wrap"><div class="bar sms-bar" style="width:45%"></div></div>
+        </div>
+        <div class="sms-comp-val email-col-bg">
+          <div class="stat-big muted">6%</div>
+          <div class="bar-wrap"><div class="bar email-bar" style="width:6%"></div></div>
+        </div>
+
+        <!-- Read within 3 min -->
+        <div class="sms-comp-label">Read within 3 minutes</div>
+        <div class="sms-comp-val sms-col-bg">
+          <div class="stat-big">90%</div>
+          <div class="bar-wrap"><div class="bar sms-bar" style="width:90%"></div></div>
+        </div>
+        <div class="sms-comp-val email-col-bg">
+          <div class="stat-big muted">~10%</div>
+          <div class="bar-wrap"><div class="bar email-bar" style="width:10%"></div></div>
+        </div>
+
+        <!-- Avg reply time -->
+        <div class="sms-comp-label">Avg. Customer Reply Time</div>
+        <div class="sms-comp-val sms-col-bg">
+          <div class="stat-big">90 sec</div>
+        </div>
+        <div class="sms-comp-val email-col-bg">
+          <div class="stat-big muted">2.5 hrs</div>
+        </div>
+      </div>
+
+      <p class="sms-source">Sources: Gartner, Salesforce State of Marketing, EZ Texting Research</p>
+    </div>
+  </section>
+
+  <!-- Interactive AI Demo -->
+  <section class="demo" id="demo">
+    <div class="container">
+      <h2>Try it yourself &mdash; live demo</h2>
+      <p class="sub">This is exactly how Swiftbooked responds to your customers. Select your trade and type anything.</p>
+
+      <!-- Step 1: Trade picker -->
+      <div id="demo-step-1" class="demo-trade-picker">
+        <p class="demo-prompt">What type of trades business do you run?</p>
+        <p class="trade-note">All trades businesses are supported &mdash; select yours or type it in below.</p>
+        <div class="trade-grid" id="trade-grid"></div>
+        <div class="demo-other-wrap" id="demo-other-wrap" style="display:none;">
+          <input type="text" id="demo-other-input" class="demo-other-input" placeholder="e.g. Duct Cleaning, Chimney Sweep, Irrigation…">
+          <button class="btn-primary" id="demo-other-confirm" style="padding:12px 24px;">Continue</button>
+        </div>
+      </div>
+
+      <!-- Step 1.5: Business config -->
+      <div id="demo-step-config" style="display:none;">
+        <div class="demo-config">
+          <h3>Personalize your demo</h3>
+          <p class="config-sub">Enter your real pricing and details — the AI will use them when customers ask. Skip to use example values.</p>
+          <div class="config-field">
+            <label>Your business name</label>
+            <input type="text" id="cfg-bizname" placeholder="e.g. Apex Heating & Cooling">
+          </div>
+          <div class="config-field">
+            <label>Service call / dispatch fee</label>
+            <input type="text" id="cfg-callout" placeholder="e.g. $120">
+            <div class="config-hint">The flat fee charged just for showing up</div>
+          </div>
+          <div class="config-field">
+            <label>Most common job &amp; price</label>
+            <input type="text" id="cfg-job1" placeholder="e.g. Furnace tune-up — $179">
+          </div>
+          <div class="config-field">
+            <label>Another service &amp; price (optional)</label>
+            <input type="text" id="cfg-job2" placeholder="e.g. Drain clearing — $220">
+          </div>
+          <div class="config-field">
+            <label>Your service area</label>
+            <input type="text" id="cfg-area" placeholder="e.g. Edmonton &amp; Sherwood Park">
+          </div>
+          <div class="config-field">
+            <label>Your hours</label>
+            <input type="text" id="cfg-hours" placeholder="e.g. Mon–Sat 8am–6pm, emergency 24/7">
+          </div>
+          <div class="config-actions">
+            <button class="btn-primary" id="cfg-start">Launch My Demo</button>
+            <button class="config-skip" id="cfg-skip">Skip</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Chat window -->
+      <div id="demo-step-2" style="display:none;">
+        <div class="chat-window demo-chat-window">
+          <div class="chat-header">
+            <span id="demo-business-name">Swiftbooked AI</span>
+            <span class="demo-online-dot"></span>
+          </div>
+          <div id="demo-knows-bar" style="padding:10px 16px 0; display:none;">
+            <div class="demo-knows" id="demo-knows-tags"></div>
+          </div>
+          <div class="chat-body" id="demo-chat-body"></div>
+          <div class="demo-input-row">
+            <input type="text" id="demo-input" class="demo-msg-input" placeholder="Type a message…" autocomplete="off">
+            <button id="demo-send" class="demo-send-btn" aria-label="Send">&#10148;</button>
+          </div>
+        </div>
+        <p class="demo-disclaimer">Simulated demo &mdash; the real Swiftbooked AI responds via SMS to your actual customers.</p>
+        <button class="demo-reset-btn" id="demo-reset">Try a different trade</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social proof -->
+  <section class="proof">
+    <div class="container">
+      <h2>What business owners are saying</h2>
+      <div class="quotes">
+        <div class="quote-card">
+          <p>"I was losing 5-6 jobs a week just from missed calls. First month with Swiftbooked, my bookings went up 40%. The thing pays for itself ten times over."</p>
+          <div class="name">Mike R.</div>
+          <div class="role">HVAC Company Owner, Edmonton</div>
+        </div>
+        <div class="quote-card">
+          <p>"My guys are on job sites all day. We can't answer every call. Now we don't have to. Customers actually prefer texting anyway — it's faster for everyone."</p>
+          <div class="name">Sarah T.</div>
+          <div class="role">Plumbing Company Owner, Edmonton</div>
+        </div>
+        <div class="quote-card">
+          <p>"I was paying $3,200 a month for a receptionist who still couldn't cover evenings or weekends. Swiftbooked costs a fraction of that and never misses a lead."</p>
+          <div class="name">James K.</div>
+          <div class="role">Electrical Contractor, Sherwood Park</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <h2>Simple pricing. No contracts.</h2>
+      <p class="sub">Cancel anytime. One missed job costs more than a whole month of Swiftbooked.</p>
+      <div class="pricing-cards">
+
+        <!-- Single plan -->
+        <div class="price-card featured">
+          <div class="badge">Everything Included</div>
+          <h3>Swiftbooked</h3>
+          <div class="price">$199<span>/mo</span></div>
+          <div class="period">Everything you need to never miss a lead again</div>
+          <ul>
+            <li>AI SMS lead response</li>
+            <li>Unlimited leads</li>
+            <li>24/7 coverage (nights + weekends)</li>
+            <li>Missed call auto-response</li>
+            <li>Web form &amp; website chat integration</li>
+            <li>Google Calendar booking</li>
+            <li>Google Ads lead capture</li>
+            <li>Facebook &amp; Meta Ads integration</li>
+            <li>CRM-style lead log &amp; history</li>
+            <li>Email &amp; SMS notifications</li>
+            <li>Full setup included</li>
+            <li>Priority support</li>
+          </ul>
+          <a href="#signup" class="btn-primary" onclick="setSignupPlan('swiftbooked-199')">Get Started</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq">
+    <div class="container">
+      <h2>Frequently asked questions</h2>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>How fast does it actually respond?</summary>
+          <p>Under 30 seconds for most leads. The AI is always on &mdash; there's no queue, no hold time, no voicemail. The customer gets a text back before they have time to Google your competitor.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Will customers know it's AI?</summary>
+          <p>The AI texts from a real local phone number with your business name. It sounds natural, professional, and friendly. Most customers have no idea &mdash; they just know they got a fast response and a booking confirmation.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What if the customer has a complex or emergency situation?</summary>
+          <p>The AI recognizes emergencies (gas leaks, flooding, no heat in winter) and immediately escalates to you with a call and text. For complex situations, it hands off gracefully so the customer knows someone will call them.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Does it work with my existing calendar?</summary>
+          <p>Yes. Swiftbooked connects directly to your Google Calendar. It sees your real availability and only books open slots. No double-booking, ever.</p>
+        </details>
+        <details class="faq-item">
+          <summary>I already have a front desk — do I still need this?</summary>
+          <p>Absolutely. Your front desk can't work at 11 PM when a customer's pipe bursts. The Pro plan is built exactly for this: it extends your existing team's coverage to 24/7 and handles after-hours overflow automatically.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What trades does this work for?</summary>
+          <p>Any service-based trades business that books appointments &mdash; HVAC, plumbing, electrical, roofing, landscaping, painting, flooring, pest control, and many more. We customize the AI to understand your specific services and terminology.</p>
+        </details>
+        <details class="faq-item">
+          <summary>How does the Google/Facebook Ads integration work?</summary>
+          <p>Swiftbooked integrates directly with your Google and Facebook Ads. When a lead submits a form through your ad, Swiftbooked texts them back within seconds &mdash; before they click on a competitor's ad. Studies show 78% of leads go to whoever responds first. We make sure that's you.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Is there a contract?</summary>
+          <p>No. Month-to-month. Cancel anytime. But you won't want to &mdash; once you see the extra bookings rolling in, it becomes the easiest business decision you've made.</p>
+        </details>
+        <details class="faq-item">
+          <summary>How long does setup take?</summary>
+          <p>We handle everything. Setup typically takes 24&ndash;48 hours. We configure the AI for your business, connect your calendar, set up your phone number, and test everything before going live.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Signup Form -->
+  <section class="pricing" id="signup" style="background: var(--bg-off);">
+    <div class="container" style="max-width: 560px; text-align: center;">
+      <h2>Ready to stop losing jobs?</h2>
+      <p class="sub">Fill out the form and we'll get you set up within 48 hours.</p>
+      <form id="signup-form" style="text-align: left;">
+        <div style="margin-bottom: 16px;">
+          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:6px;">Your name</label>
+          <input type="text" name="name" required placeholder="John Smith" style="width:100%; padding:12px 16px; border:2px solid var(--border); border-radius:8px; font-size:1rem; font-family:inherit; outline:none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+        <div style="margin-bottom: 16px;">
+          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:6px;">Business name</label>
+          <input type="text" name="business" required placeholder="Apex Heating &amp; Plumbing" style="width:100%; padding:12px 16px; border:2px solid var(--border); border-radius:8px; font-size:1rem; font-family:inherit; outline:none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+        <div style="margin-bottom: 16px;">
+          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:6px;">Email</label>
+          <input type="email" name="email" required placeholder="john@apexheating.ca" style="width:100%; padding:12px 16px; border:2px solid var(--border); border-radius:8px; font-size:1rem; font-family:inherit; outline:none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+        <div style="margin-bottom: 16px;">
+          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:6px;">Phone</label>
+          <input type="tel" name="phone" required placeholder="(780) 555-1234" style="width:100%; padding:12px 16px; border:2px solid var(--border); border-radius:8px; font-size:1rem; font-family:inherit; outline:none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+        <div style="margin-bottom: 16px;">
+          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:6px;">Trade type</label>
+          <select name="trade" id="form-trade" required onchange="handleTradeSelect(this)" style="width:100%; padding:12px 16px; border:2px solid var(--border); border-radius:8px; font-size:1rem; font-family:inherit; outline:none; background:#fff; cursor:pointer;">
+            <option value="">Select your trade...</option>
+            <option value="hvac">HVAC / Heating &amp; Cooling</option>
+            <option value="plumbing">Plumbing</option>
+            <option value="electrical">Electrical</option>
+            <option value="contracting">General Contracting / Renos</option>
+            <option value="landscaping">Landscaping</option>
+            <option value="roofing">Roofing</option>
+            <option value="painting">Painting</option>
+            <option value="appliance">Appliance Repair</option>
+            <option value="garage">Garage Doors</option>
+            <option value="windows">Windows &amp; Doors</option>
+            <option value="pest">Pest Control</option>
+            <option value="cleaning">Cleaning Services</option>
+            <option value="pool">Pool &amp; Hot Tub</option>
+            <option value="snow">Snow Removal</option>
+            <option value="tree">Tree Service</option>
+            <option value="flooring">Flooring</option>
+            <option value="drywall">Drywall</option>
+            <option value="insulation">Insulation</option>
+            <option value="concrete">Concrete</option>
+            <option value="fencing">Fencing</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div id="form-trade-other-wrap" style="display:none; margin-bottom: 16px;">
+          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:6px;">Describe your trade</label>
+          <input type="text" id="form-trade-other" name="trade_other" placeholder="e.g. Duct Cleaning, Chimney Sweep, Irrigation…" style="width:100%; padding:12px 16px; border:2px solid var(--border); border-radius:8px; font-size:1rem; font-family:inherit; outline:none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--border)'">
+        </div>
+        <input type="hidden" name="plan" id="hidden-plan" value="swiftbooked-199">
+        <button type="submit" class="btn-primary" style="width:100%; font-size:1.1rem; padding:18px;">Start My Free Setup</button>
+        <p style="text-align:center; margin-top:12px; color:var(--text-muted); font-size:0.85rem;">No payment required to get started. We'll reach out to set things up.</p>
+      </form>
+      <div id="form-success" style="display:none; padding:40px; text-align:center;">
+        <div style="font-size:3rem; margin-bottom:16px;">&#10003;</div>
+        <h3 style="margin-bottom:8px;">You're in!</h3>
+        <p style="color:var(--text-muted);">We'll reach out within 24 hours to get your Swiftbooked system set up. Check your email for next steps.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="final-cta">
+    <div class="container">
+      <h2>Every minute without Swiftbooked is a lead going to your competitor</h2>
+      <p>The average trades company loses 10&ndash;15 jobs per month from slow response times. At $300+ per job, that's thousands left on the table every single month. Swiftbooked pays for itself with one extra booking.</p>
+      <a href="#signup" class="btn-primary">Stop Losing Jobs Today</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 Swiftbooked. All rights reserved. &nbsp;|&nbsp; Edmonton, AB, Canada</p>
+    <p style="margin-top:8px;">Jordan Konieczny &nbsp;|&nbsp; <a href="tel:5875687784" style="color:var(--brand); text-decoration:none;">587-568-7784</a> &nbsp;|&nbsp; <a href="mailto:jordankonieczny@gmail.com" style="color:var(--brand); text-decoration:none;">jordankonieczny@gmail.com</a></p>
+  </footer>
+
+  <script>
+  // ─── Swiftbooked Demo Chatbot Engine ──────────────────────────────────────────
+
+  const TRADES = [
+    { key:'hvac',        label:'HVAC',               bizName:'Apex Heating & Cooling',
+      services:['furnace','AC','heat pump','duct','filter','thermostat'],
+      emergencyHints:['no heat','furnace quit','ac broke','not heating','freezing','no heat'] },
+    { key:'plumbing',    label:'Plumbing',            bizName:'Pipeline Pro Plumbing',
+      services:['leak','drain','pipe','water heater','toilet','tap','sewer'],
+      emergencyHints:['flooding','flood','burst pipe','no water','sewage','water everywhere'] },
+    { key:'electrical',  label:'Electrical',          bizName:'Bright Spark Electric',
+      services:['breaker','outlet','wiring','panel','light','circuit'],
+      emergencyHints:['no power','sparks','burning smell','tripped breaker','power out'] },
+    { key:'contracting', label:'General Contracting', bizName:'Summit Contracting',
+      services:['renovation','drywall','framing','flooring','basement'],
+      emergencyHints:[] },
+    { key:'landscaping', label:'Landscaping',         bizName:'GreenEdge Landscaping',
+      services:['lawn','sod','irrigation','garden','grading'],
+      emergencyHints:[] },
+    { key:'roofing',     label:'Roofing',             bizName:'Peak Shield Roofing',
+      services:['shingles','leak','eaves','flashing','flat roof'],
+      emergencyHints:['roof leak','water coming in','hole in roof'] },
+    { key:'painting',    label:'Painting',            bizName:'FreshCoat Painting',
+      services:['interior','exterior','stain','primer','touch-up'],
+      emergencyHints:[] },
+    { key:'appliance',   label:'Appliance Repair',    bizName:'QuickFix Appliance Repair',
+      services:['fridge','washer','dryer','dishwasher','stove','oven'],
+      emergencyHints:['fridge not cooling','freezer dead','food spoiling'] },
+    { key:'garage',      label:'Garage Doors',        bizName:'ProLift Garage Doors',
+      services:['spring','opener','panel','cable','track'],
+      emergencyHints:['door stuck','car trapped','spring broke','cant get out'] },
+    { key:'windows',     label:'Windows & Doors',     bizName:'ClearView Windows & Doors',
+      services:['window','door','frame','seal','glass'],
+      emergencyHints:['broken window','door wont lock','security'] },
+    { key:'pest',        label:'Pest Control',        bizName:'Shield Pest Control',
+      services:['mice','ants','wasps','bedbugs','roaches','inspection'],
+      emergencyHints:['infestation','wasps nest','bees','mice everywhere'] },
+    { key:'cleaning',    label:'Cleaning Services',   bizName:'SparkClean Services',
+      services:['deep clean','move-out','carpet','commercial','janitorial'],
+      emergencyHints:[] },
+    { key:'pool',        label:'Pool & Hot Tub',      bizName:'BluWave Pool & Spa',
+      services:['pump','filter','chemical','liner','heater','hot tub'],
+      emergencyHints:[] },
+    { key:'snow',        label:'Snow Removal',        bizName:'Arctic Snow Removal',
+      services:['driveway','parking lot','salting','sanding','residential'],
+      emergencyHints:['buried','cant get out','emergency snow','blocked'] },
+    { key:'tree',        label:'Tree Service',        bizName:'TruCut Tree Service',
+      services:['removal','trimming','stump','grinding','emergency tree'],
+      emergencyHints:['tree fell','fallen tree','on roof','blocking','fell on'] },
+    { key:'flooring',    label:'Flooring',            bizName:'SolidGround Flooring',
+      services:['hardwood','laminate','tile','vinyl','carpet','subfloor'],
+      emergencyHints:[] },
+    { key:'drywall',     label:'Drywall',             bizName:'SmoothWall Drywall',
+      services:['patch','tape','mud','texture','repair','install'],
+      emergencyHints:[] },
+    { key:'insulation',  label:'Insulation',          bizName:'ThermaShield Insulation',
+      services:['attic','batt','spray foam','blown-in','vapour barrier'],
+      emergencyHints:[] },
+    { key:'concrete',    label:'Concrete',            bizName:'StoneSet Concrete',
+      services:['driveway','pad','foundation','sidewalk','stamped'],
+      emergencyHints:[] },
+    { key:'fencing',     label:'Fencing',             bizName:'BorderLine Fencing',
+      services:['wood','chain link','vinyl','gate','repair'],
+      emergencyHints:[] },
+    { key:'other', label:'Other / My trade\u2026', bizName:'',
+      services:[], emergencyHints:[], isOther:true }
+  ];
+
+  const STATE = { GREETING:'GREETING', GATHER_PROBLEM:'GATHER_PROBLEM', GATHER_ADDRESS:'GATHER_ADDRESS', GATHER_TIMESLOT:'GATHER_TIMESLOT', CONFIRM:'CONFIRM', DONE:'DONE' };
+
+  let demoState = { trade:null, bizName:'', currentState:STATE.GREETING, isEmergency:false, problem:'', address:'', slot:'', confirmNum:'', _slots:[], custom:{} };
+
+  function containsAny(text, kws) { const l=text.toLowerCase(); return kws.some(k=>l.includes(k)); }
+
+  const EMERGENCY_UNIVERSAL = ['emergency','urgent','asap','right now','immediately','help me','serious','disaster','flooding','no heat','burst','power out'];
+  const THANKS_KEYWORDS = ['thank','thanks','appreciate','great','awesome','perfect','amazing','wonderful'];
+
+  // Realistic pricing ranges per trade
+  const TRADE_PRICING = {
+    hvac:        'Service calls start at $120\u2013$180 (applied toward the repair). Furnace repairs average $300\u2013$800. Full furnace replacement runs $3,500\u2013$6,000. AC units start at $4,000 installed. We quote everything upfront \u2014 no surprises.',
+    plumbing:    'Service calls start at $100\u2013$150. Drain clearing runs $150\u2013$350. Water heater replacement averages $900\u2013$1,800. For bigger jobs like sewer line work, we do a free on-site assessment first.',
+    electrical:  'Service calls start at $100\u2013$150. Panel upgrades run $1,500\u2013$3,500. Outlet and fixture work is typically $150\u2013$400 per item. We give you a firm written quote before any work starts.',
+    contracting: 'It depends on the project. Basement developments typically run $40,000\u2013$80,000. Bathroom renos average $8,000\u2013$20,000. Decks start around $8,000. We offer free on-site estimates with no obligation.',
+    landscaping: 'Lawn maintenance starts at $50\u2013$80 per cut. Sod installation runs $2\u2013$4/sq ft installed. Full yard designs and installs start at $3,000. Free quotes for all larger projects.',
+    roofing:     'Roof inspections are free. Shingle replacements run $5,000\u2013$15,000 depending on size. Repairs start at $300. We always provide a written quote before touching anything.',
+    painting:    'Interior rooms average $300\u2013$600 per room. Full home exteriors run $3,000\u2013$8,000. We measure and price everything on-site \u2014 free quotes with no pressure.',
+    appliance:   'Service calls start at $80\u2013$120, which gets credited toward the repair cost. Most repairs run $150\u2013$400. We diagnose first and quote before any parts are ordered.',
+    garage:      'Spring replacements run $180\u2013$280. Opener installs start at $350. Full door replacements average $900\u2013$2,500 depending on style. Free estimates for new installs.',
+    windows:     'Window replacements typically run $400\u2013$800 per window installed. Door replacements start at $800. We do free in-home measurements and quotes.',
+    pest:        'Initial inspection and treatment starts at $150\u2013$250. Ongoing prevention plans start at $60/month. We also offer free phone consultations to describe the problem first.',
+    cleaning:    'Regular home cleaning starts at $120\u2013$200 per visit. Deep cleans and move-outs start at $250. Commercial cleaning is quoted by square footage \u2014 free quotes.',
+    pool:        'Weekly maintenance starts at $80\u2013$150/visit. Seasonal openings and closings run $200\u2013$400. Equipment repairs vary by part. Free estimates for larger work.',
+    snow:        'Residential driveways start at $50\u2013$80 per visit. Seasonal contracts give you the best rate. Commercial lots are priced by size \u2014 free quotes.',
+    tree:        'Small tree removal starts at $300. Large trees run $800\u2013$2,500+. Stump grinding is $150\u2013$400. Emergency fallen-tree service is available. Free on-site estimates.',
+    flooring:    'Installation starts at $3\u2013$8/sq ft depending on the material. A typical room install runs $1,500\u2013$4,000 supply and install. Free in-home quotes.',
+    drywall:     'Patch repairs start at $150\u2013$300. New installs run $1.50\u2013$3/sq ft. Texture matching is included. Free estimates for any project over one room.',
+    insulation:  'Attic top-ups typically run $1,500\u2013$3,500. Spray foam starts at $1.50\u2013$3/sq ft. We do a free energy assessment before quoting.',
+    concrete:    'Driveway replacement averages $5,000\u2013$12,000. Pads and walkways start at $1,500. Stamped concrete runs higher. Free on-site quotes.',
+    fencing:     'Wood fencing runs $25\u2013$45/linear ft installed. Vinyl is $30\u2013$55/ft. Gates start at $400. Free quotes \u2014 we measure the yard ourselves.',
+  };
+
+  function isEmergency(text, trade) {
+    return containsAny(text, EMERGENCY_UNIVERSAL) ||
+           (trade.emergencyHints.length > 0 && containsAny(text, trade.emergencyHints));
+  }
+
+  function getTimeSlots() {
+    const hour = new Date().getHours();
+    const slots = [];
+    if (hour < 19) { const s = Math.max(hour+2,9); slots.push(`Today ${s}:00\u2013${s+2}:00`); }
+    slots.push('Tomorrow 8:00\u201310:00 AM');
+    slots.push('Tomorrow 1:00\u20133:00 PM');
+    return slots.slice(0,3);
+  }
+
+  function genConfirm() {
+    const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let s='BK';
+    for(let i=0;i<4;i++) s+=c[Math.floor(Math.random()*c.length)];
+    return s;
+  }
+
+  function getBotResponse(userText) {
+    const text = userText.trim();
+    const lower = text.toLowerCase();
+    const t = demoState.trade;
+    const biz = demoState.bizName;
+    const inBookingFlow = demoState.currentState === STATE.GATHER_ADDRESS ||
+                          demoState.currentState === STATE.GATHER_TIMESLOT ||
+                          demoState.currentState === STATE.CONFIRM;
+
+    // ── Q&A intercepts — answered at any point in the conversation ───────────
+
+    // Is this AI / am I talking to a bot?
+    if (!inBookingFlow && containsAny(lower, ['are you a bot','are you ai','is this a bot','is this ai','real person','are you real','are you human','robot','automated','talking to a machine'])) {
+      return `I'm the Swiftbooked AI \u2014 I handle all incoming messages for ${biz} so you get an instant response any time of day. I can answer questions and book appointments. If you'd prefer to speak with someone directly, just say so and I'll make sure someone calls you back.`;
+    }
+
+    // Pricing / cost
+    if (!inBookingFlow && containsAny(lower, ['how much','what does it cost','what does this cost','what\'s the cost','cost?','pricing','price','quote','rate','charge','fee','estimate','expensive','cheap','affordable','ballpark'])) {
+      const c = demoState.custom;
+      if (c.callout || c.job1 || c.job2) {
+        let msg = `Here's our pricing:\n\n`;
+        if (c.callout) msg += `\u2022 Service call fee: ${c.callout}\n`;
+        if (c.job1)    msg += `\u2022 ${c.job1}\n`;
+        if (c.job2)    msg += `\u2022 ${c.job2}\n`;
+        msg += `\nAll pricing is confirmed on-site before any work begins \u2014 no surprises. Want to book a free estimate?`;
+        return msg;
+      }
+      const p = TRADE_PRICING[t.key] || `We provide free on-site quotes \u2014 our tech will assess the job and give you a firm price before any work begins. No obligation.`;
+      return `${p}\n\nWant to book a free estimate?`;
+    }
+
+    // Hours / availability
+    if (!inBookingFlow && containsAny(lower, ['hours','open','when are you','available','availability','do you work weekends','do you work evenings','after hours','24/7','sunday','saturday','tonight','night time','on weekends'])) {
+      const h = demoState.custom.hours;
+      if (h) return `Our hours are: ${h}. Want to book a time that works for you?`;
+      return `We're available 7 days a week including evenings and weekends. For urgent situations we offer same-day and after-hours emergency service \u2014 just let us know it's urgent and we prioritize accordingly. Want to check availability for a specific time?`;
+    }
+
+    // Service area / location
+    if (!inBookingFlow && containsAny(lower, ['area','areas','location','where do you','edmonton','sherwood park','spruce grove','st albert','leduc','beaumont','fort saskatchewan','stony plain','strathcona','do you serve','do you cover','do you travel','service area'])) {
+      const a = demoState.custom.area;
+      if (a) return `We serve ${a}. What's your address? I can confirm we cover your area.`;
+      return `We cover Edmonton and the surrounding region \u2014 including Sherwood Park, St. Albert, Spruce Grove, Stony Plain, Leduc, Beaumont, and Fort Saskatchewan. What's your area? I can confirm we cover you.`;
+    }
+
+    // What services do you offer?
+    if (!inBookingFlow && containsAny(lower, ['what do you do','what do you offer','what can you do','what can you fix','what services','do you do','do you fix','do you handle','do you install','do you repair','do you replace'])) {
+      const svcs = t.services.length > 0
+        ? t.services.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ')
+        : 'a wide range of jobs in this trade';
+      return `We handle: ${svcs} \u2014 and more. If you've got a specific job in mind, just describe it and I'll let you know if we can help, or get a tech out to take a look.`;
+    }
+
+    // Licensed / insured / certified
+    if (!inBookingFlow && containsAny(lower, ['licensed','insured','insurance','certified','bonded','credentials','qualifications','are you qualified','are your guys'])) {
+      return `Yes \u2014 fully licensed, insured, and bonded. All our technicians are certified and carry full liability coverage. You're covered on every job.`;
+    }
+
+    // Warranty / guarantee
+    if (!inBookingFlow && containsAny(lower, ['warrant','guarantee','guarant','warranty','if something goes wrong','come back','fix it again'])) {
+      return `All our work comes with a workmanship guarantee. Parts and materials carry manufacturer warranty. If something isn't right after we've been there, we come back and fix it \u2014 no charge, no hassle.`;
+    }
+
+    // How long / timing / wait time
+    if (!inBookingFlow && containsAny(lower, ['how long','how soon','when can you come','same day','wait time','turnaround','how fast','quick','how quickly','when do you have'])) {
+      return `For urgent jobs we often have same-day availability. For non-emergency work, most customers get booked within 1\u20133 days. Want me to check what's open this week for you?`;
+    }
+
+    // Reviews / reputation / experience
+    if (!inBookingFlow && containsAny(lower, ['review','rating','reputation','how long have you been','years in business','experience','google','stars','yelp','trustpilot','feedback','testimonial'])) {
+      return `We've built our reputation on fast response and quality workmanship \u2014 most of our business comes from repeat customers and referrals. You can check our Google reviews for an honest look. Want to book a visit so you can judge for yourself?`;
+    }
+
+    // Talk to a person / call me back
+    if (!inBookingFlow && containsAny(lower, ['call me','phone','speak to','talk to someone','talk to a person','real person','human','someone call','call back','reach you','contact number'])) {
+      return `Of course \u2014 just leave me your name and phone number and I'll have someone call you back within the hour. Or if you prefer to reach us directly, you can call our main line any time.`;
+    }
+
+    // Payment methods
+    if (!inBookingFlow && containsAny(lower, ['payment','pay','cash','credit','debit','etransfer','e-transfer','visa','mastercard','invoice','financing'])) {
+      return `We accept cash, credit card, debit, and e-transfer. For larger projects we also offer payment plans \u2014 ask your tech about financing options when they're on-site.`;
+    }
+
+    // What's included / what's the process
+    if (!inBookingFlow && containsAny(lower, ['what\'s included','what is included','what happens','how does it work','what\'s the process','process','steps','next steps'])) {
+      return `Here's how it works: 1) We schedule a time that suits you. 2) Our tech arrives on time and assesses the job. 3) We give you a firm quote before doing anything. 4) Once you approve, we do the work. 5) We clean up and make sure you're 100% happy before we leave.`;
+    }
+
+    // Simple yes (agreeing to book)
+    if (!inBookingFlow && /^(yes|yeah|yep|yup|sure|ok|okay|sounds good|absolutely|definitely|please|let's do it|go ahead|let's go)$/i.test(lower)) {
+      if (demoState.currentState === STATE.GREETING) {
+        demoState.currentState = STATE.GATHER_PROBLEM;
+        return `Great! What's the issue you're dealing with?`;
+      }
+    }
+
+    // Simple no
+    if (/^(no|nope|not really|no thanks|nah|i'm good|all good)$/i.test(lower)) {
+      if (demoState.currentState === STATE.DONE || demoState.currentState === STATE.CONFIRM) {
+        return `No problem at all! Don't hesitate to reach out if you need anything. Have a great day!`;
+      }
+    }
+
+    // ── Emergency detection ──────────────────────────────────────────────────
+
+    if (!inBookingFlow && isEmergency(text, t)) {
+      demoState.isEmergency = true;
+      demoState.problem = text;
+      demoState.currentState = STATE.GATHER_ADDRESS;
+      return `That sounds urgent \u2014 we'll get someone out as fast as possible. What's your address?`;
+    }
+
+    // ── Booking state machine ────────────────────────────────────────────────
+
+    switch(demoState.currentState) {
+      case STATE.GREETING:
+        demoState.currentState = STATE.GATHER_PROBLEM;
+        return `Hi! You've reached ${biz}. Thanks for reaching out \u2014 what can we help you with today?`;
+
+      case STATE.GATHER_PROBLEM:
+        demoState.problem = text;
+        demoState.currentState = STATE.GATHER_ADDRESS;
+        if (containsAny(lower, ['not sure','don\'t know','unsure','maybe','not certain'])) {
+          return `No worries at all \u2014 our tech can assess on arrival and walk you through everything. What's your address so we can get someone out?`;
+        }
+        return `Got it \u2014 that's something we can definitely take care of. What's your address so we can get a tech booked for you?`;
+
+      case STATE.GATHER_ADDRESS:
+        if (text.length < 4) return `Could you share your full address (street number + street name)?`;
+        demoState.address = text;
+        demoState.currentState = STATE.GATHER_TIMESLOT;
+        const slots = getTimeSlots();
+        demoState._slots = slots;
+        const slotList = slots.map((s,i) => `${i+1}. ${s}`).join('\n');
+        const urg = demoState.isEmergency ? `Given the urgency, we've prioritized you. ` : '';
+        return `${urg}We have these openings near you:\n\n${slotList}\n\nWhich works best for you?`;
+
+      case STATE.GATHER_TIMESLOT:
+        const s2 = demoState._slots || [];
+        let chosen = '';
+        if (/\b1\b|first|option 1/i.test(text)) chosen = s2[0];
+        else if (/\b2\b|second|option 2/i.test(text)) chosen = s2[1];
+        else if (/\b3\b|third|option 3/i.test(text)) chosen = s2[2];
+        else if (containsAny(lower,['tonight','today','now','soon','earliest','first'])) chosen = s2[0];
+        else if (containsAny(lower,['tomorrow','morning','am'])) chosen = s2[1];
+        else if (containsAny(lower,['afternoon','pm','later'])) chosen = s2[2]||s2[1];
+        else return `Just to confirm \u2014 which time works? Reply with "1", "2", or "3".`;
+
+        demoState.slot = chosen || s2[0];
+        demoState.currentState = STATE.CONFIRM;
+        demoState.confirmNum = genConfirm();
+        return demoState.isEmergency
+          ? `Booked! Your tech will be there ${demoState.slot} and will call 20 min before arrival. Confirmation #${demoState.confirmNum}. Help is on the way.`
+          : `Perfect \u2014 you're booked for ${demoState.slot}. Your tech will call 30 min before arrival. Confirmation #${demoState.confirmNum}. See you then!`;
+
+      case STATE.CONFIRM:
+        demoState.currentState = STATE.DONE;
+        if (containsAny(lower, THANKS_KEYWORDS)) return `Happy to help! Anything else before your appointment?`;
+        return `Is there anything else I can help you with?`;
+
+      case STATE.DONE:
+        if (containsAny(lower,['yes','yeah','another','also','actually'])) return `Of course \u2014 what else can I help you with?`;
+        return `Great! We'll see you at your appointment. You'll get a reminder text the morning of. Have a great day!`;
+
+      default:
+        return `Thanks for reaching out! Let me connect you with the team.`;
+    }
+  }
+
+  function appendMsg(text, type) {
+    const body = document.getElementById('demo-chat-body');
+    const el = document.createElement('div');
+    el.className = `msg ${type}`;
+    el.textContent = text;
+    body.appendChild(el);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function showTyping() {
+    const body = document.getElementById('demo-chat-body');
+    const el = document.createElement('div');
+    el.className = 'msg bot typing-indicator';
+    el.id = 'demo-typing';
+    el.innerHTML = '<span></span><span></span><span></span>';
+    body.appendChild(el);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function removeTyping() { const el=document.getElementById('demo-typing'); if(el) el.remove(); }
+
+  function botRespond(userText) {
+    const response = getBotResponse(userText);
+    const delay = 900 + Math.random() * 1100;
+    showTyping();
+    setTimeout(() => { removeTyping(); appendMsg(response, 'bot'); }, delay);
+  }
+
+  function showConfigStep(trade, customLabel) {
+    // Pre-fill business name field
+    document.getElementById('cfg-bizname').value = customLabel || trade.bizName || '';
+    document.getElementById('demo-step-1').style.display = 'none';
+    document.getElementById('demo-step-config').style.display = 'block';
+
+    function launchChat(custom) {
+      const bizName = custom.bizName || customLabel || trade.bizName;
+      demoState = { trade, bizName, currentState:STATE.GREETING, isEmergency:false, problem:'', address:'', slot:'', confirmNum:'', _slots:[], custom };
+      document.getElementById('demo-step-config').style.display = 'none';
+      document.getElementById('demo-step-2').style.display = 'block';
+      document.getElementById('demo-business-name').textContent = bizName;
+      document.getElementById('demo-chat-body').innerHTML = '';
+
+      // Show "knows" tags for whatever was configured
+      const tags = [];
+      if (custom.callout) tags.push('Your pricing');
+      if (custom.job1 || custom.job2) tags.push('Your services');
+      if (custom.area) tags.push('Your service area');
+      if (custom.hours) tags.push('Your hours');
+      if (tags.length > 0) {
+        const bar = document.getElementById('demo-knows-bar');
+        const tagsEl = document.getElementById('demo-knows-tags');
+        tagsEl.innerHTML = '<span style="font-size:0.78rem;font-weight:600;color:var(--text-muted);margin-right:4px;">Bot knows:</span>' +
+          tags.map(t => `<span class="knows-tag">${t}</span>`).join('');
+        bar.style.display = 'block';
+      } else {
+        document.getElementById('demo-knows-bar').style.display = 'none';
+      }
+
+      setTimeout(() => appendMsg(`Hi there! You've reached ${bizName}. How can we help you today?`, 'bot'), 400);
+      document.getElementById('demo-input').focus();
+    }
+
+    document.getElementById('cfg-start').onclick = () => {
+      launchChat({
+        bizName:  document.getElementById('cfg-bizname').value.trim(),
+        callout:  document.getElementById('cfg-callout').value.trim(),
+        job1:     document.getElementById('cfg-job1').value.trim(),
+        job2:     document.getElementById('cfg-job2').value.trim(),
+        area:     document.getElementById('cfg-area').value.trim(),
+        hours:    document.getElementById('cfg-hours').value.trim(),
+      });
+    };
+
+    document.getElementById('cfg-skip').onclick = () => launchChat({});
+  }
+
+  function startDemoWithTrade(trade, customLabel) {
+    showConfigStep(trade, customLabel);
+  }
+
+  function demoSend() {
+    const input = document.getElementById('demo-input');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    appendMsg(text, 'customer');
+    botRespond(text);
+  }
+
+  function initTradeGrid() {
+    const grid = document.getElementById('trade-grid');
+    TRADES.forEach(trade => {
+      const btn = document.createElement('button');
+      btn.className = 'trade-btn' + (trade.isOther ? ' other-btn' : '');
+      btn.textContent = trade.label;
+      btn.addEventListener('click', () => {
+        if (trade.isOther) {
+          document.getElementById('demo-other-wrap').style.display = 'flex';
+          document.getElementById('demo-other-input').focus();
+        } else {
+          startDemoWithTrade(trade);
+        }
+      });
+      grid.appendChild(btn);
+    });
+
+    document.getElementById('demo-other-confirm').addEventListener('click', () => {
+      const name = document.getElementById('demo-other-input').value.trim();
+      if (!name) return;
+      const otherTrade = TRADES.find(t => t.isOther);
+      startDemoWithTrade(otherTrade, name);
+    });
+
+    document.getElementById('demo-other-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('demo-other-confirm').click();
+    });
+  }
+
+  // ─── Plan selector helpers ────────────────────────────────────────────────────
+
+  function setSignupPlan(plan) {
+    document.getElementById('hidden-plan').value = plan;
+    // Update visible radio UI
+    ['starter-199','pro-299','growth-499'].forEach(p => {
+      const key = p.split('-')[0];
+      const label = document.getElementById('plan-label-' + key);
+      if (label) label.style.borderColor = (p === plan) ? 'var(--brand)' : 'var(--border)';
+      const radio = label ? label.querySelector('input') : null;
+      if (radio) radio.checked = (p === plan);
+    });
+  }
+
+  function handleTradeSelect(select) {
+    const wrap = document.getElementById('form-trade-other-wrap');
+    const input = document.getElementById('form-trade-other');
+    if (select.value === 'other') { wrap.style.display = 'block'; input.required = true; }
+    else { wrap.style.display = 'none'; input.required = false; }
+  }
+
+  // ─── Init on DOM ready ────────────────────────────────────────────────────────
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initTradeGrid();
+
+    document.getElementById('demo-send').addEventListener('click', demoSend);
+    document.getElementById('demo-input').addEventListener('keydown', e => { if(e.key==='Enter') demoSend(); });
+    document.getElementById('demo-reset').addEventListener('click', () => {
+      document.getElementById('demo-step-2').style.display = 'none';
+      document.getElementById('demo-step-config').style.display = 'none';
+      document.getElementById('demo-step-1').style.display = 'block';
+      document.getElementById('demo-other-wrap').style.display = 'none';
+      document.getElementById('demo-other-input').value = '';
+      document.getElementById('demo-knows-bar').style.display = 'none';
+      // Clear config fields
+      ['cfg-bizname','cfg-callout','cfg-job1','cfg-job2','cfg-area','cfg-hours'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+    });
+
+    // Plan radio UI sync
+    document.querySelectorAll('input[name="plan_display"]').forEach(radio => {
+      radio.closest('label').addEventListener('click', () => {
+        setSignupPlan(radio.value);
+      });
+    });
+  });
+
+  // ─── Form submission ──────────────────────────────────────────────────────────
+
+  document.getElementById('signup-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = Object.fromEntries(new FormData(form));
+    const button = form.querySelector('button[type="submit"]');
+    button.disabled = true;
+    button.textContent = 'Submitting...';
+
+    try {
+      const response = await fetch('/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (response.ok) {
+        form.style.display = 'none';
+        document.getElementById('form-success').style.display = 'block';
+      } else { throw new Error('failed'); }
+    } catch {
+      const subject = encodeURIComponent(`Swiftbooked Signup - ${data.business}`);
+      const body = encodeURIComponent(`New signup:\n\nName: ${data.name}\nBusiness: ${data.business}\nEmail: ${data.email}\nPhone: ${data.phone}\nTrade: ${data.trade}${data.trade_other ? ' / ' + data.trade_other : ''}\nPlan: ${data.plan}`);
+      window.location.href = `mailto:jordankonieczny@gmail.com?subject=${subject}&body=${body}`;
+      form.style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+    }
+  });
+  </script>
+
+</body>
+</html>
