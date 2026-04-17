@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"C:/Users/13065/Desktop/Business\" && git add -A && git diff --cached --quiet || git commit -m \"Auto-update: $(date '+%Y-%m-%d %H:%M')\" && git push origin main 2>/dev/null || true",
+            "statusMessage": "Pushing to GitHub..."
+          }
+        ]
+      }
+    ]
+  }
+}
