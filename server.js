@@ -1,47 +1,115 @@
 /**
- * Main server — handles all inbound lead sources:
+ * Swiftbooked — Main Server
+ *
+ * Endpoints:
+ *   POST /api/chat          — Website demo chatbot (Claude-powered)
  *   POST /webhook/sms       — Twilio inbound SMS
- *   POST /webhook/form      — Web form submissions
+ *   POST /webhook/form      — Web form lead submissions
  *   POST /webhook/lsa       — Google Local Services Ads leads
- *   POST /demo              — Demo mode (no real SMS/calendar)
+ *   GET  /health            — Status check
  */
 
 import "dotenv/config";
 import express from "express";
+import cors from "cors";
+import rateLimit from "express-rate-limit";
 import twilio from "twilio";
-import { handleIncomingMessage } from "./ai-engine.js";
+import { handleChat, handleIncomingMessage } from "./ai-engine.js";
 
 const app = express();
+
+// ── CORS — allow website demo to call this API ───────────────────────────────
+app.use(
+  cors({
+    origin: [
+      "https://jordankonieczny-coder.github.io",
+      "http://localhost:3000",
+      "http://127.0.0.1:5500",
+      /\.github\.io$/,
+    ],
+    methods: ["GET", "POST"],
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const twilioClient = process.env.TWILIO_ACCOUNT_SID
-  ? twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
-  : null;
+// ── Rate limiting ─────────────────────────────────────────────────────────────
+const demoLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 50,                   // 50 requests per IP per 15 min
+  message: { error: "Too many requests — please try again in a few minutes." },
+});
 
-// ── Twilio inbound SMS ────────────────────────────────────────────────────────
-app.post("/webhook/sms", async (req, res) => {
+const smsLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 20,
+  message: { error: "Rate limit exceeded" },
+});
+
+// ── Twilio client ─────────────────────────────────────────────────────────────
+const twilioClient =
+  process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN
+    ? twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
+    : null;
+
+// ═════════════════════════════════════════════════════════════════════════════
+// POST /api/chat — Website demo chatbot
+// Body: { sessionId, message, config: { bizName, trade, callout, job1, job2, hours, area } }
+// ═════════════════════════════════════════════════════════════════════════════
+app.post("/api/chat", demoLimiter, async (req, res) => {
+  const { sessionId, message, config } = req.body;
+
+  if (!sessionId || !message) {
+    return res.status(400).json({ error: "sessionId and message are required" });
+  }
+
+  if (message.length > 500) {
+    return res.status(400).json({ error: "Message too long" });
+  }
+
+  try {
+    const result = await handleChat(sessionId, message, config || {});
+    res.json(result);
+  } catch (err) {
+    console.error("[/api/chat error]", err.message);
+    res.status(500).json({
+      error: "AI unavailable",
+      reply:
+        "Sorry, I'm having a technical issue. Please call 587-568-7784 directly.",
+    });
+  }
+});
+
+// ═════════════════════════════════════════════════════════════════════════════
+// POST /webhook/sms — Twilio inbound SMS
+// ═════════════════════════════════════════════════════════════════════════════
+app.post("/webhook/sms", smsLimiter, async (req, res) => {
   const { From: phone, Body: messageText } = req.body;
-  console.log(`[SMS] From ${phone}: "${messageText}"`);
+
+  if (!phone || !messageText) {
+    return res.type("text/xml").send("<Response/>");
+  }
+
+  console.log(`[SMS in] ${phone}: "${messageText}"`);
 
   try {
     const result = await handleIncomingMessage(phone, messageText);
-    await sendSMS(phone, result.message);
-
-    // Twilio expects empty TwiML response (we're sending separately)
+    await sendSMS(phone, result.reply);
     res.type("text/xml").send("<Response/>");
   } catch (err) {
-    console.error("[SMS webhook error]", err);
+    console.error("[SMS webhook error]", err.message);
     await sendSMS(
       phone,
-      `Sorry, we're having a technical issue. Please call us directly at ${process.env.BUSINESS_PHONE}.`
+      `Sorry, we're having a technical issue. Please call ${process.env.OWNER_PHONE || "587-568-7784"} directly.`
     );
     res.type("text/xml").send("<Response/>");
   }
 });
 
-// ── Web form webhook ──────────────────────────────────────────────────────────
-// Connect this to your website's contact form (Gravity Forms, WPForms, etc.)
+// ═════════════════════════════════════════════════════════════════════════════
+// POST /webhook/form — Website contact form / Zapier / Facebook Lead Ads
+// ═════════════════════════════════════════════════════════════════════════════
 app.post("/webhook/form", async (req, res) => {
   const { name, phone, email, message, service } = req.body;
 
@@ -49,10 +117,7 @@ app.post("/webhook/form", async (req, res) => {
     return res.status(400).json({ error: "Phone number required" });
   }
 
-  // Normalize phone to E.164
   const cleanPhone = normalizePhone(phone);
-
-  // Build initial message from form data
   const initialMsg = [
     service ? `I need help with: ${service}` : null,
     message || null,
@@ -61,7 +126,7 @@ app.post("/webhook/form", async (req, res) => {
     .filter(Boolean)
     .join(". ");
 
-  console.log(`[Form lead] ${name} ${cleanPhone}: "${initialMsg}"`);
+  console.log(`[Form lead] ${name || "Unknown"} ${cleanPhone}: "${initialMsg}"`);
 
   try {
     const result = await handleIncomingMessage(
@@ -69,18 +134,23 @@ app.post("/webhook/form", async (req, res) => {
       initialMsg || "I'd like to book a service",
       name
     );
-    await sendSMS(cleanPhone, result.message);
+    await sendSMS(cleanPhone, result.reply);
     res.json({ success: true, message: "Lead response sent via SMS" });
   } catch (err) {
-    console.error("[Form webhook error]", err);
+    console.error("[Form webhook error]", err.message);
     res.status(500).json({ error: "Failed to process lead" });
   }
 });
 
-// ── Google LSA lead webhook ───────────────────────────────────────────────────
+// ═════════════════════════════════════════════════════════════════════════════
+// POST /webhook/lsa — Google Local Services Ads
+// ═════════════════════════════════════════════════════════════════════════════
 app.post("/webhook/lsa", async (req, res) => {
-  // Google LSA sends lead data in this format
   const { consumer_name, consumer_phone_number, job_type, note } = req.body;
+
+  if (!consumer_phone_number) {
+    return res.status(400).json({ error: "Phone required" });
+  }
 
   const phone = normalizePhone(consumer_phone_number);
   const message = [
@@ -92,45 +162,34 @@ app.post("/webhook/lsa", async (req, res) => {
 
   try {
     const result = await handleIncomingMessage(phone, message, consumer_name);
-    await sendSMS(phone, result.message);
+    await sendSMS(phone, result.reply);
     res.json({ success: true });
   } catch (err) {
-    console.error("[LSA webhook error]", err);
+    console.error("[LSA webhook error]", err.message);
     res.status(500).json({ error: "Failed to process LSA lead" });
   }
 });
 
-// ── Demo endpoint (no real SMS or calendar) ───────────────────────────────────
-app.post("/demo", async (req, res) => {
-  const { phone = "+17805550001", message } = req.body;
-  if (!message) return res.status(400).json({ error: "message required" });
-
-  try {
-    const result = await handleIncomingMessage(phone, message);
-    res.json(result);
-  } catch (err) {
-    console.error("[Demo error]", err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// ── Health check ──────────────────────────────────────────────────────────────
+// ═════════════════════════════════════════════════════════════════════════════
+// GET /health
+// ═════════════════════════════════════════════════════════════════════════════
 app.get("/health", (req, res) => {
   res.json({
     status: "ok",
-    business: process.env.BUSINESS_NAME,
-    type: process.env.BUSINESS_TYPE,
+    service: "Swiftbooked AI Bot",
+    owner: process.env.OWNER_NAME,
     twilioConnected: !!twilioClient,
+    anthropicConfigured: !!process.env.ANTHROPIC_API_KEY,
+    timestamp: new Date().toISOString(),
   });
 });
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 async function sendSMS(to, message) {
   if (!twilioClient) {
-    console.log(`[SMS - NOT SENT (no Twilio)] To ${to}: "${message}"`);
+    console.log(`[SMS - not sent, no Twilio] → ${to}: "${message}"`);
     return;
   }
-  // Split long messages (SMS 160 char limit)
   const chunks = splitSMS(message);
   for (const chunk of chunks) {
     await twilioClient.messages.create({
@@ -138,22 +197,21 @@ async function sendSMS(to, message) {
       from: process.env.TWILIO_PHONE_NUMBER,
       to,
     });
-    // Small delay between multi-part messages
     if (chunks.length > 1) await new Promise((r) => setTimeout(r, 500));
   }
 }
 
-function splitSMS(text, maxLength = 155) {
-  if (text.length <= maxLength) return [text];
+function splitSMS(text, max = 155) {
+  if (text.length <= max) return [text];
   const chunks = [];
   const sentences = text.split(/(?<=[.!?])\s+/);
   let current = "";
-  for (const sentence of sentences) {
-    if ((current + sentence).length > maxLength) {
+  for (const s of sentences) {
+    if ((current + s).length > max) {
       if (current) chunks.push(current.trim());
-      current = sentence;
+      current = s;
     } else {
-      current += (current ? " " : "") + sentence;
+      current += (current ? " " : "") + s;
     }
   }
   if (current) chunks.push(current.trim());
@@ -161,7 +219,7 @@ function splitSMS(text, maxLength = 155) {
 }
 
 function normalizePhone(raw) {
-  const digits = raw.replace(/\D/g, "");
+  const digits = (raw || "").replace(/\D/g, "");
   if (digits.length === 10) return `+1${digits}`;
   if (digits.length === 11 && digits.startsWith("1")) return `+${digits}`;
   return `+${digits}`;
@@ -171,18 +229,18 @@ function normalizePhone(raw) {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`
-╔═══════════════════════════════════════════════════════╗
-║  Trades Lead Bot — ${process.env.BUSINESS_NAME || "Not configured"}
-║  Type: ${process.env.BUSINESS_TYPE || "Not set"}
-║  Port: ${PORT}
+╔══════════════════════════════════════════════════════╗
+║  Swiftbooked AI Bot — Live on port ${PORT}
+║  Owner: ${process.env.OWNER_NAME || "Not set"}
+║  Twilio: ${twilioClient ? "Connected" : "Not connected (SMS disabled)"}
+║  Claude: ${process.env.ANTHROPIC_API_KEY ? "Connected" : "API key missing!"}
 ║
-║  Endpoints:
-║    POST /webhook/sms   ← Twilio webhook URL
-║    POST /webhook/form  ← Website contact form
-║    POST /webhook/lsa   ← Google Local Services
-║    POST /demo          ← Test without real SMS
-║    GET  /health        ← Status check
-╚═══════════════════════════════════════════════════════╝
+║  POST /api/chat       ← Website demo
+║  POST /webhook/sms    ← Twilio
+║  POST /webhook/form   ← Web forms / Zapier / Facebook
+║  POST /webhook/lsa    ← Google Local Services
+║  GET  /health         ← Status
+╚══════════════════════════════════════════════════════╝
   `);
 });
 
