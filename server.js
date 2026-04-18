@@ -324,11 +324,7 @@ app.post("/api/signup", async (req, res) => {
       <p><strong>4. Emergency contact</strong><br>
       <span style="color:#6b7280;font-size:0.9rem;">If a customer has an urgent situation (e.g. burst pipe, no heat), what number should the AI tell them to call?</span></p>
 
-      <p><strong>5. Calendar app</strong><br>
-      <span style="color:#6b7280;font-size:0.9rem;">Which calendar do you use? (Google Calendar, Apple Calendar, Outlook, Calendly, or other)</span></p>
-
-      <p><strong>6. Calendar access</strong><br>
-      <span style="color:#6b7280;font-size:0.9rem;">For Google Calendar: the Gmail address your calendar is under. For Calendly: your booking link. For others, we'll guide you through it.</span></p>
+      ${calendarSection}
 
       <p><strong>7. Your AI phone number preference</strong><br>
       <span style="color:#6b7280;font-size:0.9rem;">Do you want the AI to text from a new local number we provide, or forward from your existing business number?</span></p>
