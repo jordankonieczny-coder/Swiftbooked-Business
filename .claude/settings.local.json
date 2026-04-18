@@ -5,7 +5,9 @@
       "Bash(python -c \"import json; d=json.load\\(open\\('.claude/settings.json'\\)\\); print\\('Valid JSON'\\); print\\('Hook command:', d['hooks']['PostToolUse'][0]['hooks'][0]['command']\\)\")",
       "Bash(gh --version)",
       "Bash(gh auth *)",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Read(//c/Users/13065/AppData/Roaming/**)",
+      "Bash(railway --version)"
     ]
   }
 }
