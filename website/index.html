@@ -1284,11 +1284,41 @@
 
   function removeTyping() { const el=document.getElementById('demo-typing'); if(el) el.remove(); }
 
-  function botRespond(userText) {
-    const response = getBotResponse(userText);
-    const delay = 900 + Math.random() * 1100;
+  async function botRespond(userText) {
     showTyping();
-    setTimeout(() => { removeTyping(); appendMsg(response, 'bot'); }, delay);
+    const sendBtn = document.getElementById('demo-send');
+    const input = document.getElementById('demo-input');
+    if (sendBtn) sendBtn.disabled = true;
+    if (input) input.disabled = true;
+
+    try {
+      const res = await fetch(SWIFTBOT_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: demoSession.id,
+          message: userText,
+          config: demoSession.config,
+        }),
+      });
+
+      const data = await res.json();
+      removeTyping();
+
+      if (data.reply) {
+        appendMsg(data.reply, 'bot');
+        // After first exchange, don't resend config
+        demoSession.config = {};
+      } else if (data.error) {
+        appendMsg("Sorry, I'm having a moment \u2014 please try again or call 587-568-7784.", 'bot');
+      }
+    } catch (err) {
+      removeTyping();
+      appendMsg("Connection issue \u2014 the AI server may be spinning up. Try again in 30 seconds, or call 587-568-7784 directly.", 'bot');
+    } finally {
+      if (sendBtn) sendBtn.disabled = false;
+      if (input) { input.disabled = false; input.focus(); }
+    }
   }
 
   function showConfigStep(trade, customLabel) {
