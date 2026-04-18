@@ -784,76 +784,103 @@
   <!-- Interactive AI Demo -->
   <section class="demo" id="demo">
     <div class="container">
-      <h2>Try it yourself &mdash; live demo</h2>
-      <p class="sub">This is exactly how Swiftbooked responds to your customers. Select your trade and type anything.</p>
+      <h2>See it in action &mdash; live demo</h2>
+      <p class="sub">This is exactly what your customers experience. Try it yourself.</p>
 
-      <!-- Step 1: Trade picker -->
-      <div id="demo-step-1" class="demo-trade-picker">
-        <p class="demo-prompt">What type of trades business do you run?</p>
-        <p class="trade-note">All trades businesses are supported &mdash; select yours or type it in below.</p>
-        <div class="trade-grid" id="trade-grid"></div>
-        <div class="demo-other-wrap" id="demo-other-wrap" style="display:none;">
-          <input type="text" id="demo-other-input" class="demo-other-input" placeholder="e.g. Duct Cleaning, Chimney Sweep, Irrigation…">
-          <button class="btn-primary" id="demo-other-confirm" style="padding:12px 24px;">Continue</button>
-        </div>
-      </div>
+      <div class="demo-layout">
 
-      <!-- Step 1.5: Business config -->
-      <div id="demo-step-config" style="display:none;">
-        <div class="demo-config">
-          <h3>Personalize your demo</h3>
-          <p class="config-sub">Enter your real pricing and details — the AI will use them when customers ask. Skip to use example values.</p>
-          <div class="config-field">
-            <label>Your business name</label>
-            <input type="text" id="cfg-bizname" placeholder="e.g. Apex Heating & Cooling">
-          </div>
-          <div class="config-field">
-            <label>Service call / dispatch fee</label>
-            <input type="text" id="cfg-callout" placeholder="e.g. $120">
-            <div class="config-hint">The flat fee charged just for showing up</div>
-          </div>
-          <div class="config-field">
-            <label>Most common job &amp; price</label>
-            <input type="text" id="cfg-job1" placeholder="e.g. Furnace tune-up — $179">
-          </div>
-          <div class="config-field">
-            <label>Another service &amp; price (optional)</label>
-            <input type="text" id="cfg-job2" placeholder="e.g. Drain clearing — $220">
-          </div>
-          <div class="config-field">
-            <label>Your service area</label>
-            <input type="text" id="cfg-area" placeholder="e.g. Edmonton &amp; Sherwood Park">
-          </div>
-          <div class="config-field">
-            <label>Your hours</label>
-            <input type="text" id="cfg-hours" placeholder="e.g. Mon–Sat 8am–6pm, emergency 24/7">
-          </div>
-          <div class="config-actions">
-            <button class="btn-primary" id="cfg-start">Launch My Demo</button>
-            <button class="config-skip" id="cfg-skip">Skip</button>
-          </div>
-        </div>
-      </div>
+        <!-- Left: trade picker + info -->
+        <div class="demo-left">
+          <h3>Pick your trade to try it live</h3>
+          <p>Select your trade below and type anything — ask about pricing, availability, or just say you have a problem. The AI responds exactly like it would to your real customers via SMS.</p>
 
-      <!-- Step 2: Chat window -->
-      <div id="demo-step-2" style="display:none;">
-        <div class="chat-window demo-chat-window">
-          <div class="chat-header">
-            <span id="demo-business-name">Swiftbooked AI</span>
-            <span class="demo-online-dot"></span>
+          <!-- Step 1: Trade picker -->
+          <div id="demo-step-1">
+            <div class="demo-trade-label">What type of business do you run?</div>
+            <p class="trade-note" style="font-size:0.82rem; color:var(--text-muted); margin-bottom:12px;">All trades supported — select yours or type it in.</p>
+            <div class="trade-grid" id="trade-grid"></div>
+            <div class="demo-other-wrap" id="demo-other-wrap" style="display:none;">
+              <input type="text" id="demo-other-input" class="demo-other-input" placeholder="e.g. Duct Cleaning, Chimney Sweep…">
+              <button class="btn-primary" id="demo-other-confirm" style="padding:12px 24px;">Continue</button>
+            </div>
           </div>
-          <div id="demo-knows-bar" style="padding:10px 16px 0; display:none;">
-            <div class="demo-knows" id="demo-knows-tags"></div>
+
+          <!-- Step 1.5: Business config -->
+          <div id="demo-step-config" style="display:none;">
+            <div class="demo-config" style="padding:24px; box-shadow:none; border-color:var(--border);">
+              <h3 style="font-size:1rem;">Personalize your demo</h3>
+              <p class="config-sub">Enter your real details or skip to use example values.</p>
+              <div class="config-field">
+                <label>Business name</label>
+                <input type="text" id="cfg-bizname" placeholder="e.g. Apex Heating & Cooling">
+              </div>
+              <div class="config-field">
+                <label>Service call fee</label>
+                <input type="text" id="cfg-callout" placeholder="e.g. $120">
+              </div>
+              <div class="config-field">
+                <label>Most common job &amp; price</label>
+                <input type="text" id="cfg-job1" placeholder="e.g. Furnace tune-up — $179">
+              </div>
+              <div class="config-field">
+                <label>Service area</label>
+                <input type="text" id="cfg-area" placeholder="e.g. Edmonton &amp; Sherwood Park">
+              </div>
+              <div class="config-actions">
+                <button class="btn-primary" id="cfg-start">Launch Demo</button>
+                <button class="config-skip" id="cfg-skip">Skip</button>
+              </div>
+            </div>
           </div>
-          <div class="chat-body" id="demo-chat-body"></div>
-          <div class="demo-input-row">
-            <input type="text" id="demo-input" class="demo-msg-input" placeholder="Type a message…" autocomplete="off">
-            <button id="demo-send" class="demo-send-btn" aria-label="Send">&#10148;</button>
+
+          <div id="demo-step-2-controls" style="display:none;">
+            <button class="demo-reset-btn" id="demo-reset" style="margin:0;">&#8592; Try a different trade</button>
           </div>
         </div>
-        <p class="demo-disclaimer">Simulated demo &mdash; the real Swiftbooked AI responds via SMS to your actual customers.</p>
-        <button class="demo-reset-btn" id="demo-reset">Try a different trade</button>
+
+        <!-- Right: phone mockup -->
+        <div class="phone-wrap">
+          <div class="phone-frame">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="chat-window" id="demo-chat-outer">
+                <div class="chat-header">
+                  <span id="demo-business-name">Apex Heating &amp; Cooling</span>
+                  <span class="demo-online-dot"></span>
+                </div>
+                <div id="demo-knows-bar" style="padding:8px 12px 0; display:none;">
+                  <div class="demo-knows" id="demo-knows-tags"></div>
+                </div>
+                <div class="chat-body" id="demo-chat-body">
+                  <!-- Pre-loaded example conversation -->
+                  <div class="msg customer">Hey my furnace stopped working, it's freezing in here</div>
+                  <div class="msg bot">That sounds urgent — we'll get someone out as fast as possible. What's your address?</div>
+                  <div class="msg customer">4521 109 St NW Edmonton</div>
+                  <div class="msg bot">We have these openings near you:
+
+1. Today 5:00–7:00 PM
+2. Tomorrow 8:00–10:00 AM
+3. Tomorrow 1:00–3:00 PM
+
+Which works best?</div>
+                  <div class="msg customer">Today please</div>
+                  <div class="msg bot">Booked! Your tech will be there today 5:00–7:00 PM and will call 20 min before arrival. Confirmation #BK7X2R. Help is on the way! 🔧</div>
+                </div>
+                <div class="demo-input-row" id="demo-input-row" style="display:none;">
+                  <input type="text" id="demo-input" class="demo-msg-input" placeholder="Type a message…" autocomplete="off">
+                  <button id="demo-send" class="demo-send-btn" aria-label="Send">&#10148;</button>
+                </div>
+                <div id="demo-select-prompt" style="padding:12px 16px; border-top:1px solid var(--border); text-align:center; font-size:0.82rem; color:var(--text-muted);">
+                  ← Select your trade to try it live
+                </div>
+              </div>
+            </div>
+            <div class="phone-home"></div>
+          </div>
+        </div>
+
       </div>
+      <p class="demo-disclaimer" style="margin-top:24px;">Live demo powered by Claude AI — this is exactly how Swiftbooked responds to your real customers via SMS.</p>
     </div>
   </section>
 
