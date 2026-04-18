@@ -172,6 +172,108 @@ app.post("/webhook/lsa", async (req, res) => {
   }
 });
 
+// ── Email transporter ─────────────────────────────────────────────────────────
+const mailer = process.env.EMAIL_USER && process.env.EMAIL_PASS
+  ? nodemailer.createTransport({
+      service: "gmail",
+      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+    })
+  : null;
+
+// ═════════════════════════════════════════════════════════════════════════════
+// POST /api/signup
+// ═════════════════════════════════════════════════════════════════════════════
+app.post("/api/signup", async (req, res) => {
+  const { name, business, email, phone, trade, trade_other } = req.body;
+  if (!name || !email) return res.status(400).json({ error: "Missing required fields" });
+
+  const tradeName = trade === "other" ? trade_other : trade;
+
+  // Email to customer — setup questionnaire
+  const customerHtml = `
+<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;color:#111;">
+  <div style="background:#1a56db;padding:28px 32px;border-radius:10px 10px 0 0;">
+    <h1 style="color:#fff;margin:0;font-size:1.4rem;">Welcome to Swiftbooked, ${name.split(' ')[0]}!</h1>
+    <p style="color:rgba(255,255,255,0.85);margin:8px 0 0;font-size:0.95rem;">Your AI text bot is almost ready. We just need a few details.</p>
+  </div>
+  <div style="background:#f9fafb;padding:28px 32px;border-radius:0 0 10px 10px;border:1px solid #e5e7eb;border-top:none;">
+    <p style="margin-top:0;">Hi ${name},</p>
+    <p>We're setting up your Swiftbooked AI text bot for <strong>${business}</strong>. To get it live within 48 hours, please reply to this email with answers to the questions below.</p>
+
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:20px 24px;margin:20px 0;">
+      <h2 style="font-size:1rem;margin-top:0;color:#1a56db;">📋 Setup Questionnaire</h2>
+
+      <p><strong>1. Your services &amp; typical pricing</strong><br>
+      <span style="color:#6b7280;font-size:0.9rem;">List each service you offer and a typical price range. Example: "Furnace tune-up – $179, Service call fee – $120, AC install – $4,000–$6,000"</span></p>
+
+      <p><strong>2. Your service area</strong><br>
+      <span style="color:#6b7280;font-size:0.9rem;">Which cities, neighbourhoods, or postal codes do you cover?</span></p>
+
+      <p><strong>3. Your business hours</strong><br>
+      <span style="color:#6b7280;font-size:0.9rem;">When are you available for bookings? Do you offer after-hours or emergency service?</span></p>
+
+      <p><strong>4. Emergency contact</strong><br>
+      <span style="color:#6b7280;font-size:0.9rem;">If a customer has an urgent situation (e.g. burst pipe, no heat), what number should the AI tell them to call?</span></p>
+
+      <p><strong>5. Calendar app</strong><br>
+      <span style="color:#6b7280;font-size:0.9rem;">Which calendar do you use? (Google Calendar, Apple Calendar, Outlook, Calendly, or other)</span></p>
+
+      <p><strong>6. Calendar access</strong><br>
+      <span style="color:#6b7280;font-size:0.9rem;">For Google Calendar: the Gmail address your calendar is under. For Calendly: your booking link. For others, we'll guide you through it.</span></p>
+
+      <p><strong>7. Your AI phone number preference</strong><br>
+      <span style="color:#6b7280;font-size:0.9rem;">Do you want the AI to text from a new local number we provide, or forward from your existing business number?</span></p>
+
+      <p><strong>8. Anything else the AI should know</strong><br>
+      <span style="color:#6b7280;font-size:0.9rem;">Warranties, payment methods, special offers, things you want the AI to always say or never say. Anything goes.</span></p>
+    </div>
+
+    <p>Once we receive your answers, we'll configure your bot and have it live within <strong>48 hours</strong>. You'll get a test text to confirm everything is working before we go live.</p>
+    <p>Questions? Reply to this email or call/text Jordan directly at <a href="tel:5875687784" style="color:#1a56db;">587-568-7784</a>.</p>
+    <p style="margin-bottom:0;">— Jordan Konieczny<br><span style="color:#6b7280;font-size:0.9rem;">Swiftbooked</span></p>
+  </div>
+</div>`;
+
+  // Notification email to Jordan
+  const ownerHtml = `
+<div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;">
+  <h2 style="color:#1a56db;">New Swiftbooked Signup 🎉</h2>
+  <table style="border-collapse:collapse;width:100%;">
+    <tr><td style="padding:8px 0;font-weight:700;width:130px;">Name</td><td>${name}</td></tr>
+    <tr><td style="padding:8px 0;font-weight:700;">Business</td><td>${business}</td></tr>
+    <tr><td style="padding:8px 0;font-weight:700;">Email</td><td><a href="mailto:${email}">${email}</a></td></tr>
+    <tr><td style="padding:8px 0;font-weight:700;">Phone</td><td><a href="tel:${phone}">${phone}</a></td></tr>
+    <tr><td style="padding:8px 0;font-weight:700;">Trade</td><td>${tradeName}</td></tr>
+  </table>
+  <p style="color:#6b7280;font-size:0.9rem;">Questionnaire sent to customer. Reply when they respond to set them up.</p>
+</div>`;
+
+  try {
+    if (mailer) {
+      await Promise.all([
+        mailer.sendMail({
+          from: `"Swiftbooked" <${process.env.EMAIL_USER}>`,
+          to: email,
+          subject: `Welcome to Swiftbooked — let's get your AI bot live`,
+          html: customerHtml,
+        }),
+        mailer.sendMail({
+          from: `"Swiftbooked Signups" <${process.env.EMAIL_USER}>`,
+          to: process.env.OWNER_EMAIL,
+          subject: `New signup: ${business} (${tradeName})`,
+          html: ownerHtml,
+        }),
+      ]);
+    } else {
+      console.log(`[Signup - email not configured] ${name} | ${business} | ${email} | ${phone} | ${tradeName}`);
+    }
+    res.json({ success: true });
+  } catch (err) {
+    console.error("[/api/signup error]", err.message);
+    res.status(500).json({ error: "Failed to send emails" });
+  }
+});
+
 // ═════════════════════════════════════════════════════════════════════════════
 // GET /health
 // ═════════════════════════════════════════════════════════════════════════════
