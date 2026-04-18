@@ -1327,9 +1327,25 @@
     document.getElementById('demo-step-1').style.display = 'none';
     document.getElementById('demo-step-config').style.display = 'block';
 
-    function launchChat(custom) {
+    async function launchChat(custom) {
       const bizName = custom.bizName || customLabel || trade.bizName;
-      demoState = { trade, bizName, currentState:STATE.GREETING, isEmergency:false, problem:'', address:'', slot:'', confirmNum:'', _slots:[], custom };
+
+      // Create a fresh session for this conversation
+      demoSession = {
+        id: newSessionId(),
+        trade,
+        bizName,
+        config: {
+          bizName,
+          trade: trade.label,
+          callout: custom.callout || '',
+          job1:    custom.job1 || '',
+          job2:    custom.job2 || '',
+          area:    custom.area || '',
+          hours:   custom.hours || '',
+        },
+      };
+
       document.getElementById('demo-step-config').style.display = 'none';
       document.getElementById('demo-step-2').style.display = 'block';
       document.getElementById('demo-business-name').textContent = bizName;
@@ -1351,7 +1367,31 @@
         document.getElementById('demo-knows-bar').style.display = 'none';
       }
 
-      setTimeout(() => appendMsg(`Hi there! You've reached ${bizName}. How can we help you today?`, 'bot'), 400);
+      // Get the opening greeting from Claude
+      showTyping();
+      try {
+        const res = await fetch(SWIFTBOT_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId: demoSession.id,
+            message: '__greeting__',
+            config: demoSession.config,
+          }),
+        });
+        const data = await res.json();
+        removeTyping();
+        if (data.reply) {
+          appendMsg(data.reply, 'bot');
+          demoSession.config = {}; // config sent, clear for future messages
+        } else {
+          appendMsg(`Hi there! You've reached ${bizName}. How can we help you today?`, 'bot');
+        }
+      } catch (e) {
+        removeTyping();
+        appendMsg(`Hi there! You've reached ${bizName}. How can we help you today?`, 'bot');
+      }
+
       document.getElementById('demo-input').focus();
     }
 
