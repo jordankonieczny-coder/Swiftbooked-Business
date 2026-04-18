@@ -1032,9 +1032,17 @@
       services:[], emergencyHints:[], isOther:true }
   ];
 
-  const STATE = { GREETING:'GREETING', GATHER_PROBLEM:'GATHER_PROBLEM', GATHER_ADDRESS:'GATHER_ADDRESS', GATHER_TIMESLOT:'GATHER_TIMESLOT', CONFIRM:'CONFIRM', DONE:'DONE' };
+  // Session state — one session per demo conversation
+  let demoSession = {
+    id: null,       // unique session ID sent to API
+    trade: null,
+    bizName: '',
+    config: {},
+  };
 
-  let demoState = { trade:null, bizName:'', currentState:STATE.GREETING, isEmergency:false, problem:'', address:'', slot:'', confirmNum:'', _slots:[], custom:{} };
+  function newSessionId() {
+    return 'demo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+  }
 
   function containsAny(text, kws) { const l=text.toLowerCase(); return kws.some(k=>l.includes(k)); }
 
