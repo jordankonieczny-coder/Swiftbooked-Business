@@ -70,6 +70,83 @@
     .container { max-width: 1080px; margin: 0 auto; }
     h1, h2, h3 { letter-spacing: -0.5px; }
 
+    /* ── Free Month Banner ───────────────────────── */
+    .free-banner {
+      background: #16a34a;
+      color: #fff;
+      text-align: center;
+      padding: 14px 24px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    .free-banner span {
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 4px 14px;
+      margin-left: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* ── Phone Frame ─────────────────────────────── */
+    .phone-wrap {
+      display: flex;
+      justify-content: center;
+      margin: 0 auto;
+    }
+    .phone-frame {
+      width: 320px;
+      background: #111;
+      border-radius: 44px;
+      padding: 14px;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.22), 0 0 0 2px #333;
+      position: relative;
+    }
+    .phone-notch {
+      width: 100px;
+      height: 24px;
+      background: #111;
+      border-radius: 0 0 16px 16px;
+      margin: 0 auto 6px;
+    }
+    .phone-screen {
+      background: #fff;
+      border-radius: 32px;
+      overflow: hidden;
+    }
+    .phone-home {
+      width: 100px;
+      height: 5px;
+      background: #444;
+      border-radius: 3px;
+      margin: 8px auto 4px;
+    }
+    .phone-frame .chat-window {
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+    }
+    .phone-frame .chat-body { max-height: 280px; }
+
+    /* ── Demo layout ─────────────────────────────── */
+    .demo-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .demo-left h3 { font-size: 1.3rem; margin-bottom: 8px; }
+    .demo-left p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 20px; }
+    .demo-trade-label { font-weight: 700; font-size: 0.85rem; margin-bottom: 10px; color: var(--text); }
+    @media (max-width: 700px) {
+      .demo-layout { grid-template-columns: 1fr; }
+      .demo-left { order: 2; }
+      .phone-wrap { order: 1; }
+    }
+
     /* ── Hero ────────────────────────────────────── */
     .hero {
       padding: 120px 24px 100px;
