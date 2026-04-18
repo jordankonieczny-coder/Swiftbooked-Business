@@ -317,8 +317,14 @@ export async function handleChat(sessionId, userMessage, config = {}) {
     session.config = { ...session.config, ...config };
   }
 
+  // Handle greeting trigger from demo widget
+  const isGreeting = userMessage === "__greeting__";
+  const actualMessage = isGreeting
+    ? `Please send a warm, natural opening greeting for ${session.config.bizName || "the business"} introducing yourself and asking how you can help. Keep it to 1–2 sentences.`
+    : userMessage;
+
   // Add user message
-  session.messages.push({ role: "user", content: userMessage });
+  session.messages.push({ role: "user", content: actualMessage });
 
   try {
     let finalText = null;
