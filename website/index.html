@@ -1433,6 +1433,7 @@ Which works best?</div>
     document.getElementById('cfg-bizname').value = customLabel || trade.bizName || '';
     document.getElementById('demo-step-1').style.display = 'none';
     document.getElementById('demo-step-config').style.display = 'block';
+    document.getElementById('demo-chat-body').innerHTML = '';
 
     async function launchChat(custom) {
       const bizName = custom.bizName || customLabel || trade.bizName;
