@@ -1587,14 +1587,25 @@ Which works best?</div>
     document.getElementById('demo-send').addEventListener('click', demoSend);
     document.getElementById('demo-input').addEventListener('keydown', e => { if(e.key==='Enter') demoSend(); });
     document.getElementById('demo-reset').addEventListener('click', () => {
-      document.getElementById('demo-step-2').style.display = 'none';
       document.getElementById('demo-step-config').style.display = 'none';
       document.getElementById('demo-step-1').style.display = 'block';
+      document.getElementById('demo-step-2-controls').style.display = 'none';
       document.getElementById('demo-other-wrap').style.display = 'none';
       document.getElementById('demo-other-input').value = '';
       document.getElementById('demo-knows-bar').style.display = 'none';
-      // Clear config fields
-      ['cfg-bizname','cfg-callout','cfg-job1','cfg-job2','cfg-area','cfg-hours'].forEach(id => {
+      document.getElementById('demo-input-row').style.display = 'none';
+      document.getElementById('demo-select-prompt').style.display = 'block';
+      document.getElementById('demo-business-name').textContent = 'Apex Heating & Cooling';
+      // Restore example conversation
+      document.getElementById('demo-chat-body').innerHTML = `
+        <div class="msg customer">Hey my furnace stopped working, it's freezing in here</div>
+        <div class="msg bot">That sounds urgent — we'll get someone out as fast as possible. What's your address?</div>
+        <div class="msg customer">4521 109 St NW Edmonton</div>
+        <div class="msg bot">We have these openings near you:\n\n1. Today 5:00–7:00 PM\n2. Tomorrow 8:00–10:00 AM\n3. Tomorrow 1:00–3:00 PM\n\nWhich works best?</div>
+        <div class="msg customer">Today please</div>
+        <div class="msg bot">Booked! Your tech will be there today 5:00–7:00 PM and will call 20 min before arrival. Confirmation #BK7X2R. Help is on the way! 🔧</div>
+      `;
+      ['cfg-bizname','cfg-callout','cfg-job1','cfg-area'].forEach(id => {
         document.getElementById(id).value = '';
       });
     });
