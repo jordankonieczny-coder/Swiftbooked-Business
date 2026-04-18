@@ -15,18 +15,19 @@ import cors from "cors";
 import rateLimit from "express-rate-limit";
 import twilio from "twilio";
 import { handleChat, handleIncomingMessage } from "./ai-engine.js";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
+
+// ── Serve static website ─────────────────────────────────────────────────────
+app.use(express.static(join(__dirname, "website")));
 
 // ── CORS — allow website demo to call this API ───────────────────────────────
 app.use(
   cors({
-    origin: [
-      "https://jordankonieczny-coder.github.io",
-      "http://localhost:3000",
-      "http://127.0.0.1:5500",
-      /\.github\.io$/,
-    ],
+    origin: "*",
     methods: ["GET", "POST"],
   })
 );
