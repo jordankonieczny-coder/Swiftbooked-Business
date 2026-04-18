@@ -15,6 +15,7 @@ import cors from "cors";
 import rateLimit from "express-rate-limit";
 import twilio from "twilio";
 import nodemailer from "nodemailer";
+import { google } from "googleapis";
 import { handleChat, handleIncomingMessage } from "./ai-engine.js";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
