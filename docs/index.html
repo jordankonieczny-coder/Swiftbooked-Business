@@ -959,7 +959,13 @@
   </footer>
 
   <script>
-  // ─── Swiftbooked Demo Chatbot Engine ──────────────────────────────────────────
+  // ─── Swiftbooked Demo Chatbot Engine (Claude-powered) ────────────────────────
+
+  // Update this URL after deploying to Railway:
+  const SWIFTBOT_API = 'https://swiftbooked-bot-production.up.railway.app/api/chat';
+
+  // Fallback: use local server when developing
+  // const SWIFTBOT_API = 'http://localhost:3000/api/chat';
 
   const TRADES = [
     { key:'hvac',        label:'HVAC',               bizName:'Apex Heating & Cooling',
@@ -1026,9 +1032,17 @@
       services:[], emergencyHints:[], isOther:true }
   ];
 
-  const STATE = { GREETING:'GREETING', GATHER_PROBLEM:'GATHER_PROBLEM', GATHER_ADDRESS:'GATHER_ADDRESS', GATHER_TIMESLOT:'GATHER_TIMESLOT', CONFIRM:'CONFIRM', DONE:'DONE' };
+  // Session state — one session per demo conversation
+  let demoSession = {
+    id: null,       // unique session ID sent to API
+    trade: null,
+    bizName: '',
+    config: {},
+  };
 
-  let demoState = { trade:null, bizName:'', currentState:STATE.GREETING, isEmergency:false, problem:'', address:'', slot:'', confirmNum:'', _slots:[], custom:{} };
+  function newSessionId() {
+    return 'demo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+  }
 
   function containsAny(text, kws) { const l=text.toLowerCase(); return kws.some(k=>l.includes(k)); }
 
@@ -1270,11 +1284,41 @@
 
   function removeTyping() { const el=document.getElementById('demo-typing'); if(el) el.remove(); }
 
-  function botRespond(userText) {
-    const response = getBotResponse(userText);
-    const delay = 900 + Math.random() * 1100;
+  async function botRespond(userText) {
     showTyping();
-    setTimeout(() => { removeTyping(); appendMsg(response, 'bot'); }, delay);
+    const sendBtn = document.getElementById('demo-send');
+    const input = document.getElementById('demo-input');
+    if (sendBtn) sendBtn.disabled = true;
+    if (input) input.disabled = true;
+
+    try {
+      const res = await fetch(SWIFTBOT_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: demoSession.id,
+          message: userText,
+          config: demoSession.config,
+        }),
+      });
+
+      const data = await res.json();
+      removeTyping();
+
+      if (data.reply) {
+        appendMsg(data.reply, 'bot');
+        // After first exchange, don't resend config
+        demoSession.config = {};
+      } else if (data.error) {
+        appendMsg("Sorry, I'm having a moment \u2014 please try again or call 587-568-7784.", 'bot');
+      }
+    } catch (err) {
+      removeTyping();
+      appendMsg("Connection issue \u2014 the AI server may be spinning up. Try again in 30 seconds, or call 587-568-7784 directly.", 'bot');
+    } finally {
+      if (sendBtn) sendBtn.disabled = false;
+      if (input) { input.disabled = false; input.focus(); }
+    }
   }
 
   function showConfigStep(trade, customLabel) {
@@ -1283,9 +1327,25 @@
     document.getElementById('demo-step-1').style.display = 'none';
     document.getElementById('demo-step-config').style.display = 'block';
 
-    function launchChat(custom) {
+    async function launchChat(custom) {
       const bizName = custom.bizName || customLabel || trade.bizName;
-      demoState = { trade, bizName, currentState:STATE.GREETING, isEmergency:false, problem:'', address:'', slot:'', confirmNum:'', _slots:[], custom };
+
+      // Create a fresh session for this conversation
+      demoSession = {
+        id: newSessionId(),
+        trade,
+        bizName,
+        config: {
+          bizName,
+          trade: trade.label,
+          callout: custom.callout || '',
+          job1:    custom.job1 || '',
+          job2:    custom.job2 || '',
+          area:    custom.area || '',
+          hours:   custom.hours || '',
+        },
+      };
+
       document.getElementById('demo-step-config').style.display = 'none';
       document.getElementById('demo-step-2').style.display = 'block';
       document.getElementById('demo-business-name').textContent = bizName;
@@ -1307,7 +1367,31 @@
         document.getElementById('demo-knows-bar').style.display = 'none';
       }
 
-      setTimeout(() => appendMsg(`Hi there! You've reached ${bizName}. How can we help you today?`, 'bot'), 400);
+      // Get the opening greeting from Claude
+      showTyping();
+      try {
+        const res = await fetch(SWIFTBOT_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId: demoSession.id,
+            message: '__greeting__',
+            config: demoSession.config,
+          }),
+        });
+        const data = await res.json();
+        removeTyping();
+        if (data.reply) {
+          appendMsg(data.reply, 'bot');
+          demoSession.config = {}; // config sent, clear for future messages
+        } else {
+          appendMsg(`Hi there! You've reached ${bizName}. How can we help you today?`, 'bot');
+        }
+      } catch (e) {
+        removeTyping();
+        appendMsg(`Hi there! You've reached ${bizName}. How can we help you today?`, 'bot');
+      }
+
       document.getElementById('demo-input').focus();
     }
 
@@ -1332,10 +1416,10 @@
   function demoSend() {
     const input = document.getElementById('demo-input');
     const text = input.value.trim();
-    if (!text) return;
+    if (!text || input.disabled) return;
     input.value = '';
     appendMsg(text, 'customer');
-    botRespond(text);
+    botRespond(text);  // async — does not block
   }
 
   function initTradeGrid() {
