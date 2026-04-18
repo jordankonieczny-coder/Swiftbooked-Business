@@ -959,7 +959,13 @@
   </footer>
 
   <script>
-  // ─── Swiftbooked Demo Chatbot Engine ──────────────────────────────────────────
+  // ─── Swiftbooked Demo Chatbot Engine (Claude-powered) ────────────────────────
+
+  // Update this URL after deploying to Railway:
+  const SWIFTBOT_API = 'https://swiftbooked-bot-production.up.railway.app/api/chat';
+
+  // Fallback: use local server when developing
+  // const SWIFTBOT_API = 'http://localhost:3000/api/chat';
 
   const TRADES = [
     { key:'hvac',        label:'HVAC',               bizName:'Apex Heating & Cooling',
