@@ -181,6 +181,99 @@ const mailer = process.env.EMAIL_USER && process.env.EMAIL_PASS
     })
   : null;
 
+// ── Google OAuth ──────────────────────────────────────────────────────────────
+const BASE_URL = process.env.BASE_URL || "https://swiftbooked-business-production.up.railway.app";
+
+const googleOAuth = process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+  ? new google.auth.OAuth2(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      `${BASE_URL}/auth/google/callback`
+    )
+  : null;
+
+// Temporary in-memory store: state token → client signup info (expires after 1 hour)
+const oauthSessions = new Map();
+setInterval(() => {
+  const cutoff = Date.now() - 60 * 60 * 1000;
+  for (const [k, v] of oauthSessions) if (v.createdAt < cutoff) oauthSessions.delete(k);
+}, 10 * 60 * 1000);
+
+function generateState(data) {
+  const state = Math.random().toString(36).slice(2) + Date.now().toString(36);
+  oauthSessions.set(state, { ...data, createdAt: Date.now() });
+  return state;
+}
+
+// GET /auth/google?state=<token> — redirect client to Google consent screen
+app.get("/auth/google", (req, res) => {
+  if (!googleOAuth) return res.status(503).send("Google OAuth not configured.");
+  const { state } = req.query;
+  if (!state || !oauthSessions.has(state)) {
+    return res.status(400).send("Invalid or expired link. Please sign up again.");
+  }
+  const url = googleOAuth.generateAuthUrl({
+    access_type: "offline",
+    prompt: "consent",
+    scope: ["https://www.googleapis.com/auth/calendar.readonly", "https://www.googleapis.com/auth/calendar.events"],
+    state,
+  });
+  res.redirect(url);
+});
+
+// GET /auth/google/callback — Google redirects here after approval
+app.get("/auth/google/callback", async (req, res) => {
+  if (!googleOAuth) return res.status(503).send("Google OAuth not configured.");
+  const { code, state, error } = req.query;
+
+  if (error) return res.send(`<h2>Access denied.</h2><p>You can close this tab and try again, or contact Jordan at <a href="tel:5875687784">587-568-7784</a>.</p>`);
+
+  const session = oauthSessions.get(state);
+  if (!session) return res.status(400).send("Session expired. Please sign up again.");
+
+  try {
+    const { tokens } = await googleOAuth.getToken(code);
+    oauthSessions.delete(state);
+
+    // Notify Jordan with the tokens
+    if (mailer) {
+      await mailer.sendMail({
+        from: `"Swiftbooked" <${process.env.EMAIL_USER}>`,
+        to: process.env.OWNER_EMAIL,
+        subject: `✅ Google Calendar connected: ${session.business}`,
+        html: `
+<div style="font-family:Arial,sans-serif;max-width:500px;">
+  <h2 style="color:#16a34a;">Google Calendar Connected ✅</h2>
+  <p><strong>${session.name}</strong> (${session.business}) just authorized Google Calendar access.</p>
+  <table style="border-collapse:collapse;width:100%;font-size:0.9rem;">
+    <tr><td style="padding:6px 0;font-weight:700;width:140px;">Client email</td><td>${session.email}</td></tr>
+    <tr><td style="padding:6px 0;font-weight:700;">Business</td><td>${session.business}</td></tr>
+    <tr><td style="padding:6px 0;font-weight:700;">Trade</td><td>${session.trade}</td></tr>
+    <tr><td style="padding:6px 0;font-weight:700;">Refresh token</td><td style="word-break:break-all;font-size:0.8rem;">${tokens.refresh_token || "(no refresh token — ask client to re-authorize)"}</td></tr>
+    <tr><td style="padding:6px 0;font-weight:700;">Access token</td><td style="word-break:break-all;font-size:0.8rem;">${tokens.access_token}</td></tr>
+  </table>
+  <p style="color:#6b7280;font-size:0.85rem;margin-top:16px;">Save the refresh token — it's long-lived and lets you access their calendar anytime.</p>
+</div>`,
+      });
+    }
+
+    res.send(`
+<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>body{font-family:Arial,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f9fafb;}
+.box{max-width:420px;text-align:center;padding:40px 32px;background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.08);}
+h2{color:#16a34a;margin-bottom:8px;}p{color:#4b5563;line-height:1.6;}</style></head>
+<body><div class="box">
+<div style="font-size:3rem;">✅</div>
+<h2>Calendar connected!</h2>
+<p>Your Google Calendar is now linked to Swiftbooked. Jordan will have your AI bot live within 48 hours.</p>
+<p style="font-size:0.9rem;">Questions? Call or text <a href="tel:5875687784" style="color:#1a56db;">587-568-7784</a>.</p>
+</div></body></html>`);
+  } catch (err) {
+    console.error("[OAuth callback error]", err.message);
+    res.status(500).send("Something went wrong. Please contact Jordan at 587-568-7784.");
+  }
+});
+
 // ═════════════════════════════════════════════════════════════════════════════
 // POST /api/signup
 // ═════════════════════════════════════════════════════════════════════════════
