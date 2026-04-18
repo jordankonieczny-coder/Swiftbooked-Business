@@ -1416,10 +1416,10 @@
   function demoSend() {
     const input = document.getElementById('demo-input');
     const text = input.value.trim();
-    if (!text) return;
+    if (!text || input.disabled) return;
     input.value = '';
     appendMsg(text, 'customer');
-    botRespond(text);
+    botRespond(text);  // async — does not block
   }
 
   function initTradeGrid() {
