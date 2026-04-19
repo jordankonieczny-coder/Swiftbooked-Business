@@ -96,55 +96,99 @@
       margin: 0 auto;
     }
     .phone-frame {
-      width: 380px;
-      background: #111;
-      border-radius: 44px;
-      padding: 14px;
-      box-shadow: 0 40px 80px rgba(0,0,0,0.22), 0 0 0 2px #333;
+      width: 340px;
+      background: #0a0a0a;
+      border-radius: 52px;
+      padding: 12px;
+      box-shadow:
+        0 50px 100px rgba(0,0,0,0.35),
+        0 0 0 1px #2a2a2a,
+        inset 0 0 0 1px #3a3a3a;
       position: relative;
     }
+    /* Side buttons */
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      left: -3px;
+      top: 100px;
+      width: 3px;
+      height: 36px;
+      background: #2a2a2a;
+      border-radius: 2px 0 0 2px;
+      box-shadow: 0 50px 0 #2a2a2a, 0 96px 0 #2a2a2a;
+    }
+    .phone-frame::after {
+      content: '';
+      position: absolute;
+      right: -3px;
+      top: 130px;
+      width: 3px;
+      height: 64px;
+      background: #2a2a2a;
+      border-radius: 0 2px 2px 0;
+    }
     .phone-notch {
-      width: 100px;
-      height: 24px;
-      background: #111;
-      border-radius: 0 0 16px 16px;
+      width: 120px;
+      height: 32px;
+      background: #0a0a0a;
+      border-radius: 0 0 24px 24px;
       margin: 0 auto 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .phone-notch::before {
+      content: '';
+      width: 10px; height: 10px;
+      background: #1a1a1a;
+      border-radius: 50%;
+      border: 1px solid #333;
+    }
+    .phone-notch::after {
+      content: '';
+      width: 48px; height: 6px;
+      background: #1a1a1a;
+      border-radius: 4px;
     }
     .phone-screen {
       background: #fff;
-      border-radius: 32px;
+      border-radius: 42px;
       overflow: hidden;
     }
     .phone-home {
-      width: 100px;
+      width: 120px;
       height: 5px;
-      background: #444;
+      background: #333;
       border-radius: 3px;
-      margin: 8px auto 4px;
+      margin: 10px auto 6px;
     }
     .phone-frame .chat-window {
       border-radius: 0;
       border: none;
       box-shadow: none;
     }
-    .phone-frame .chat-body { max-height: 380px; }
+    .phone-frame .chat-body { max-height: 540px; }
 
     /* ── Demo layout ─────────────────────────────── */
     .demo-layout {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
+      grid-template-columns: 1fr auto;
+      gap: 56px;
       align-items: start;
-      max-width: 900px;
+      max-width: 1000px;
       margin: 0 auto;
     }
     .demo-left h3 { font-size: 1.3rem; margin-bottom: 8px; }
     .demo-left p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 20px; }
     .demo-trade-label { font-weight: 700; font-size: 0.85rem; margin-bottom: 10px; color: var(--text); }
-    @media (max-width: 700px) {
+    @media (max-width: 800px) {
       .demo-layout { grid-template-columns: 1fr; }
       .demo-left { order: 2; }
       .phone-wrap { order: 1; }
+      .phone-frame { width: 300px; }
+      .phone-frame .chat-body { max-height: 420px; }
     }
 
     /* ── Hero ────────────────────────────────────── */
