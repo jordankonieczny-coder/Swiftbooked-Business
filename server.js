@@ -323,46 +323,40 @@ app.post("/api/signup", async (req, res) => {
       </div>`
     : `<p><strong>5. Calendar app &amp; access</strong><br><span style="color:#6b7280;font-size:0.9rem;">Which calendar do you use? (Google Calendar, Apple Calendar, Outlook, Calendly, or other). We'll send you a secure connect link.</span></p>`;
 
-  // Email to customer — setup questionnaire
+  // Email to customer — setup questionnaire via Google Form
   const customerHtml = `
 <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;color:#111;">
   <div style="background:#1a56db;padding:28px 32px;border-radius:10px 10px 0 0;">
     <h1 style="color:#fff;margin:0;font-size:1.4rem;">Welcome to Swiftbooked, ${name.split(' ')[0]}!</h1>
-    <p style="color:rgba(255,255,255,0.85);margin:8px 0 0;font-size:0.95rem;">Your AI text bot is almost ready. We just need a few details.</p>
+    <p style="color:rgba(255,255,255,0.85);margin:8px 0 0;font-size:0.95rem;">Your AI text bot is almost ready. One quick form and you're done.</p>
   </div>
   <div style="background:#f9fafb;padding:28px 32px;border-radius:0 0 10px 10px;border:1px solid #e5e7eb;border-top:none;">
     <p style="margin-top:0;">Hi ${name},</p>
-    <p>We're setting up your Swiftbooked AI text bot for <strong>${business}</strong>. To get it live within 48 hours, please reply to this email with answers to the questions below.</p>
+    <p>We're setting up your Swiftbooked AI text bot for <strong>${business}</strong>. To get it live within 48 hours, fill out the short setup form below — it takes about 3 minutes.</p>
 
-    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:20px 24px;margin:20px 0;">
-      <h2 style="font-size:1rem;margin-top:0;color:#1a56db;">📋 Setup Questionnaire</h2>
-
-      <p><strong>1. Your services &amp; typical pricing</strong><br>
-      <span style="color:#6b7280;font-size:0.9rem;">List each service you offer and a typical price range. Example: "Furnace tune-up – $179, Service call fee – $120, AC install – $4,000–$6,000"</span></p>
-
-      <p><strong>2. Your service area</strong><br>
-      <span style="color:#6b7280;font-size:0.9rem;">Which cities, neighbourhoods, or postal codes do you cover?</span></p>
-
-      <p><strong>3. Your business hours</strong><br>
-      <span style="color:#6b7280;font-size:0.9rem;">When are you available for bookings? Do you offer after-hours or emergency service?</span></p>
-
-      <p><strong>4. Emergency contact</strong><br>
-      <span style="color:#6b7280;font-size:0.9rem;">If a customer has an urgent situation (e.g. burst pipe, no heat), what number should the AI tell them to call?</span></p>
-
-      ${calendarSection}
-
-      <p><strong>7. Custom Q&amp;A for your business</strong><br>
-      <span style="color:#6b7280;font-size:0.9rem;">List any questions your customers commonly ask and the exact answer you want the AI to give. The AI will use your exact wording instead of guessing.</span><br>
-      <span style="color:#6b7280;font-size:0.9rem;"><em>Example:<br>
-      Q: Do you treat mice? A: Yes — we use snap traps and bait stations only, no poison, so it's safe for pets and kids.<br>
-      Q: Do you offer a warranty? A: Yes, all work is guaranteed for 90 days.<br>
-      Q: Do you do same-day service? A: Yes, we often have same-day availability — ask and we'll check.</em></span></p>
-
-      <p><strong>8. Anything else the AI should know</strong><br>
-      <span style="color:#6b7280;font-size:0.9rem;">Warranties, payment methods, special offers, things you want the AI to always say or never say. Anything goes.</span></p>
+    <div style="text-align:center;margin:28px 0;">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScKpzHwAr-r3_Mwg8fsh-lRGeXnaJlZ8GQYE0Qbs1czr5Y3cQ/viewform"
+         style="display:inline-block;background:#1a56db;color:#fff;padding:16px 36px;border-radius:10px;text-decoration:none;font-weight:700;font-size:1.05rem;">
+        Fill Out Setup Form →
+      </a>
+      <p style="color:#6b7280;font-size:0.85rem;margin:12px 0 0;">Takes about 3 minutes · No account required</p>
     </div>
 
-    <p>Once we receive your answers, we'll configure your bot and have it live within <strong>48 hours</strong>. You'll get a test text to confirm everything is working before we go live.</p>
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:18px 24px;margin:20px 0;">
+      <p style="margin:0 0 10px;font-weight:700;font-size:0.95rem;color:#374151;">The form covers:</p>
+      <ul style="margin:0;padding-left:20px;color:#6b7280;font-size:0.9rem;line-height:1.9;">
+        <li>Your services &amp; pricing</li>
+        <li>Service area &amp; business hours</li>
+        <li>Emergency contact number</li>
+        <li>Calendar connection</li>
+        <li>Common customer Q&amp;A</li>
+        <li>Anything else the AI should know</li>
+      </ul>
+    </div>
+
+    ${calendarSection}
+
+    <p>Once you submit the form, we'll configure your bot and have it live within <strong>48 hours</strong>. You'll get a test text to confirm everything is working before we go live.</p>
     <p>Questions? Reply to this email or call/text Jordan directly at <a href="tel:5875687784" style="color:#1a56db;">587-568-7784</a>.</p>
     <p style="margin-bottom:0;">— Jordan Konieczny<br><span style="color:#6b7280;font-size:0.9rem;">Swiftbooked</span></p>
   </div>
