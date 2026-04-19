@@ -2155,7 +2155,7 @@ Which works best?</div>
   }
 
   function appendMsg(text, type) {
-    const body = document.getElementById('demo-chat-body');
+    const body = document.getElementById(activeChatBodyId);
     const el = document.createElement('div');
     el.className = `msg ${type}`;
     el.textContent = text;
@@ -2164,7 +2164,7 @@ Which works best?</div>
   }
 
   function showTyping() {
-    const body = document.getElementById('demo-chat-body');
+    const body = document.getElementById(activeChatBodyId);
     const el = document.createElement('div');
     el.className = 'msg bot typing-indicator';
     el.id = 'demo-typing';
