@@ -262,9 +262,8 @@ app.get("/auth/google/callback", async (req, res) => {
     oauthSessions.delete(state);
 
     // Notify Jordan with the tokens
-    if (mailer) {
-      await mailer.sendMail({
-        from: `"Swiftbooked" <${process.env.EMAIL_USER}>`,
+    if (resend) {
+      await sendEmail({
         to: process.env.OWNER_EMAIL,
         subject: `✅ Google Calendar connected: ${session.business}`,
         html: `
