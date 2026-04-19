@@ -645,18 +645,60 @@
       border-top: 1px solid var(--border);
     }
 
+    /* ── Why Different ───────────────────────────── */
+    .different { background: #0f172a; color: #fff; }
+    .different h2 { font-size: 2rem; text-align: center; margin-bottom: 12px; color: #fff; }
+    .different .sub { text-align: center; color: rgba(255,255,255,0.6); margin-bottom: 48px; font-size: 1.05rem; }
+    .diff-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .diff-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 28px 24px;
+    }
+    .diff-icon { font-size: 2rem; margin-bottom: 14px; }
+    .diff-card h3 { font-size: 1.05rem; color: #fff; margin-bottom: 8px; }
+    .diff-card p { color: rgba(255,255,255,0.6); font-size: 0.92rem; line-height: 1.7; margin: 0; }
+    .diff-vs {
+      display: flex; gap: 8px; margin-bottom: 10px; align-items: center;
+    }
+    .diff-vs .no { background: rgba(220,38,38,0.15); color: #f87171; border-radius: 6px; padding: 3px 10px; font-size: 0.8rem; font-weight: 700; }
+    .diff-vs .yes { background: rgba(22,163,74,0.2); color: #4ade80; border-radius: 6px; padding: 3px 10px; font-size: 0.8rem; font-weight: 700; }
+
     /* ── Responsive ──────────────────────────────── */
     @media (max-width: 640px) {
-      section { padding: 60px 20px; }
-      .hero { padding: 80px 20px 60px; }
-      .hero h1 { font-size: 1.8rem; }
-      .price-card { padding: 32px 24px; }
+      section { padding: 56px 16px; }
+      .hero { padding: 72px 16px 56px; }
+      .hero h1 { font-size: 1.65rem; }
+      .hero p.subtitle { font-size: 1rem; }
+      .price-card { padding: 32px 20px; }
       .nav-logo { height: 68px; }
+      .nav-inner { height: 80px; }
+      .nav-phone { display: none; }
       .sms-comparison { grid-template-columns: 1fr 1fr; }
       .sms-comp-label, .sms-comp-header:first-child { display: none; }
-      .sms-comp-header, .sms-comp-val { padding: 14px 12px; }
-      .stat-big { font-size: 1.5rem; }
-      .trade-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+      .sms-comp-header, .sms-comp-val { padding: 14px 10px; }
+      .stat-big { font-size: 1.4rem; }
+      .trade-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+      .stats { grid-template-columns: 1fr 1fr; gap: 20px; }
+      .stat-number { font-size: 1.8rem; }
+      .steps { grid-template-columns: 1fr; gap: 16px; }
+      .step { padding: 16px; text-align: left; display: flex; gap: 16px; align-items: flex-start; }
+      .step-num { flex-shrink: 0; margin-bottom: 0; }
+      .problem-grid { grid-template-columns: 1fr; }
+      .quotes { grid-template-columns: 1fr; }
+      .pricing-cards { grid-template-columns: 1fr; max-width: 100%; }
+      .free-banner { font-size: 0.88rem; padding: 12px 16px; }
+      .free-banner span { display: none; }
+      .diff-grid { grid-template-columns: 1fr; }
+      .faq-item summary { font-size: 0.95rem; }
+      .final-cta h2 { font-size: 1.6rem; }
     }
   </style>
 </head>
