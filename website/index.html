@@ -2177,8 +2177,8 @@ Which works best?</div>
 
   async function botRespond(userText) {
     showTyping();
-    const sendBtn = document.getElementById('demo-send');
-    const input = document.getElementById('demo-input');
+    const sendBtn = document.getElementById(activeSendBtnId);
+    const input = document.getElementById(activeChatInputId);
     if (sendBtn) sendBtn.disabled = true;
     if (input) input.disabled = true;
 
