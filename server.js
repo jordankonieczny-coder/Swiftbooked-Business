@@ -358,7 +358,7 @@ app.post("/api/signup", async (req, res) => {
       Q: Do you offer a warranty? A: Yes, all work is guaranteed for 90 days.<br>
       Q: Do you do same-day service? A: Yes, we often have same-day availability — ask and we'll check.</em></span></p>
 
-      <p><strong>9. Anything else the AI should know</strong><br>
+      <p><strong>8. Anything else the AI should know</strong><br>
       <span style="color:#6b7280;font-size:0.9rem;">Warranties, payment methods, special offers, things you want the AI to always say or never say. Anything goes.</span></p>
     </div>
 
