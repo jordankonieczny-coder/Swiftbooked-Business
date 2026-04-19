@@ -402,6 +402,52 @@ app.post("/api/signup", async (req, res) => {
 });
 
 // ═════════════════════════════════════════════════════════════════════════════
+// ADMIN — password protected client management
+// ═════════════════════════════════════════════════════════════════════════════
+function requireAdmin(req, res, next) {
+  const auth = req.headers.authorization || "";
+  const [scheme, encoded] = auth.split(" ");
+  if (scheme === "Basic" && encoded) {
+    const [, pass] = Buffer.from(encoded, "base64").toString().split(":");
+    if (pass === (process.env.ADMIN_PASSWORD || "swiftbooked")) return next();
+  }
+  res.set("WWW-Authenticate", 'Basic realm="Swiftbooked Admin"');
+  res.status(401).send("Unauthorized");
+}
+
+app.get("/admin", requireAdmin, (req, res) => {
+  res.sendFile(join(__dirname, "website", "admin.html"));
+});
+
+app.get("/api/admin/clients", requireAdmin, async (req, res) => {
+  const clients = await getAllClients();
+  res.json(clients);
+});
+
+app.post("/api/admin/clients", requireAdmin, async (req, res) => {
+  try {
+    const client = await createClient(req.body);
+    res.json(client);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.put("/api/admin/clients/:id", requireAdmin, async (req, res) => {
+  try {
+    const client = await updateClient(req.params.id, req.body);
+    res.json(client);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.delete("/api/admin/clients/:id", requireAdmin, async (req, res) => {
+  await deleteClient(req.params.id);
+  res.json({ success: true });
+});
+
+// ═════════════════════════════════════════════════════════════════════════════
 // GET /health
 // ═════════════════════════════════════════════════════════════════════════════
 app.get("/health", (req, res) => {
