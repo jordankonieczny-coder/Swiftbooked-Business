@@ -89,23 +89,37 @@ app.post("/api/chat", demoLimiter, async (req, res) => {
 // POST /webhook/sms — Twilio inbound SMS
 // ═════════════════════════════════════════════════════════════════════════════
 app.post("/webhook/sms", smsLimiter, async (req, res) => {
-  const { From: phone, Body: messageText } = req.body;
+  const { From: phone, Body: messageText, To: toNumber } = req.body;
 
   if (!phone || !messageText) {
     return res.type("text/xml").send("<Response/>");
   }
 
-  console.log(`[SMS in] ${phone}: "${messageText}"`);
+  console.log(`[SMS in] ${phone} → ${toNumber}: "${messageText}"`);
 
   try {
-    const result = await handleIncomingMessage(phone, messageText);
-    await sendSMS(phone, result.reply);
+    // Look up which client owns this Twilio number
+    const client = toNumber ? await getClientByNumber(toNumber) : null;
+    const config = client ? {
+      bizName:    client.business_name,
+      trade:      client.trade,
+      hours:      client.hours,
+      area:       client.service_area,
+      callout:    client.callout_fee,
+      job1:       client.job1,
+      job2:       client.job2,
+      faq:        client.faq,
+    } : null;
+
+    const result = await handleIncomingMessage(phone, messageText, null, config);
+    await sendSMSFrom(phone, result.reply, toNumber);
     res.type("text/xml").send("<Response/>");
   } catch (err) {
     console.error("[SMS webhook error]", err.message);
-    await sendSMS(
+    await sendSMSFrom(
       phone,
-      `Sorry, we're having a technical issue. Please call ${process.env.OWNER_PHONE || "587-568-7784"} directly.`
+      `Sorry, we're having a technical issue. Please call ${process.env.OWNER_PHONE || "587-568-7784"} directly.`,
+      toNumber
     );
     res.type("text/xml").send("<Response/>");
   }
