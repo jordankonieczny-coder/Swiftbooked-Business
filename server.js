@@ -506,6 +506,13 @@ function normalizePhone(raw) {
 
 // ── Start ─────────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
+
+if (process.env.DATABASE_URL) {
+  initDB().catch(err => console.error("[DB init error]", err.message));
+} else {
+  console.log("[DB] No DATABASE_URL — running without database");
+}
+
 app.listen(PORT, () => {
   console.log(`
 ╔══════════════════════════════════════════════════════╗
