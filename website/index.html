@@ -2454,7 +2454,7 @@ Which works best?</div>
       appendMsg(`Hi there! You've reached ${bizName}. How can we help you today?`, 'bot');
     }
 
-    document.getElementById(activeChatInputId).focus();
+    document.getElementById(activeChatInputId).focus({ preventScroll: true });
   }
 
   function showConfigStep(trade, customLabel) {
