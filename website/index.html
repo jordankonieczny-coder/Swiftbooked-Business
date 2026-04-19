@@ -2391,6 +2391,8 @@ Which works best?</div>
       document.getElementById('demo-input-row').style.display = 'flex';
       document.getElementById('demo-select-prompt').style.display = 'none';
       document.getElementById('demo-business-name').textContent = bizName;
+      const av = document.getElementById('ios-avatar');
+      if (av) av.textContent = bizName.split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase();
       document.getElementById('demo-chat-body').innerHTML = '';
 
       const tags = [];
