@@ -1029,32 +1029,50 @@ Which works best?</div>
   <section class="pricing" id="pricing">
     <div class="container">
       <h2>Simple pricing. No contracts.</h2>
-      <p class="sub">First month free. Then $199/mo — cancel anytime.</p>
-      <div class="pricing-cards">
+      <p class="sub">First month free on any plan. Cancel anytime.</p>
+      <div class="pricing-cards" style="max-width:760px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
 
-        <!-- Single plan -->
-        <div class="price-card featured">
-          <div class="badge" style="background:#16a34a; font-size:0.95rem; padding:6px 20px;">🎉 First Month Free</div>
-          <h3 style="margin-top:12px;">Swiftbooked</h3>
-          <div style="background:#f0fdf4; border:2px solid #16a34a; border-radius:10px; padding:12px 16px; margin:16px 0; text-align:center;">
-            <div style="font-size:1.1rem; font-weight:700; color:#16a34a;">Month 1: FREE</div>
-            <div style="font-size:0.85rem; color:#166534; margin-top:2px;">then renews automatically</div>
+        <!-- Starter plan -->
+        <div class="price-card">
+          <div class="badge" style="background:#16a34a; font-size:0.85rem; padding:5px 16px;">🎉 First Month Free</div>
+          <h3 style="margin-top:12px;">Essential</h3>
+          <div style="background:#f0fdf4; border:2px solid #16a34a; border-radius:10px; padding:10px 14px; margin:14px 0; text-align:center;">
+            <div style="font-size:1rem; font-weight:700; color:#16a34a;">Month 1: FREE</div>
+            <div style="font-size:0.8rem; color:#166534;">then renews automatically</div>
           </div>
           <div class="price">$199<span>/mo</span></div>
-          <div class="period">after your free first month</div>
+          <div class="period">Missed call recovery + SMS</div>
           <ul>
-            <li>AI text bot — responds in 30 seconds</li>
-            <li>Unlimited leads</li>
-            <li>24/7 coverage (nights + weekends)</li>
+            <li>AI text bot — responds in 30 sec</li>
             <li>Missed call auto-response</li>
-            <li>Web form &amp; website chat integration</li>
+            <li>Unlimited leads, 24/7 coverage</li>
             <li>Google, Apple, Outlook &amp; Calendly booking</li>
-            <li>CRM-style lead log &amp; history</li>
+            <li>CRM lead log &amp; history</li>
             <li>Email &amp; SMS notifications</li>
             <li>Full setup included</li>
+          </ul>
+          <a href="#signup" class="btn-primary" onclick="setSignupPlan('essential-199')" style="background:var(--text); ">Start Free</a>
+        </div>
+
+        <!-- Pro plan -->
+        <div class="price-card featured">
+          <div class="badge" style="background:#1a56db; font-size:0.85rem; padding:5px 16px;">⭐ Most Popular</div>
+          <h3 style="margin-top:12px;">Pro</h3>
+          <div style="background:#f0fdf4; border:2px solid #16a34a; border-radius:10px; padding:10px 14px; margin:14px 0; text-align:center;">
+            <div style="font-size:1rem; font-weight:700; color:#16a34a;">Month 1: FREE</div>
+            <div style="font-size:0.8rem; color:#166534;">then renews automatically</div>
+          </div>
+          <div class="price">$299<span>/mo</span></div>
+          <div class="period">Everything + website integration</div>
+          <ul>
+            <li><strong>Everything in Essential</strong></li>
+            <li>Website chatbot widget</li>
+            <li>Web form lead capture</li>
+            <li>Instant response to form submissions</li>
+            <li>Priority 24hr setup</li>
             <li>Priority support</li>
           </ul>
-          <a href="#signup" class="btn-primary" onclick="setSignupPlan('swiftbooked-199')">Start Free — No Credit Card</a>
+          <a href="#signup" class="btn-primary" onclick="setSignupPlan('pro-299')">Start Free</a>
         </div>
 
       </div>
