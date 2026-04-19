@@ -2212,32 +2212,38 @@ Which works best?</div>
     }
   }
 
-  function showConfigStep(trade, customLabel) {
-    // Pre-fill business name field
-    document.getElementById('cfg-bizname').value = customLabel || trade.bizName || '';
-    document.getElementById('demo-step-1').style.display = 'none';
-    document.getElementById('demo-step-config').style.display = 'block';
-    document.getElementById('demo-chat-body').innerHTML = '';
+  async function launchChat(trade, custom, customLabel) {
+    const bizName = custom.bizName || customLabel || trade.bizName;
 
-    async function launchChat(custom) {
-      const bizName = custom.bizName || customLabel || trade.bizName;
-
-      // Create a fresh session for this conversation
-      demoSession = {
-        id: newSessionId(),
-        trade,
+    demoSession = {
+      id: newSessionId(),
+      trade,
+      bizName,
+      config: {
         bizName,
-        config: {
-          bizName,
-          trade: trade.label,
-          callout: custom.callout || '',
-          job1:    custom.job1 || '',
-          job2:    custom.job2 || '',
-          area:    custom.area || '',
-          hours:   custom.hours || '',
-        },
-      };
+        trade: trade.label,
+        callout: custom.callout || '',
+        job1:    custom.job1 || '',
+        job2:    custom.job2 || '',
+        area:    custom.area || '',
+        hours:   custom.hours || '',
+      },
+    };
 
+    if (window.innerWidth <= 768) {
+      // Mobile: open fullscreen overlay
+      activeChatBodyId = 'mobile-chat-body';
+      activeChatInputId = 'mobile-chat-input';
+      activeSendBtnId   = 'mobile-chat-send';
+      document.getElementById('mobile-chat-biz-name').textContent = bizName;
+      document.getElementById('mobile-chat-body').innerHTML = '';
+      document.getElementById('mobile-chat-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Desktop: inline phone frame
+      activeChatBodyId = 'demo-chat-body';
+      activeChatInputId = 'demo-input';
+      activeSendBtnId   = 'demo-send';
       document.getElementById('demo-step-config').style.display = 'none';
       document.getElementById('demo-step-2-controls').style.display = 'block';
       document.getElementById('demo-input-row').style.display = 'flex';
@@ -2245,64 +2251,74 @@ Which works best?</div>
       document.getElementById('demo-business-name').textContent = bizName;
       document.getElementById('demo-chat-body').innerHTML = '';
 
-      // Show "knows" tags for whatever was configured
       const tags = [];
       if (custom.callout) tags.push('Your pricing');
       if (custom.job1 || custom.job2) tags.push('Your services');
       if (custom.area) tags.push('Your service area');
       if (custom.hours) tags.push('Your hours');
       if (tags.length > 0) {
-        const bar = document.getElementById('demo-knows-bar');
         const tagsEl = document.getElementById('demo-knows-tags');
         tagsEl.innerHTML = '<span style="font-size:0.78rem;font-weight:600;color:var(--text-muted);margin-right:4px;">Bot knows:</span>' +
           tags.map(t => `<span class="knows-tag">${t}</span>`).join('');
-        bar.style.display = 'block';
+        document.getElementById('demo-knows-bar').style.display = 'block';
       } else {
         document.getElementById('demo-knows-bar').style.display = 'none';
       }
-
-      // Get the opening greeting from Claude
-      showTyping();
-      try {
-        const res = await fetch(SWIFTBOT_API, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            sessionId: demoSession.id,
-            message: '__greeting__',
-            config: demoSession.config,
-          }),
-        });
-        const data = await res.json();
-        removeTyping();
-        if (data.reply) {
-          appendMsg(data.reply, 'bot');
-          demoSession.config = {}; // config sent, clear for future messages
-        } else {
-          appendMsg(`Hi there! You've reached ${bizName}. How can we help you today?`, 'bot');
-        }
-      } catch (e) {
-        removeTyping();
-        appendMsg(`Hi there! You've reached ${bizName}. How can we help you today?`, 'bot');
-      }
-
-      document.getElementById('demo-input').focus();
     }
 
+    showTyping();
+    try {
+      const res = await fetch(SWIFTBOT_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: demoSession.id,
+          message: '__greeting__',
+          config: demoSession.config,
+        }),
+      });
+      const data = await res.json();
+      removeTyping();
+      if (data.reply) {
+        appendMsg(data.reply, 'bot');
+        demoSession.config = {};
+      } else {
+        appendMsg(`Hi there! You've reached ${bizName}. How can we help you today?`, 'bot');
+      }
+    } catch (e) {
+      removeTyping();
+      appendMsg(`Hi there! You've reached ${bizName}. How can we help you today?`, 'bot');
+    }
+
+    document.getElementById(activeChatInputId).focus();
+  }
+
+  function showConfigStep(trade, customLabel) {
+    document.getElementById('cfg-bizname').value = customLabel || trade.bizName || '';
+    document.getElementById('demo-step-1').style.display = 'none';
+    document.getElementById('demo-step-config').style.display = 'block';
+    document.getElementById('demo-chat-body').innerHTML = '';
+
     document.getElementById('cfg-start').onclick = () => {
-      launchChat({
+      launchChat(trade, {
         bizName:  document.getElementById('cfg-bizname').value.trim(),
         callout:  document.getElementById('cfg-callout').value.trim(),
         job1:     document.getElementById('cfg-job1').value.trim(),
         area:     document.getElementById('cfg-area').value.trim(),
-      });
+      }, customLabel);
     };
 
-    document.getElementById('cfg-skip').onclick = () => launchChat({});
+    document.getElementById('cfg-skip').onclick = () => launchChat(trade, {}, customLabel);
   }
 
   function startDemoWithTrade(trade, customLabel) {
-    showConfigStep(trade, customLabel);
+    if (window.innerWidth <= 768) {
+      // Skip config on mobile — go straight to fullscreen chat
+      document.getElementById('demo-step-1').style.display = 'none';
+      launchChat(trade, {}, customLabel);
+    } else {
+      showConfigStep(trade, customLabel);
+    }
   }
 
   function demoSend() {
