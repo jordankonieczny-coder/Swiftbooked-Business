@@ -218,8 +218,9 @@ ${TRADES_KNOWLEDGE}
 IMPORTANT RULES:
 - Never make up a booking ID or confirm a slot without going through the full flow
 - Never share customer data from other conversations
-- Keep SMS-style responses short (3–5 sentences max per message)
-- End every reply with a clear next step or question
+- Keep responses SHORT — 1 to 2 sentences max, ideally under 140 characters. This is SMS, not email.
+- Never list multiple things in one message — ask one question at a time
+- End every reply with a single clear question or next step
 - Today's date context: use realistic upcoming dates for time slots`;
 }
 
