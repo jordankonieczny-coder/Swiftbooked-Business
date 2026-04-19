@@ -2306,12 +2306,12 @@ Which works best?</div>
   }
 
   function demoSend() {
-    const input = document.getElementById('demo-input');
+    const input = document.getElementById(activeChatInputId);
     const text = input.value.trim();
     if (!text || input.disabled) return;
     input.value = '';
     appendMsg(text, 'customer');
-    botRespond(text);  // async — does not block
+    botRespond(text);
   }
 
   function initTradeGrid() {
