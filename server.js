@@ -351,10 +351,7 @@ app.post("/api/signup", async (req, res) => {
 
       ${calendarSection}
 
-      <p><strong>7. Your dedicated AI number</strong><br>
-      <span style="color:#6b7280;font-size:0.9rem;">We'll assign you a local Edmonton number (587 or 780 area code) that your AI texts from. This is the number your customers will text when they miss your call — we handle the setup completely. No action needed from you on this one.</span></p>
-
-      <p><strong>8. Custom Q&amp;A for your business</strong><br>
+      <p><strong>7. Custom Q&amp;A for your business</strong><br>
       <span style="color:#6b7280;font-size:0.9rem;">List any questions your customers commonly ask and the exact answer you want the AI to give. The AI will use your exact wording instead of guessing.</span><br>
       <span style="color:#6b7280;font-size:0.9rem;"><em>Example:<br>
       Q: Do you treat mice? A: Yes — we use snap traps and bait stations only, no poison, so it's safe for pets and kids.<br>
