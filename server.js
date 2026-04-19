@@ -462,20 +462,22 @@ app.get("/health", (req, res) => {
 });
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-async function sendSMS(to, message) {
+async function sendSMSFrom(to, message, fromNumber) {
+  const from = fromNumber || process.env.TWILIO_PHONE_NUMBER;
   if (!twilioClient) {
-    console.log(`[SMS - not sent, no Twilio] → ${to}: "${message}"`);
+    console.log(`[SMS - not sent, no Twilio] ${from} → ${to}: "${message}"`);
     return;
   }
   const chunks = splitSMS(message);
   for (const chunk of chunks) {
-    await twilioClient.messages.create({
-      body: chunk,
-      from: process.env.TWILIO_PHONE_NUMBER,
-      to,
-    });
+    await twilioClient.messages.create({ body: chunk, from, to });
     if (chunks.length > 1) await new Promise((r) => setTimeout(r, 500));
   }
+}
+
+// Keep old name as alias so existing callers still work
+async function sendSMS(to, message) {
+  return sendSMSFrom(to, message, null);
 }
 
 function splitSMS(text, max = 155) {
