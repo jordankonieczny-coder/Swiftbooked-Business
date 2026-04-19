@@ -396,12 +396,12 @@ export async function handleChat(sessionId, userMessage, config = {}) {
 }
 
 // ── SMS handler (Twilio) ──────────────────────────────────────────────────────
-export async function handleIncomingMessage(phone, text, name = null) {
-  const config = {
+export async function handleIncomingMessage(phone, text, name = null, clientConfig = null) {
+  const config = clientConfig || {
     bizName: process.env.BUSINESS_NAME || "the business",
-    trade: process.env.BUSINESS_TYPE || "trades",
-    hours: process.env.BUSINESS_HOURS || "Mon–Fri 8am–5pm, Sat 9am–1pm",
-    area: process.env.SERVICE_AREA || "Edmonton and surrounding area",
+    trade:   process.env.BUSINESS_TYPE || "trades",
+    hours:   process.env.BUSINESS_HOURS || "Mon–Fri 8am–5pm, Sat 9am–1pm",
+    area:    process.env.SERVICE_AREA || "Edmonton and surrounding area",
   };
   if (name) config.customerName = name;
 
