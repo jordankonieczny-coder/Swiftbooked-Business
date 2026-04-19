@@ -1066,33 +1066,72 @@
   <!-- SMS vs Email Data Section -->
   <section class="sms-vs-email">
     <div class="container">
-      <h2>Why SMS? The data is overwhelming.</h2>
-      <p class="sub">Email is dead for time-sensitive leads. Your customers are already on their phones — Swiftbooked meets them there.</p>
+      <h2>Why SMS? The numbers don't lie.</h2>
+      <p class="sub">Email gets ignored. SMS gets read. For a time-sensitive lead, there's no comparison.</p>
 
-      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; max-width:860px; margin:0 auto 24px;">
+      <div style="max-width:720px; margin:0 auto 24px; border-radius:16px; overflow:hidden; border:1px solid var(--border); box-shadow:0 4px 24px rgba(0,0,0,0.06);">
 
-        <div style="background:#fff; border-radius:14px; padding:24px 20px; text-align:center; border:1px solid var(--border); box-shadow:0 2px 12px rgba(0,0,0,0.04);">
-          <div style="font-size:2.6rem; font-weight:800; color:var(--brand); line-height:1;">98%</div>
-          <div style="font-weight:700; font-size:0.95rem; margin:6px 0 4px;">Open Rate</div>
-          <div style="font-size:0.82rem; color:var(--text-muted);">vs 21% for email</div>
+        <!-- Header row -->
+        <div style="display:grid; grid-template-columns:1.6fr 1fr 1fr; background:var(--bg);">
+          <div style="padding:14px 20px; font-weight:700; font-size:0.9rem; color:var(--text-muted); border-bottom:2px solid var(--border);"></div>
+          <div style="padding:14px 20px; text-align:center; background:#eef4ff; border-bottom:2px solid var(--brand); border-left:1px solid var(--border);">
+            <span style="background:var(--brand); color:#fff; border-radius:20px; padding:5px 14px; font-size:0.82rem; font-weight:700; white-space:nowrap;">📱 SMS Text</span>
+          </div>
+          <div style="padding:14px 20px; text-align:center; background:var(--bg-off); border-bottom:2px solid var(--border); border-left:1px solid var(--border);">
+            <span style="background:#e5e7eb; color:var(--text-muted); border-radius:20px; padding:5px 14px; font-size:0.82rem; font-weight:700; white-space:nowrap;">📧 Email</span>
+          </div>
         </div>
 
-        <div style="background:#fff; border-radius:14px; padding:24px 20px; text-align:center; border:1px solid var(--border); box-shadow:0 2px 12px rgba(0,0,0,0.04);">
-          <div style="font-size:2.6rem; font-weight:800; color:var(--brand); line-height:1;">90%</div>
-          <div style="font-weight:700; font-size:0.95rem; margin:6px 0 4px;">Read in 3 Minutes</div>
-          <div style="font-size:0.82rem; color:var(--text-muted);">vs ~10% for email</div>
+        <!-- Row 1 -->
+        <div style="display:grid; grid-template-columns:1.6fr 1fr 1fr; border-bottom:1px solid var(--border);">
+          <div style="padding:18px 20px; font-weight:600; font-size:0.9rem; display:flex; align-items:center;">Open Rate</div>
+          <div style="padding:18px 20px; text-align:center; background:#eef4ff; border-left:1px solid var(--border); display:flex; flex-direction:column; align-items:center; gap:6px;">
+            <span style="font-size:1.8rem; font-weight:800; color:var(--brand); line-height:1;">98%</span>
+            <div style="width:80%; height:7px; background:#e5e7eb; border-radius:4px; overflow:hidden;"><div style="width:98%; height:100%; background:var(--brand); border-radius:4px;"></div></div>
+          </div>
+          <div style="padding:18px 20px; text-align:center; background:var(--bg-off); border-left:1px solid var(--border); display:flex; flex-direction:column; align-items:center; gap:6px;">
+            <span style="font-size:1.8rem; font-weight:800; color:var(--text-muted); line-height:1;">21%</span>
+            <div style="width:80%; height:7px; background:#e5e7eb; border-radius:4px; overflow:hidden;"><div style="width:21%; height:100%; background:#9ca3af; border-radius:4px;"></div></div>
+          </div>
         </div>
 
-        <div style="background:#fff; border-radius:14px; padding:24px 20px; text-align:center; border:1px solid var(--border); box-shadow:0 2px 12px rgba(0,0,0,0.04);">
-          <div style="font-size:2.6rem; font-weight:800; color:var(--brand); line-height:1;">45%</div>
-          <div style="font-weight:700; font-size:0.95rem; margin:6px 0 4px;">Response Rate</div>
-          <div style="font-size:0.82rem; color:var(--text-muted);">vs 6% for email</div>
+        <!-- Row 2 -->
+        <div style="display:grid; grid-template-columns:1.6fr 1fr 1fr; border-bottom:1px solid var(--border);">
+          <div style="padding:18px 20px; font-weight:600; font-size:0.9rem; display:flex; align-items:center;">Read Within 3 Min</div>
+          <div style="padding:18px 20px; text-align:center; background:#eef4ff; border-left:1px solid var(--border); display:flex; flex-direction:column; align-items:center; gap:6px;">
+            <span style="font-size:1.8rem; font-weight:800; color:var(--brand); line-height:1;">90%</span>
+            <div style="width:80%; height:7px; background:#e5e7eb; border-radius:4px; overflow:hidden;"><div style="width:90%; height:100%; background:var(--brand); border-radius:4px;"></div></div>
+          </div>
+          <div style="padding:18px 20px; text-align:center; background:var(--bg-off); border-left:1px solid var(--border); display:flex; flex-direction:column; align-items:center; gap:6px;">
+            <span style="font-size:1.8rem; font-weight:800; color:var(--text-muted); line-height:1;">10%</span>
+            <div style="width:80%; height:7px; background:#e5e7eb; border-radius:4px; overflow:hidden;"><div style="width:10%; height:100%; background:#9ca3af; border-radius:4px;"></div></div>
+          </div>
         </div>
 
-        <div style="background:#fff; border-radius:14px; padding:24px 20px; text-align:center; border:1px solid var(--border); box-shadow:0 2px 12px rgba(0,0,0,0.04);">
-          <div style="font-size:2.6rem; font-weight:800; color:var(--brand); line-height:1;">90s</div>
-          <div style="font-weight:700; font-size:0.95rem; margin:6px 0 4px;">Avg. Reply Time</div>
-          <div style="font-size:0.82rem; color:var(--text-muted);">vs 2.5 hrs for email</div>
+        <!-- Row 3 -->
+        <div style="display:grid; grid-template-columns:1.6fr 1fr 1fr; border-bottom:1px solid var(--border);">
+          <div style="padding:18px 20px; font-weight:600; font-size:0.9rem; display:flex; align-items:center;">Response Rate</div>
+          <div style="padding:18px 20px; text-align:center; background:#eef4ff; border-left:1px solid var(--border); display:flex; flex-direction:column; align-items:center; gap:6px;">
+            <span style="font-size:1.8rem; font-weight:800; color:var(--brand); line-height:1;">45%</span>
+            <div style="width:80%; height:7px; background:#e5e7eb; border-radius:4px; overflow:hidden;"><div style="width:45%; height:100%; background:var(--brand); border-radius:4px;"></div></div>
+          </div>
+          <div style="padding:18px 20px; text-align:center; background:var(--bg-off); border-left:1px solid var(--border); display:flex; flex-direction:column; align-items:center; gap:6px;">
+            <span style="font-size:1.8rem; font-weight:800; color:var(--text-muted); line-height:1;">6%</span>
+            <div style="width:80%; height:7px; background:#e5e7eb; border-radius:4px; overflow:hidden;"><div style="width:6%; height:100%; background:#9ca3af; border-radius:4px;"></div></div>
+          </div>
+        </div>
+
+        <!-- Row 4 -->
+        <div style="display:grid; grid-template-columns:1.6fr 1fr 1fr;">
+          <div style="padding:18px 20px; font-weight:600; font-size:0.9rem; display:flex; align-items:center;">Avg. Reply Time</div>
+          <div style="padding:18px 20px; text-align:center; background:#eef4ff; border-left:1px solid var(--border); display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:1.8rem; font-weight:800; color:var(--brand); line-height:1;">90 sec</span>
+            <span style="font-size:0.75rem; color:var(--brand); font-weight:600;">✓ Lead still interested</span>
+          </div>
+          <div style="padding:18px 20px; text-align:center; background:var(--bg-off); border-left:1px solid var(--border); display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <span style="font-size:1.8rem; font-weight:800; color:var(--text-muted); line-height:1;">2.5 hrs</span>
+            <span style="font-size:0.75rem; color:#ef4444; font-weight:600;">✗ They've moved on</span>
+          </div>
         </div>
 
       </div>
