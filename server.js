@@ -191,10 +191,19 @@ app.post("/webhook/lsa", async (req, res) => {
 // ── Email transporter ─────────────────────────────────────────────────────────
 const mailer = process.env.EMAIL_USER && process.env.EMAIL_PASS
   ? nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000,
     })
   : null;
+
+if (mailer) {
+  mailer.verify().then(() => console.log("[Email] Gmail SMTP connected")).catch(e => console.error("[Email] SMTP error:", e.message));
+}
 
 // ── Google OAuth ──────────────────────────────────────────────────────────────
 const BASE_URL = process.env.BASE_URL || "https://swiftbooked-business-production.up.railway.app";
