@@ -143,6 +143,12 @@ function buildSystemPrompt(config = {}) {
     customPricing += `\n- Always say "all pricing is confirmed on-site, no surprises"\n`;
   }
 
+  const customFaq = config.faq
+    ? `\nCUSTOM Q&A (use these exact answers — do NOT improvise or add to these):
+${config.faq}
+If a customer asks something covered above, use only the answer provided. Do not add extra information.\n`
+    : "";
+
   return `You are SwiftBot, an AI booking assistant for ${bizName}, a ${trade} company serving ${area}.
 
 You were built by Swiftbooked (swiftbooked.ca) — an AI service run by Jordan Konieczny (${ownerPhone}).
