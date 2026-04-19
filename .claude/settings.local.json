@@ -12,7 +12,8 @@
       "Bash(railway login *)",
       "Bash(railway list *)",
       "Bash(railway logs *)",
-      "Bash(railway up *)"
+      "Bash(railway up *)",
+      "Bash(curl -sf https://swiftbooked-business-production.up.railway.app/)"
     ]
   }
 }
