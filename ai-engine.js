@@ -325,7 +325,7 @@ export async function handleChat(sessionId, userMessage, config = {}) {
   // Handle greeting trigger from demo widget
   const isGreeting = userMessage === "__greeting__";
   const actualMessage = isGreeting
-    ? `Please send a warm, natural opening greeting for ${session.config.bizName || "the business"} introducing yourself and asking how you can help. Keep it to 1–2 sentences.`
+    ? `Send a warm, natural opening text message as ${session.config.bizName || "the business"}. Say something like "Hi, this is [business name] — how can we help you today?" Keep it to 1 sentence. Do not mention SwiftBot or Swiftbooked.`
     : userMessage;
 
   // Add user message
