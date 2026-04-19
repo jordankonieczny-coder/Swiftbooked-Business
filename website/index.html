@@ -2397,8 +2397,10 @@ Which works best?</div>
     document.getElementById('mobile-chat-send').addEventListener('click', demoSend);
     document.getElementById('mobile-chat-input').addEventListener('keydown', e => { if(e.key==='Enter') demoSend(); });
     document.getElementById('mobile-chat-back').addEventListener('click', () => {
-      document.getElementById('mobile-chat-overlay').classList.remove('open');
-      document.body.style.overflow = '';
+      const overlay = document.getElementById('mobile-chat-overlay');
+      overlay.classList.remove('open');
+      overlay.style.height = '';
+      overlay.style.top = '';
       activeChatBodyId = 'demo-chat-body';
       activeChatInputId = 'demo-input';
       activeSendBtnId   = 'demo-send';
