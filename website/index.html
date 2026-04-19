@@ -2690,6 +2690,18 @@ Which works best?</div>
     }, 3000);
   })();
 
+  // ─── iOS clock: show real time in phone status bar ───────────────────────────────
+  (function() {
+    function updateClock() {
+      const el = document.getElementById('ios-clock');
+      if (!el) return;
+      const now = new Date();
+      el.textContent = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+    }
+    updateClock();
+    setInterval(updateClock, 30000);
+  })();
+
   // ─── iOS keyboard fix: shrink overlay when keyboard appears ─────────────────────
   (function() {
     if (!window.visualViewport) return;
