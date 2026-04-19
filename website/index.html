@@ -1918,6 +1918,11 @@ Which works best?</div>
       services:[], emergencyHints:[], isOther:true }
   ];
 
+  // Active chat target IDs — swapped to mobile overlay when on small screens
+  let activeChatBodyId = 'demo-chat-body';
+  let activeChatInputId = 'demo-input';
+  let activeSendBtnId   = 'demo-send';
+
   // Session state — one session per demo conversation
   let demoSession = {
     id: null,       // unique session ID sent to API
