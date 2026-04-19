@@ -1247,6 +1247,7 @@
     /* ── Demo: phone on mobile — scaled down with tap overlay ─ */
     @media (max-width: 768px) {
       .demo .phone-wrap { display: flex; order: 1; pointer-events: none; }
+      .demo .phone-wrap .mobile-tap-overlay { pointer-events: auto; }
       .demo .phone-wrap .phone-frame { transform: scale(0.72); transform-origin: top center; margin-bottom: -120px; }
       .mobile-tap-overlay { display: flex !important; }
       .demo-layout { display: block !important; }
