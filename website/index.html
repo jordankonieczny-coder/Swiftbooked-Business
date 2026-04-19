@@ -2272,6 +2272,7 @@ Which works best?</div>
     document.getElementById('demo-send').addEventListener('click', demoSend);
     document.getElementById('demo-input').addEventListener('keydown', e => { if(e.key==='Enter') demoSend(); });
     document.getElementById('demo-reset').addEventListener('click', () => {
+      // Show trade picker, reset config fields
       document.getElementById('demo-step-config').style.display = 'none';
       document.getElementById('demo-step-1').style.display = 'block';
       document.getElementById('demo-step-2-controls').style.display = 'none';
@@ -2281,7 +2282,6 @@ Which works best?</div>
       document.getElementById('demo-input-row').style.display = 'none';
       document.getElementById('demo-select-prompt').style.display = 'block';
       document.getElementById('demo-business-name').textContent = 'Apex Heating & Cooling';
-      // Restore example conversation
       document.getElementById('demo-chat-body').innerHTML = `
         <div class="msg customer">Hey my furnace stopped working, it's freezing in here</div>
         <div class="msg bot">That sounds urgent — we'll get someone out as fast as possible. What's your address?</div>
