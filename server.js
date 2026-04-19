@@ -189,22 +189,23 @@ app.post("/webhook/lsa", async (req, res) => {
 });
 
 // ── Email transporter ─────────────────────────────────────────────────────────
-const mailer = process.env.EMAIL_USER && process.env.EMAIL_PASS
-  ? nodemailer.createTransport({
-      host: "74.125.133.108",
-      port: 587,
-      secure: false,
-      tls: { servername: "smtp.gmail.com" },
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 15000,
-    })
-  : null;
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
-if (mailer) {
-  mailer.verify().then(() => console.log("[Email] Gmail SMTP connected")).catch(e => console.error("[Email] SMTP error:", e.message));
+async function sendEmail({ to, subject, html }) {
+  if (!resend) {
+    console.log(`[Email - not configured] To: ${to} | Subject: ${subject}`);
+    return;
+  }
+  const { error } = await resend.emails.send({
+    from: "Swiftbooked <onboarding@resend.dev>",
+    to,
+    subject,
+    html,
+  });
+  if (error) throw new Error(error.message);
 }
+
+if (resend) console.log("[Email] Resend configured");
 
 // ── Google OAuth ──────────────────────────────────────────────────────────────
 const BASE_URL = process.env.BASE_URL || "https://swiftbooked-business-production.up.railway.app";
