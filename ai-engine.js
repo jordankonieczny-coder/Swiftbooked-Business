@@ -158,7 +158,7 @@ Respond to leads, answer their questions, and book them an appointment — all v
 
 BUSINESS HOURS: ${hours}
 SERVICE AREA: ${area}
-${customPricing}
+${customPricing}${customFaq}
 
 YOUR PERSONALITY:
 - Friendly, local, and knowledgeable — you know Edmonton well
