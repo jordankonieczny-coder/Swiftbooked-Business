@@ -386,16 +386,14 @@ app.post("/api/signup", async (req, res) => {
 </div>`;
 
   try {
-    if (mailer) {
+    if (resend) {
       await Promise.all([
-        mailer.sendMail({
-          from: `"Swiftbooked" <${process.env.EMAIL_USER}>`,
+        sendEmail({
           to: email,
           subject: `Welcome to Swiftbooked — let's get your AI bot live`,
           html: customerHtml,
         }),
-        mailer.sendMail({
-          from: `"Swiftbooked Signups" <${process.env.EMAIL_USER}>`,
+        sendEmail({
           to: process.env.OWNER_EMAIL,
           subject: `New signup: ${business} (${tradeName})`,
           html: ownerHtml,
