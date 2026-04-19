@@ -2020,6 +2020,17 @@ Which works best?</div>
     });
   });
 
+  // ─── Sticky CTA hide when signup is visible ───────────────────────────────────
+  (function() {
+    const stickyCta = document.getElementById('sticky-cta');
+    const signup = document.getElementById('signup');
+    if (!stickyCta || !signup) return;
+    const obs = new IntersectionObserver(entries => {
+      stickyCta.style.display = entries[0].isIntersecting ? 'none' : '';
+    }, { threshold: 0.1 });
+    obs.observe(signup);
+  })();
+
   // ─── Form submission ──────────────────────────────────────────────────────────
 
   document.getElementById('signup-form').addEventListener('submit', async function(e) {
