@@ -284,10 +284,13 @@
     .how h2 { font-size: 2rem; text-align: center; margin-bottom: 48px; }
     .steps {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 32px;
-      max-width: 900px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      max-width: 960px;
       margin: 0 auto;
+    }
+    @media (max-width: 800px) {
+      .steps { grid-template-columns: repeat(2, 1fr); }
     }
     .step { text-align: center; padding: 24px; }
     .step-num {
