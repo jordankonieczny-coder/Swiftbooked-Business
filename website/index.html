@@ -2233,6 +2233,110 @@ Which works best?</div>
     });
   });
 
+  // ─── Floating Widget Demo ─────────────────────────────────────────────────────
+  (function() {
+    const btn = document.getElementById('widget-btn');
+    const win = document.getElementById('widget-window');
+    const closeBtn = document.getElementById('widget-close');
+    const body = document.getElementById('widget-body');
+    const input = document.getElementById('widget-input');
+    const sendBtn = document.getElementById('widget-send');
+    let widgetSessionId = null;
+    let widgetOpened = false;
+
+    function wAppend(text, type) {
+      const el = document.createElement('div');
+      el.className = 'widget-msg ' + type;
+      el.textContent = text;
+      body.appendChild(el);
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function wTyping(show) {
+      const existing = document.getElementById('widget-typing');
+      if (show && !existing) {
+        const el = document.createElement('div');
+        el.className = 'widget-typing'; el.id = 'widget-typing';
+        el.innerHTML = '<span></span><span></span><span></span>';
+        body.appendChild(el);
+        body.scrollTop = body.scrollHeight;
+      } else if (!show && existing) { existing.remove(); }
+    }
+
+    async function wSend(text) {
+      if (!text.trim()) return;
+      input.value = '';
+      wAppend(text, 'user');
+      input.disabled = true; sendBtn.disabled = true;
+      wTyping(true);
+      try {
+        const res = await fetch(SWIFTBOT_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId: widgetSessionId,
+            message: text,
+            config: { bizName: 'Swiftbooked Demo', trade: 'HVAC' }
+          })
+        });
+        const data = await res.json();
+        wTyping(false);
+        if (data.reply) wAppend(data.reply, 'bot');
+      } catch(e) {
+        wTyping(false);
+        wAppend("Connection issue — please try again or call 587-568-7784.", 'bot');
+      } finally {
+        input.disabled = false; sendBtn.disabled = false; input.focus();
+      }
+    }
+
+    async function openWidget() {
+      win.classList.add('open');
+      // Auto-close sticky CTA on desktop too
+      const stickyCta = document.getElementById('sticky-cta');
+      if (window.innerWidth <= 768 && stickyCta) stickyCta.style.bottom = '180px';
+      if (widgetOpened) return;
+      widgetOpened = true;
+      widgetSessionId = 'widget_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+      wTyping(true);
+      try {
+        const res = await fetch(SWIFTBOT_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId: widgetSessionId,
+            message: '__greeting__',
+            config: { bizName: 'Swiftbooked Demo', trade: 'General' }
+          })
+        });
+        const data = await res.json();
+        wTyping(false);
+        wAppend(data.reply || "Hi there! I'm the Swiftbooked AI. Ask me anything about a home service, pricing, or scheduling.", 'bot');
+      } catch(e) {
+        wTyping(false);
+        wAppend("Hi there! I'm the Swiftbooked AI. What can I help you with today?", 'bot');
+      }
+    }
+
+    function closeWidget() {
+      win.classList.remove('open');
+      const stickyCta = document.getElementById('sticky-cta');
+      if (stickyCta) stickyCta.style.bottom = '';
+    }
+
+    btn.addEventListener('click', () => {
+      win.classList.contains('open') ? closeWidget() : openWidget();
+    });
+    closeBtn.addEventListener('click', closeWidget);
+    sendBtn.addEventListener('click', () => wSend(input.value));
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') wSend(input.value); });
+
+    // Show the widget button after 3 seconds with a subtle bounce
+    setTimeout(() => {
+      btn.style.animation = 'widgetBounce 0.6s ease';
+    }, 3000);
+  })();
+
   // ─── Sticky CTA hide when signup is visible ───────────────────────────────────
   (function() {
     const stickyCta = document.getElementById('sticky-cta');
