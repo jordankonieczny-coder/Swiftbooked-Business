@@ -17,6 +17,7 @@ import twilio from "twilio";
 import nodemailer from "nodemailer";
 import { google } from "googleapis";
 import { handleChat, handleIncomingMessage } from "./ai-engine.js";
+import { initDB, getClientByNumber, getAllClients, createClient, updateClient, deleteClient } from "./db.js";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
