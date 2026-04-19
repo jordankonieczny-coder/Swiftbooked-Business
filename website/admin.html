@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swiftbooked Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f9fafb; color: #111827; font-size: 0.9rem; }
+    header { background: #1a56db; color: #fff; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+    header h1 { font-size: 1.1rem; font-weight: 700; }
+    header span { font-size: 0.8rem; opacity: 0.8; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .toolbar h2 { font-size: 1.1rem; }
+    .btn { padding: 9px 18px; border-radius: 8px; border: none; font-family: inherit; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+    .btn-primary { background: #1a56db; color: #fff; }
+    .btn-primary:hover { background: #1342a8; }
+    .btn-danger { background: #fee2e2; color: #dc2626; }
+    .btn-danger:hover { background: #fecaca; }
+    .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+    .btn-secondary { background: #e5e7eb; color: #374151; }
+    .btn-secondary:hover { background: #d1d5db; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 8px rgba(0,0,0,0.06); }
+    th { background: #f3f4f6; text-align: left; padding: 12px 16px; font-size: 0.8rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.04em; }
+    td { padding: 12px 16px; border-top: 1px solid #f3f4f6; vertical-align: middle; }
+    tr:hover td { background: #f9fafb; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    .badge-active { background: #d1fae5; color: #065f46; }
+    .badge-inactive { background: #f3f4f6; color: #6b7280; }
+    .badge-pro { background: #dbeafe; color: #1e40af; }
+    .badge-essential { background: #f3f4f6; color: #374151; }
+    .actions { display: flex; gap: 8px; }
+    /* Modal */
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+    .overlay.open { display: flex; }
+    .modal { background: #fff; border-radius: 14px; width: 100%; max-width: 620px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+    .modal-header { padding: 20px 24px 0; display: flex; justify-content: space-between; align-items: center; }
+    .modal-header h3 { font-size: 1.05rem; }
+    .modal-close { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: #9ca3af; line-height: 1; }
+    .modal-body { padding: 20px 24px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field.full { grid-column: 1 / -1; }
+    label { font-weight: 600; font-size: 0.8rem; color: #374151; }
+    input, select, textarea { padding: 9px 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: inherit; font-size: 0.88rem; outline: none; transition: border-color 0.15s; width: 100%; }
+    input:focus, select:focus, textarea:focus { border-color: #1a56db; }
+    textarea { resize: vertical; min-height: 80px; }
+    .modal-footer { padding: 0 24px 20px; display: flex; gap: 10px; justify-content: flex-end; }
+    .empty { text-align: center; padding: 48px; color: #9ca3af; }
+    .toast { position: fixed; bottom: 24px; right: 24px; background: #111827; color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 0.88rem; font-weight: 600; z-index: 200; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Swiftbooked Admin</h1>
+  <span>Client Management</span>
+</header>
+
+<div class="container">
+  <div class="toolbar">
+    <h2>Clients</h2>
+    <button class="btn btn-primary" onclick="openModal()">+ Add Client</button>
+  </div>
+
+  <table id="clients-table">
+    <thead>
+      <tr>
+        <th>Business</th>
+        <th>Trade</th>
+        <th>Twilio Number</th>
+        <th>Owner</th>
+        <th>Plan</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="clients-body">
+      <tr><td colspan="7" class="empty">Loading...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">Add Client</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-id">
+
+      <div class="field">
+        <label>Business Name *</label>
+        <input type="text" id="f-business_name" placeholder="Dave's Plumbing">
+      </div>
+      <div class="field">
+        <label>Trade *</label>
+        <select id="f-trade">
+          <option value="hvac">HVAC</option>
+          <option value="plumbing">Plumbing</option>
+          <option value="electrical">Electrical</option>
+          <option value="roofing">Roofing</option>
+          <option value="landscaping">Landscaping</option>
+          <option value="contracting">General Contracting</option>
+          <option value="painting">Painting</option>
+          <option value="appliance">Appliance Repair</option>
+          <option value="garage">Garage Doors</option>
+          <option value="pest">Pest Control</option>
+          <option value="cleaning">Cleaning Services</option>
+          <option value="flooring">Flooring</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Twilio Number * (format: +15871234567)</label>
+        <input type="text" id="f-twilio_number" placeholder="+15871234567">
+      </div>
+      <div class="field">
+        <label>Plan</label>
+        <select id="f-plan">
+          <option value="essential">Essential — $199/mo</option>
+          <option value="pro">Pro — $299/mo</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Business Hours</label>
+        <input type="text" id="f-hours" placeholder="Mon–Sat 8am–6pm, emergency service available">
+      </div>
+      <div class="field">
+        <label>Service Area</label>
+        <input type="text" id="f-service_area" placeholder="Edmonton and Sherwood Park">
+      </div>
+      <div class="field">
+        <label>Service Call Fee</label>
+        <input type="text" id="f-callout_fee" placeholder="$120">
+      </div>
+      <div class="field">
+        <label>Common Job #1 &amp; Price</label>
+        <input type="text" id="f-job1" placeholder="Furnace tune-up — $179">
+      </div>
+      <div class="field full">
+        <label>Common Job #2 &amp; Price</label>
+        <input type="text" id="f-job2" placeholder="AC install — $4,000–$6,000">
+      </div>
+      <div class="field full">
+        <label>Custom Q&amp;A (one per line: Q: ... A: ...)</label>
+        <textarea id="f-faq" placeholder="Q: Do you offer same-day service? A: Yes, we often have same-day availability.&#10;Q: Are you licensed? A: Yes, fully licensed and insured."></textarea>
+      </div>
+      <div class="field">
+        <label>Owner Name</label>
+        <input type="text" id="f-owner_name" placeholder="Dave Smith">
+      </div>
+      <div class="field">
+        <label>Owner Email</label>
+        <input type="email" id="f-owner_email" placeholder="dave@davesplumbing.ca">
+      </div>
+      <div class="field">
+        <label>Owner Phone</label>
+        <input type="text" id="f-owner_phone" placeholder="+17801234567">
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <select id="f-active">
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveClient()">Save Client</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let clients = [];
+  let editingId = null;
+
+  async function loadClients() {
+    const res = await fetch('/api/admin/clients');
+    clients = await res.json();
+    renderTable();
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('clients-body');
+    if (!clients.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty">No clients yet. Click "Add Client" to get started.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = clients.map(c => `
+      <tr>
+        <td><strong>${c.business_name}</strong></td>
+        <td>${c.trade}</td>
+        <td style="font-family:monospace;font-size:0.82rem;">${c.twilio_number}</td>
+        <td>${c.owner_name || '—'}<br><span style="color:#9ca3af;font-size:0.78rem;">${c.owner_phone || ''}</span></td>
+        <td><span class="badge badge-${c.plan}">${c.plan}</span></td>
+        <td><span class="badge ${c.active ? 'badge-active' : 'badge-inactive'}">${c.active ? 'Active' : 'Inactive'}</span></td>
+        <td>
+          <div class="actions">
+            <button class="btn btn-secondary btn-sm" onclick="editClient(${c.id})">Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteClientById(${c.id}, '${c.business_name.replace(/'/g,"\\'")}')">Delete</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function openModal(id = null) {
+    editingId = id;
+    document.getElementById('modal-title').textContent = id ? 'Edit Client' : 'Add Client';
+    if (!id) clearForm();
+    document.getElementById('overlay').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('overlay').classList.remove('open');
+    editingId = null;
+  }
+
+  function clearForm() {
+    ['business_name','twilio_number','hours','service_area','callout_fee','job1','job2','faq','owner_name','owner_email','owner_phone'].forEach(f => {
+      document.getElementById('f-' + f).value = '';
+    });
+    document.getElementById('f-trade').value = 'plumbing';
+    document.getElementById('f-plan').value = 'essential';
+    document.getElementById('f-active').value = 'true';
+  }
+
+  function editClient(id) {
+    const c = clients.find(x => x.id === id);
+    if (!c) return;
+    document.getElementById('f-business_name').value = c.business_name || '';
+    document.getElementById('f-trade').value = c.trade || 'other';
+    document.getElementById('f-twilio_number').value = c.twilio_number || '';
+    document.getElementById('f-plan').value = c.plan || 'essential';
+    document.getElementById('f-hours').value = c.hours || '';
+    document.getElementById('f-service_area').value = c.service_area || '';
+    document.getElementById('f-callout_fee').value = c.callout_fee || '';
+    document.getElementById('f-job1').value = c.job1 || '';
+    document.getElementById('f-job2').value = c.job2 || '';
+    document.getElementById('f-faq').value = c.faq || '';
+    document.getElementById('f-owner_name').value = c.owner_name || '';
+    document.getElementById('f-owner_email').value = c.owner_email || '';
+    document.getElementById('f-owner_phone').value = c.owner_phone || '';
+    document.getElementById('f-active').value = c.active ? 'true' : 'false';
+    openModal(id);
+  }
+
+  async function saveClient() {
+    const data = {
+      business_name: document.getElementById('f-business_name').value.trim(),
+      trade:         document.getElementById('f-trade').value,
+      twilio_number: document.getElementById('f-twilio_number').value.trim(),
+      plan:          document.getElementById('f-plan').value,
+      hours:         document.getElementById('f-hours').value.trim(),
+      service_area:  document.getElementById('f-service_area').value.trim(),
+      callout_fee:   document.getElementById('f-callout_fee').value.trim(),
+      job1:          document.getElementById('f-job1').value.trim(),
+      job2:          document.getElementById('f-job2').value.trim(),
+      faq:           document.getElementById('f-faq').value.trim(),
+      owner_name:    document.getElementById('f-owner_name').value.trim(),
+      owner_email:   document.getElementById('f-owner_email').value.trim(),
+      owner_phone:   document.getElementById('f-owner_phone').value.trim(),
+      active:        document.getElementById('f-active').value === 'true',
+    };
+
+    if (!data.business_name || !data.twilio_number) {
+      showToast('Business name and Twilio number are required.'); return;
+    }
+
+    const url = editingId ? `/api/admin/clients/${editingId}` : '/api/admin/clients';
+    const method = editingId ? 'PUT' : 'POST';
+
+    const res = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    if (res.ok) {
+      closeModal();
+      await loadClients();
+      showToast(editingId ? 'Client updated.' : 'Client added.');
+    } else {
+      const err = await res.json();
+      showToast('Error: ' + err.error);
+    }
+  }
+
+  async function deleteClientById(id, name) {
+    if (!confirm(`Delete ${name}? This cannot be undone.`)) return;
+    await fetch(`/api/admin/clients/${id}`, { method: 'DELETE' });
+    await loadClients();
+    showToast('Client deleted.');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  document.getElementById('overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('overlay')) closeModal();
+  });
+
+  loadClients();
+</script>
+</body>
+</html>
