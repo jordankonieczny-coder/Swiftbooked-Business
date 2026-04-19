@@ -1713,13 +1713,15 @@ Which works best?</div>
 
   function setSignupPlan(plan) {
     document.getElementById('hidden-plan').value = plan;
-    // Update visible radio UI
-    ['starter-199','pro-299','growth-499'].forEach(p => {
+    ['essential-199','pro-299'].forEach(p => {
       const key = p.split('-')[0];
       const label = document.getElementById('plan-label-' + key);
-      if (label) label.style.borderColor = (p === plan) ? 'var(--brand)' : 'var(--border)';
-      const radio = label ? label.querySelector('input') : null;
-      if (radio) radio.checked = (p === plan);
+      if (!label) return;
+      const isSelected = (p === plan);
+      label.style.borderColor = isSelected ? 'var(--brand)' : 'var(--border)';
+      label.style.background = isSelected ? 'var(--brand-light)' : '';
+      const radio = label.querySelector('input');
+      if (radio) radio.checked = isSelected;
     });
   }
 
