@@ -329,7 +329,14 @@ app.post("/api/signup", async (req, res) => {
       <p><strong>7. Your AI phone number preference</strong><br>
       <span style="color:#6b7280;font-size:0.9rem;">Do you want the AI to text from a new local number we provide, or forward from your existing business number?</span></p>
 
-      <p><strong>8. Anything else the AI should know</strong><br>
+      <p><strong>8. Custom Q&amp;A for your business</strong><br>
+      <span style="color:#6b7280;font-size:0.9rem;">List any questions your customers commonly ask and the exact answer you want the AI to give. The AI will use your exact wording instead of guessing.</span><br>
+      <span style="color:#6b7280;font-size:0.9rem;"><em>Example:<br>
+      Q: Do you treat mice? A: Yes — we use snap traps and bait stations only, no poison, so it's safe for pets and kids.<br>
+      Q: Do you offer a warranty? A: Yes, all work is guaranteed for 90 days.<br>
+      Q: Do you do same-day service? A: Yes, we often have same-day availability — ask and we'll check.</em></span></p>
+
+      <p><strong>9. Anything else the AI should know</strong><br>
       <span style="color:#6b7280;font-size:0.9rem;">Warranties, payment methods, special offers, things you want the AI to always say or never say. Anything goes.</span></p>
     </div>
 
