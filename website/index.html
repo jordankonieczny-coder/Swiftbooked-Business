@@ -1085,6 +1085,90 @@
       .final-cta h2 { font-size: 1.6rem; }
       .quote-outcome { font-size: 0.95rem; }
       .problem-loss { font-size: 1.2rem; }
+      .demo h2 { font-size: 1.5rem; }
+      .demo .sub { font-size: 0.92rem; }
+      .trade-btn { padding: 13px 10px; font-size: 0.9rem; }
+    }
+
+    /* ── SMS vs Email grid: stack on mobile ─────────────── */
+    @media (max-width: 560px) {
+      .sms-grid { grid-template-columns: 1fr !important; max-width: 320px !important; }
+    }
+
+    /* ── Demo: hide phone frame on mobile ─────────────────── */
+    @media (max-width: 768px) {
+      .demo .phone-wrap { display: none; }
+      .demo-layout { display: block !important; }
+      .demo-left h3 { font-size: 1.1rem; }
+    }
+
+    /* ── Mobile Full-Screen Chat ──────────────────────────── */
+    .mobile-chat-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      z-index: 500;
+      flex-direction: column;
+      overscroll-behavior: contain;
+    }
+    .mobile-chat-overlay.open { display: flex; }
+    .mobile-chat-topbar {
+      background: var(--brand);
+      color: #fff;
+      padding: 14px 16px;
+      padding-top: max(14px, env(safe-area-inset-top));
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .mobile-chat-back {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 4px 10px 4px 0;
+      line-height: 1;
+      flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .mobile-chat-title { flex: 1; }
+    .mobile-chat-title .mchat-name { font-weight: 700; font-size: 0.95rem; display: block; }
+    .mobile-chat-title .mchat-sub { font-size: 0.75rem; opacity: 0.8; display: block; margin-top: 1px; }
+    .mobile-chat-dot {
+      width: 10px; height: 10px;
+      background: #4ade80;
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(74,222,128,0.3);
+      flex-shrink: 0;
+    }
+    .mobile-chat-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .mobile-chat-input-wrap {
+      display: flex;
+      gap: 8px;
+      padding: 10px 12px;
+      padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+      border-top: 1px solid var(--border);
+      background: #fff;
+      flex-shrink: 0;
+    }
+    .mobile-chat-footer {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      padding: 6px 0 8px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
     }
   </style>
 </head>
