@@ -2545,6 +2545,20 @@ Which works best?</div>
     }, 3000);
   })();
 
+  // ─── iOS keyboard fix: shrink overlay when keyboard appears ─────────────────────
+  (function() {
+    if (!window.visualViewport) return;
+    const overlay = document.getElementById('mobile-chat-overlay');
+    window.visualViewport.addEventListener('resize', () => {
+      if (!overlay.classList.contains('open')) return;
+      overlay.style.height = window.visualViewport.height + 'px';
+      overlay.style.top = window.visualViewport.offsetTop + 'px';
+      // Scroll to bottom so latest message stays visible
+      const body = document.getElementById('mobile-chat-body');
+      if (body) body.scrollTop = body.scrollHeight;
+    });
+  })();
+
   // ─── Sticky CTA hide when signup is visible ───────────────────────────────────
   (function() {
     const stickyCta = document.getElementById('sticky-cta');
