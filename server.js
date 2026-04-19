@@ -351,8 +351,8 @@ app.post("/api/signup", async (req, res) => {
 
       ${calendarSection}
 
-      <p><strong>7. Your AI phone number preference</strong><br>
-      <span style="color:#6b7280;font-size:0.9rem;">Do you want the AI to text from a new local number we provide, or forward from your existing business number?</span></p>
+      <p><strong>7. Your dedicated AI number</strong><br>
+      <span style="color:#6b7280;font-size:0.9rem;">We'll assign you a local Edmonton number (587 or 780 area code) that your AI texts from. This is the number your customers will text when they miss your call — we handle the setup completely. No action needed from you on this one.</span></p>
 
       <p><strong>8. Custom Q&amp;A for your business</strong><br>
       <span style="color:#6b7280;font-size:0.9rem;">List any questions your customers commonly ask and the exact answer you want the AI to give. The AI will use your exact wording instead of guessing.</span><br>
