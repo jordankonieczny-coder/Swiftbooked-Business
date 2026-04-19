@@ -2264,6 +2264,11 @@ Which works best?</div>
   document.addEventListener('DOMContentLoaded', () => {
     initTradeGrid();
 
+    // Auto-launch HVAC demo so visitors can type immediately without selecting a trade
+    const hvac = TRADES[0];
+    showConfigStep(hvac);
+    setTimeout(() => { document.getElementById('cfg-skip').click(); }, 30);
+
     document.getElementById('demo-send').addEventListener('click', demoSend);
     document.getElementById('demo-input').addEventListener('keydown', e => { if(e.key==='Enter') demoSend(); });
     document.getElementById('demo-reset').addEventListener('click', () => {
