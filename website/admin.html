@@ -379,6 +379,37 @@
     if (e.target === document.getElementById('overlay')) closeModal();
   });
 
+  async function generateWidgetKey(id) {
+    const res = await fetch(`/api/admin/clients/${id}/widget-key`, { method: 'POST' });
+    if (res.ok) {
+      await loadClients();
+      showToast('Widget key generated.');
+    } else {
+      showToast('Failed to generate widget key.');
+    }
+  }
+
+  function showEmbed(id, key, name) {
+    const snippet = `<script src="https://swiftbooked.ca/widget.js" data-key="${key}"><\/script>`;
+    document.getElementById('embed-sub').textContent = `Client: ${name}`;
+    document.getElementById('embed-code').value = snippet;
+    document.getElementById('embed-overlay').classList.add('open');
+  }
+
+  function copyEmbed() {
+    const code = document.getElementById('embed-code').value;
+    navigator.clipboard.writeText(code).then(() => showToast('Embed code copied!')).catch(() => {
+      document.getElementById('embed-code').select();
+      document.execCommand('copy');
+      showToast('Embed code copied!');
+    });
+  }
+
+  document.getElementById('embed-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('embed-overlay'))
+      document.getElementById('embed-overlay').classList.remove('open');
+  });
+
   let pwClientId = null;
 
   function openPasswordModal(id, name) {
