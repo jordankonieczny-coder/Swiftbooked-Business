@@ -228,26 +228,20 @@ const tools = [
   {
     name: "confirm_booking",
     description:
-      "Call this when the customer has agreed to a specific time slot and provided their name. Generates a booking confirmation.",
+      "Call this when the customer has agreed to a specific time slot and provided their name. Creates a confirmed booking and calendar event.",
     input_schema: {
       type: "object",
       properties: {
         customer_name: { type: "string", description: "Customer's first name" },
-        service_type: { type: "string", description: "What service is needed" },
-        time_slot: {
-          type: "string",
-          description: 'The agreed time slot, e.g. "Thursday April 24, 2pm–4pm"',
-        },
-        address: {
-          type: "string",
-          description: "Customer address or neighbourhood",
-        },
-        is_emergency: {
-          type: "boolean",
-          description: "Is this an emergency/after-hours call?",
-        },
+        service_type:  { type: "string", description: "What service is needed" },
+        time_slot:     { type: "string", description: 'Human-readable slot, e.g. "Thursday April 24, 2pm–4pm"' },
+        date:          { type: "string", description: "ISO date YYYY-MM-DD, e.g. 2026-04-24" },
+        start_time:    { type: "string", description: "24h start time HH:MM, e.g. 14:00" },
+        end_time:      { type: "string", description: "24h end time HH:MM, e.g. 16:00" },
+        address:       { type: "string", description: "Customer address or neighbourhood" },
+        is_emergency:  { type: "boolean", description: "Is this an emergency/after-hours call?" },
       },
-      required: ["customer_name", "service_type", "time_slot"],
+      required: ["customer_name", "service_type", "time_slot", "date", "start_time", "end_time"],
     },
   },
   {
