@@ -24,6 +24,7 @@ import { dirname, join } from "path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
+app.set("trust proxy", 1);
 
 // ── Serve static website ─────────────────────────────────────────────────────
 app.use(express.static(join(__dirname, "website")));
