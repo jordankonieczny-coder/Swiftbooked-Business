@@ -280,6 +280,35 @@ Q: Do you offer financing? A: Yes, we offer 0% financing on jobs over $1,000."><
       const sel = document.getElementById('f-trade');
       if (sel) sel.value = clientData.trade;
     }
+
+    // Set up calendar link
+    const calLink = document.getElementById('cal-link');
+    if (calLink && clientData.calendar_url) calLink.href = clientData.calendar_url;
+
+    // If calendar already connected, show connected state
+    if (clientData.has_calendar) {
+      const box = document.getElementById('cal-connect-box');
+      const status = document.getElementById('cal-status');
+      if (box) box.style.display = 'none';
+      if (status) status.style.display = 'block';
+    }
+  }
+
+  function calClicked() {
+    setTimeout(() => {
+      const confirm = document.getElementById('cal-confirm');
+      if (confirm) confirm.style.display = 'block';
+    }, 1500);
+  }
+
+  function calConnected() {
+    const box = document.getElementById('cal-connect-box');
+    const status = document.getElementById('cal-status');
+    const confirm = document.getElementById('cal-confirm');
+    if (box) box.style.display = 'none';
+    if (confirm) confirm.style.display = 'none';
+    if (status) status.style.display = 'block';
+    setTimeout(() => showStep(5), 800);
   }
 
   function updateProgress(step) {
