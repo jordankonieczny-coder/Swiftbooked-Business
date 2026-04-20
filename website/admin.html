@@ -255,7 +255,14 @@
         <td style="font-family:monospace;font-size:0.82rem;">${c.twilio_number}</td>
         <td>${c.owner_name || '—'}<br><span style="color:#9ca3af;font-size:0.78rem;">${c.owner_phone || ''}</span></td>
         <td><span class="badge badge-${c.plan}">${c.plan}</span></td>
-        <td><span class="badge ${c.active ? 'badge-active' : 'badge-inactive'}">${c.active ? 'Active' : 'Inactive'}</span></td>
+        <td>
+          ${!c.setup_completed
+            ? '<span class="badge badge-setup">⏳ Awaiting Setup</span>'
+            : !c.twilio_number
+              ? '<span class="badge badge-ready">🔢 Needs Number</span>'
+              : `<span class="badge ${c.active ? 'badge-active' : 'badge-inactive'}">${c.active ? 'Active' : 'Inactive'}</span>`
+          }
+        </td>
         <td>
           ${c.google_refresh_token
             ? '<span class="badge badge-cal">✓ Connected</span>'
