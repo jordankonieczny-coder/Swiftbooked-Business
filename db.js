@@ -124,6 +124,13 @@ export async function setClientPassword(clientId, passwordHash) {
   await pool.query("UPDATE clients SET password_hash = $1 WHERE id = $2", [passwordHash, clientId]);
 }
 
+export async function setStripeCustomerId(clientId, stripeCustomerId) {
+  await pool.query(
+    "UPDATE clients SET stripe_customer_id = $1 WHERE id = $2",
+    [stripeCustomerId, clientId]
+  );
+}
+
 export async function getClientByWidgetKey(key) {
   const { rows } = await pool.query(
     "SELECT * FROM clients WHERE widget_key = $1 AND active = true",
