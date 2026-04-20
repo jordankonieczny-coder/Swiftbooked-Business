@@ -82,6 +82,15 @@ app.post("/api/stripe-webhook", express.raw({ type: "application/json" }), async
     } catch (err) {
       console.error("[Stripe webhook] Email error:", err.message);
     }
+    // Save Stripe customer ID to DB so we can create billing portal sessions
+    if (m.email && session.customer) {
+      try {
+        const client = await getClientByEmail(m.email.toLowerCase().trim());
+        if (client) await setStripeCustomerId(client.id, session.customer);
+      } catch (err) {
+        console.error("[Stripe] Failed to save customer ID:", err.message);
+      }
+    }
   }
 
   res.json({ received: true });
