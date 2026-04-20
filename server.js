@@ -539,6 +539,69 @@ app.post("/api/create-checkout-session", async (req, res) => {
   }
 });
 
+// ── Client alert: escalation or booking notification ─────────────────────────
+async function sendClientAlerts({ client, customerPhone, fromNumber, result, lastCustomerMsg }) {
+  const isEscalation = result.escalated;
+  const bizName = client.business_name;
+  const portalUrl = `${BASE_URL}/portal`;
+
+  // SMS to client owner (from their own Twilio number)
+  if (client.owner_phone && twilioClient) {
+    const smsBody = isEscalation
+      ? `🔴 ${bizName} — Customer needs you\nPhone: ${customerPhone}\nThey said: "${lastCustomerMsg.slice(0, 100)}"\nCall or text them directly.`
+      : `✅ ${bizName} — New booking!\nCustomer: ${customerPhone}\nConfirmation: #${result.bookingId}\nView details: ${portalUrl}`;
+    await sendSMSFrom(client.owner_phone, smsBody, fromNumber).catch(err =>
+      console.error("[Alert SMS error]", err.message)
+    );
+  }
+
+  // Email to client owner
+  if (client.owner_email) {
+    const subject = isEscalation
+      ? `🔴 Customer needs a callback — ${bizName}`
+      : `✅ New booking confirmed — ${bizName}`;
+
+    const html = isEscalation
+      ? `<div style="font-family:Arial,sans-serif;max-width:500px;">
+          <h2 style="color:#dc2626;">Customer Needs a Callback</h2>
+          <p>A customer texting your <strong>${bizName}</strong> AI bot has requested to speak with someone directly.</p>
+          <table style="border-collapse:collapse;width:100%;font-size:0.9rem;">
+            <tr><td style="padding:6px 0;font-weight:700;width:160px;">Customer Phone</td><td><a href="tel:${customerPhone}">${customerPhone}</a></td></tr>
+            <tr><td style="padding:6px 0;font-weight:700;">Last Message</td><td><em>"${lastCustomerMsg.slice(0, 200)}"</em></td></tr>
+          </table>
+          <p style="margin-top:16px;">Call or text them back as soon as you can.</p>
+          <p><a href="${portalUrl}" style="color:#1a56db;">View full conversation →</a></p>
+        </div>`
+      : `<div style="font-family:Arial,sans-serif;max-width:500px;">
+          <h2 style="color:#16a34a;">New Booking Confirmed ✅</h2>
+          <p>Your <strong>${bizName}</strong> AI bot just booked a new appointment.</p>
+          <table style="border-collapse:collapse;width:100%;font-size:0.9rem;">
+            <tr><td style="padding:6px 0;font-weight:700;width:160px;">Customer Phone</td><td><a href="tel:${customerPhone}">${customerPhone}</a></td></tr>
+            <tr><td style="padding:6px 0;font-weight:700;">Confirmation #</td><td>${result.bookingId}</td></tr>
+          </table>
+          <p style="margin-top:16px;"><a href="${portalUrl}" style="color:#1a56db;">View full conversation in your portal →</a></p>
+        </div>`;
+
+    await sendEmail({ to: client.owner_email, subject, html }).catch(err =>
+      console.error("[Alert email error]", err.message)
+    );
+  }
+
+  // Notify Jordan on escalations
+  if (isEscalation && process.env.OWNER_EMAIL) {
+    await sendEmail({
+      to: process.env.OWNER_EMAIL,
+      subject: `⚠️ Escalation: ${bizName} — ${customerPhone}`,
+      html: `<div style="font-family:Arial,sans-serif;max-width:500px;">
+        <h2 style="color:#dc2626;">Escalation Alert</h2>
+        <p><strong>${bizName}</strong> — customer <a href="tel:${customerPhone}">${customerPhone}</a> requested a human.</p>
+        <p><em>"${lastCustomerMsg.slice(0, 300)}"</em></p>
+        <p><a href="${BASE_URL}/admin/leads">View in admin →</a></p>
+      </div>`,
+    }).catch(err => console.error("[Jordan alert error]", err.message));
+  }
+}
+
 // ── Shared signup email helper (called by webhook + legacy /api/signup) ───────
 async function sendNewSignupEmails({ name, business, email, phone, trade, plan, stripeCustomerId }) {
   const firstName = name.split(" ")[0];
