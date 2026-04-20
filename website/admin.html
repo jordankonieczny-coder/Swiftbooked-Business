@@ -348,6 +348,51 @@
     if (e.target === document.getElementById('overlay')) closeModal();
   });
 
+  let pwClientId = null;
+
+  function openPasswordModal(id, name) {
+    pwClientId = id;
+    document.getElementById('pw-modal-title').textContent = 'Set Portal Password';
+    document.getElementById('pw-modal-sub').textContent = `Client: ${name} — they'll use this to log in at /portal`;
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-error').style.display = 'none';
+    document.getElementById('pw-overlay').classList.add('open');
+    setTimeout(() => document.getElementById('pw-input').focus(), 50);
+  }
+
+  function closePasswordModal() {
+    document.getElementById('pw-overlay').classList.remove('open');
+    pwClientId = null;
+  }
+
+  async function savePassword() {
+    const password = document.getElementById('pw-input').value;
+    const errEl = document.getElementById('pw-error');
+    errEl.style.display = 'none';
+    if (!password || password.length < 6) {
+      errEl.textContent = 'Password must be at least 6 characters.';
+      errEl.style.display = 'block';
+      return;
+    }
+    const res = await fetch(`/api/admin/clients/${pwClientId}/password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    });
+    if (res.ok) {
+      closePasswordModal();
+      showToast('Password set — client can now log in to the portal.');
+    } else {
+      const err = await res.json();
+      errEl.textContent = err.error || 'Failed to set password.';
+      errEl.style.display = 'block';
+    }
+  }
+
+  document.getElementById('pw-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('pw-overlay')) closePasswordModal();
+  });
+
   loadClients();
 </script>
 </body>
