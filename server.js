@@ -618,6 +618,66 @@ async function sendClientAlerts({ client, customerPhone, fromNumber, result, las
   }
 }
 
+// ── Setup email sent to new clients after Stripe payment ─────────────────────
+async function sendSetupEmail({ client, token, plan }) {
+  const setupUrl = `${BASE_URL}/setup?token=${token}`;
+  const firstName = (client.owner_name || "there").split(" ")[0];
+  const planLabel = plan === "pro" ? "Pro — $299/mo" : "Essential — $199/mo";
+
+  await Promise.all([
+    sendEmail({
+      to: client.owner_email,
+      subject: `Welcome to Swiftbooked — set up your AI bot (takes 3 min)`,
+      html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;color:#111;">
+        <div style="background:#1a56db;padding:28px 32px;border-radius:10px 10px 0 0;">
+          <h1 style="color:#fff;margin:0;font-size:1.4rem;">Welcome to Swiftbooked, ${firstName}!</h1>
+          <p style="color:rgba(255,255,255,0.85);margin:8px 0 0;">Your payment went through. Now let's get your AI bot configured.</p>
+        </div>
+        <div style="background:#f9fafb;padding:28px 32px;border-radius:0 0 10px 10px;border:1px solid #e5e7eb;border-top:none;">
+          <p style="margin-top:0;">Hi ${firstName},</p>
+          <p>To get your bot live, we just need a few details about <strong>${client.business_name}</strong> — your hours, services, and pricing. Takes about 3 minutes.</p>
+          <div style="text-align:center;margin:28px 0;">
+            <a href="${setupUrl}" style="display:inline-block;background:#1a56db;color:#fff;padding:16px 36px;border-radius:10px;text-decoration:none;font-weight:700;font-size:1.05rem;">Set Up My Bot →</a>
+            <p style="color:#6b7280;font-size:0.85rem;margin:12px 0 0;">Takes 3 minutes · This link expires in 7 days</p>
+          </div>
+          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:18px 24px;margin:20px 0;">
+            <p style="margin:0 0 10px;font-weight:700;font-size:0.95rem;color:#374151;">The form covers:</p>
+            <ul style="margin:0;padding-left:20px;color:#6b7280;font-size:0.9rem;line-height:1.9;">
+              <li>Trade type &amp; business hours</li>
+              <li>Service area</li>
+              <li>Your services &amp; pricing</li>
+              <li>Common customer questions</li>
+              <li>Your client portal password</li>
+            </ul>
+          </div>
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px 20px;margin:20px 0;">
+            <p style="margin:0 0 6px;font-weight:700;color:#166534;">Your Client Portal</p>
+            <p style="margin:0;font-size:0.9rem;color:#166534;">After setup, track your leads and manage billing at: <a href="${BASE_URL}/portal" style="color:#15803d;font-weight:700;">${BASE_URL}/portal</a></p>
+          </div>
+          <p>Your first month is <strong>free</strong> — no charge for 30 days (${planLabel} after that).</p>
+          <p>Questions? Call or text Jordan at <a href="tel:5875687784" style="color:#1a56db;">587-568-7784</a>.</p>
+          <p style="margin-bottom:0;">— Jordan Konieczny<br><span style="color:#6b7280;font-size:0.9rem;">Swiftbooked</span></p>
+        </div>
+      </div>`,
+    }),
+    sendEmail({
+      to: process.env.OWNER_EMAIL,
+      subject: `New signup: ${client.business_name} (${plan}) — setup link sent`,
+      html: `<div style="font-family:Arial,sans-serif;max-width:500px;">
+        <h2 style="color:#1a56db;">New Swiftbooked Signup 🎉</h2>
+        <table style="border-collapse:collapse;width:100%;">
+          <tr><td style="padding:8px 0;font-weight:700;width:130px;">Name</td><td>${client.owner_name}</td></tr>
+          <tr><td style="padding:8px 0;font-weight:700;">Business</td><td>${client.business_name}</td></tr>
+          <tr><td style="padding:8px 0;font-weight:700;">Email</td><td><a href="mailto:${client.owner_email}">${client.owner_email}</a></td></tr>
+          <tr><td style="padding:8px 0;font-weight:700;">Plan</td><td>${planLabel}</td></tr>
+          <tr><td style="padding:8px 0;font-weight:700;">Status</td><td>⏳ Awaiting client setup</td></tr>
+        </table>
+        <p style="color:#6b7280;font-size:0.9rem;">Setup link sent to client. You'll get another email when they complete the form — then just assign a Twilio number and activate.</p>
+      </div>`,
+    }),
+  ]).catch(err => console.error("[sendSetupEmail error]", err.message));
+}
+
 // Demo checkout — admin only, skips Stripe, sends real emails, creates client record
 app.post("/api/demo-checkout", requireAdmin, async (req, res) => {
   const { name, business, email, phone, trade, trade_other, plan } = req.body;
