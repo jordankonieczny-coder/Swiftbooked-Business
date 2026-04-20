@@ -312,23 +312,47 @@ app.get("/auth/google/callback", async (req, res) => {
     const { tokens } = await googleOAuth.getToken(code);
     oauthSessions.delete(state);
 
-    // Notify Jordan with the tokens
-    if (resend) {
+    let clientName = session?.business || "Unknown";
+
+    // If state is a direct client-connect flow (cal:clientId:token), save token to DB
+    if (state && state.startsWith("cal:")) {
+      const clientId = state.split(":")[1];
+      if (clientId && tokens.refresh_token) {
+        try {
+          const updated = await saveCalendarToken(parseInt(clientId), tokens.refresh_token);
+          if (updated) clientName = updated.business_name;
+          console.log(`[Calendar] Token saved for client ${clientId} (${clientName})`);
+        } catch (err) {
+          console.error("[Calendar] Failed to save token:", err.message);
+        }
+      }
+    } else if (session?.email && tokens.refresh_token) {
+      // Legacy signup flow: try to find client by email and save token
+      try {
+        const client = await getClientByEmail(session.email);
+        if (client) {
+          await saveCalendarToken(client.id, tokens.refresh_token);
+          console.log(`[Calendar] Token saved for ${client.business_name} via email lookup`);
+        }
+      } catch (err) {
+        console.error("[Calendar] Email lookup failed:", err.message);
+      }
+    }
+
+    // Notify Jordan
+    if (resend && tokens.refresh_token) {
       await sendEmail({
         to: process.env.OWNER_EMAIL,
-        subject: `✅ Google Calendar connected: ${session.business}`,
+        subject: `✅ Google Calendar connected: ${clientName}`,
         html: `
 <div style="font-family:Arial,sans-serif;max-width:500px;">
   <h2 style="color:#16a34a;">Google Calendar Connected ✅</h2>
-  <p><strong>${session.name}</strong> (${session.business}) just authorized Google Calendar access.</p>
-  <table style="border-collapse:collapse;width:100%;font-size:0.9rem;">
-    <tr><td style="padding:6px 0;font-weight:700;width:140px;">Client email</td><td>${session.email}</td></tr>
-    <tr><td style="padding:6px 0;font-weight:700;">Business</td><td>${session.business}</td></tr>
-    <tr><td style="padding:6px 0;font-weight:700;">Trade</td><td>${session.trade}</td></tr>
-    <tr><td style="padding:6px 0;font-weight:700;">Refresh token</td><td style="word-break:break-all;font-size:0.8rem;">${tokens.refresh_token || "(no refresh token — ask client to re-authorize)"}</td></tr>
-    <tr><td style="padding:6px 0;font-weight:700;">Access token</td><td style="word-break:break-all;font-size:0.8rem;">${tokens.access_token}</td></tr>
-  </table>
-  <p style="color:#6b7280;font-size:0.85rem;margin-top:16px;">Save the refresh token — it's long-lived and lets you access their calendar anytime.</p>
+  <p><strong>${clientName}</strong> just authorized Google Calendar access. Token saved to database.</p>
+  ${session ? `<table style="border-collapse:collapse;width:100%;font-size:0.9rem;">
+    <tr><td style="padding:6px 0;font-weight:700;width:140px;">Business</td><td>${session.business || clientName}</td></tr>
+    <tr><td style="padding:6px 0;font-weight:700;">Email</td><td>${session.email || "—"}</td></tr>
+  </table>` : ""}
+  <p style="color:#16a34a;font-weight:700;">Calendar bookings will now land directly in their Google Calendar.</p>
 </div>`,
       });
     }
