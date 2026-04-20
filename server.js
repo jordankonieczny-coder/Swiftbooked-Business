@@ -923,6 +923,41 @@ app.get("/api/portal/me", requirePortalAuth, async (req, res) => {
   }
 });
 
+app.post("/api/portal/billing", requirePortalAuth, async (req, res) => {
+  if (!stripe) return res.status(503).json({ error: "Billing not configured" });
+
+  try {
+    const clients = await getAllClients();
+    const client = clients.find(c => c.id === req.portalUser.clientId);
+    if (!client) return res.status(404).json({ error: "Client not found" });
+
+    let customerId = client.stripe_customer_id;
+
+    // Fallback: look up by email in Stripe if we don't have the ID stored
+    if (!customerId && client.owner_email) {
+      const results = await stripe.customers.list({ email: client.owner_email.toLowerCase(), limit: 1 });
+      if (results.data.length) {
+        customerId = results.data[0].id;
+        await setStripeCustomerId(client.id, customerId);
+      }
+    }
+
+    if (!customerId) {
+      return res.status(404).json({ error: "No billing account found. Contact Jordan at 587-568-7784." });
+    }
+
+    const portalSession = await stripe.billingPortal.sessions.create({
+      customer: customerId,
+      return_url: `${BASE_URL}/portal`,
+    });
+
+    res.json({ url: portalSession.url });
+  } catch (err) {
+    console.error("[Billing portal error]", err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ═════════════════════════════════════════════════════════════════════════════
 // GET /health
 // ═════════════════════════════════════════════════════════════════════════════
