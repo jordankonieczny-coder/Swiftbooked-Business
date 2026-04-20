@@ -87,3 +87,19 @@ export async function updateClient(id, data) {
 export async function deleteClient(id) {
   await pool.query("DELETE FROM clients WHERE id = $1", [id]);
 }
+
+export async function saveCalendarToken(clientId, refreshToken) {
+  const { rows } = await pool.query(
+    "UPDATE clients SET google_refresh_token = $1 WHERE id = $2 RETURNING *",
+    [refreshToken, clientId]
+  );
+  return rows[0];
+}
+
+export async function getClientByEmail(email) {
+  const { rows } = await pool.query(
+    "SELECT * FROM clients WHERE owner_email = $1 LIMIT 1",
+    [email]
+  );
+  return rows[0] || null;
+}
