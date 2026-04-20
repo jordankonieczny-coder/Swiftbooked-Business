@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swiftbooked — Client Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f9fafb; color: #111827; font-size: 0.9rem; min-height: 100vh; }
+    header { background: #1a56db; color: #fff; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+    header h1 { font-size: 1.1rem; font-weight: 700; }
+    .header-right { display: flex; align-items: center; gap: 16px; font-size: 0.85rem; }
+    .btn-logout { background: rgba(255,255,255,0.15); border: none; color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 0.82rem; font-weight: 600; }
+    .btn-logout:hover { background: rgba(255,255,255,0.25); }
+    .container { max-width: 1000px; margin: 0 auto; padding: 24px; }
+
+    /* Login screen */
+    #login-screen { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 60px); }
+    .login-box { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 40px; width: 100%; max-width: 400px; box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
+    .login-box h2 { font-size: 1.3rem; margin-bottom: 6px; }
+    .login-box p { color: #6b7280; font-size: 0.85rem; margin-bottom: 28px; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-weight: 600; font-size: 0.82rem; margin-bottom: 6px; }
+    .field input { width: 100%; padding: 11px 14px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color 0.15s; }
+    .field input:focus { border-color: #1a56db; }
+    .btn-primary { width: 100%; padding: 13px; background: #1a56db; color: #fff; border: none; border-radius: 8px; font-family: inherit; font-size: 0.95rem; font-weight: 700; cursor: pointer; }
+    .btn-primary:hover { background: #1342a8; }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    .error-msg { color: #dc2626; font-size: 0.82rem; margin-top: 12px; text-align: center; }
+
+    /* Dashboard */
+    #dashboard-screen { display: none; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 28px; }
+    .stat { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 18px; text-align: center; }
+    .stat-num { font-size: 1.9rem; font-weight: 800; color: #1a56db; line-height: 1; }
+    .stat-label { font-size: 0.78rem; color: #6b7280; margin-top: 4px; }
+    .section-title { font-size: 1rem; font-weight: 700; margin-bottom: 14px; }
+    .leads-list { display: flex; flex-direction: column; gap: 10px; }
+    .lead-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; }
+    .lead-header { padding: 14px 18px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    .lead-header:hover { background: #f9fafb; }
+    .lead-phone { font-weight: 700; font-family: monospace; }
+    .lead-meta { flex: 1; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.73rem; font-weight: 700; }
+    .badge-booked { background: #d1fae5; color: #065f46; }
+    .badge-escalated { background: #fee2e2; color: #dc2626; }
+    .badge-active { background: #dbeafe; color: #1e40af; }
+    .lead-time { font-size: 0.78rem; color: #9ca3af; margin-left: auto; }
+    .lead-chevron { color: #9ca3af; font-size: 0.8rem; transition: transform 0.15s; }
+    .lead-card.open .lead-chevron { transform: rotate(180deg); }
+    .lead-messages { display: none; border-top: 1px solid #f3f4f6; padding: 16px 18px; background: #fafafa; }
+    .lead-card.open .lead-messages { display: block; }
+    .msg-row { display: flex; gap: 10px; margin-bottom: 10px; }
+    .msg-bubble { padding: 8px 12px; border-radius: 10px; font-size: 0.85rem; line-height: 1.5; max-width: 80%; }
+    .msg-user .msg-bubble { background: #1a56db; color: #fff; margin-left: auto; }
+    .msg-bot .msg-bubble { background: #e5e7eb; color: #111827; }
+    .msg-label { font-size: 0.72rem; color: #9ca3af; margin-top: 3px; }
+    .msg-user { flex-direction: row-reverse; }
+    .booking-badge { background: #d1fae5; color: #065f46; border-radius: 8px; padding: 8px 12px; font-size: 0.82rem; font-weight: 600; margin-top: 10px; }
+    .empty { text-align: center; padding: 48px; color: #9ca3af; }
+    .support-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 20px; margin-top: 32px; }
+    .support-box h3 { font-size: 0.95rem; color: #1e40af; margin-bottom: 6px; }
+    .support-box p { font-size: 0.85rem; color: #1e40af; }
+    .support-box a { color: #1a56db; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Swiftbooked Portal</h1>
+  <div class="header-right">
+    <span id="header-business" style="opacity:0.85;"></span>
+    <button class="btn-logout" id="logout-btn" style="display:none" onclick="logout()">Log out</button>
+  </div>
+</header>
+
+<!-- Login -->
+<div id="login-screen">
+  <div class="login-box">
+    <h2>Welcome back</h2>
+    <p>Log in to see your leads and bookings.</p>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="you@yourbusiness.com" autocomplete="email">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn-primary" id="login-btn" onclick="doLogin()">Log In</button>
+    <div class="error-msg" id="login-error"></div>
+    <p style="text-align:center;margin-top:20px;color:#6b7280;font-size:0.82rem;">Need help? Call or text Jordan at <a href="tel:5875687784" style="color:#1a56db;">587-568-7784</a></p>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div id="dashboard-screen">
+  <div class="container">
+    <div class="stats" id="stats-row"></div>
+    <div class="section-title">Your Leads</div>
+    <div class="leads-list" id="leads-list"><div class="empty">Loading…</div></div>
+    <div class="support-box">
+      <h3>Need help or changes?</h3>
+      <p>Contact Jordan at <a href="tel:5875687784">587-568-7784</a> or <a href="mailto:jordankonieczny@gmail.com">jordankonieczny@gmail.com</a></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const TOKEN_KEY = 'sb_portal_token';
+
+  async function doLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const btn = document.getElementById('login-btn');
+    const err = document.getElementById('login-error');
+    err.textContent = '';
+    btn.disabled = true;
+    btn.textContent = 'Logging in…';
+
+    try {
+      const res = await fetch('/api/portal/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Login failed');
+      localStorage.setItem(TOKEN_KEY, data.token);
+      document.getElementById('header-business').textContent = data.client.business_name;
+      showDashboard();
+    } catch (e) {
+      err.textContent = e.message;
+      btn.disabled = false;
+      btn.textContent = 'Log In';
+    }
+  }
+
+  document.getElementById('login-password').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+
+  function logout() {
+    localStorage.removeItem(TOKEN_KEY);
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('dashboard-screen').style.display = 'none';
+    document.getElementById('logout-btn').style.display = 'none';
+    document.getElementById('header-business').textContent = '';
+  }
+
+  async function showDashboard() {
+    const token = localStorage.getItem(TOKEN_KEY);
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard-screen').style.display = 'block';
+    document.getElementById('logout-btn').style.display = 'inline-block';
+
+    const [meRes, leadsRes] = await Promise.all([
+      fetch('/api/portal/me', { headers: { Authorization: `Bearer ${token}` } }),
+      fetch('/api/portal/leads', { headers: { Authorization: `Bearer ${token}` } }),
+    ]);
+
+    if (meRes.status === 401) { logout(); return; }
+
+    const me = await meRes.json();
+    const leads = await leadsRes.json();
+
+    document.getElementById('header-business').textContent = me.business_name;
+    renderStats(leads);
+    renderLeads(leads);
+  }
+
+  function renderStats(leads) {
+    const booked = leads.filter(l => l.status === 'booked').length;
+    const escalated = leads.filter(l => l.status === 'escalated').length;
+    document.getElementById('stats-row').innerHTML = `
+      <div class="stat"><div class="stat-num">${leads.length}</div><div class="stat-label">Total Leads</div></div>
+      <div class="stat"><div class="stat-num" style="color:#16a34a">${booked}</div><div class="stat-label">Booked</div></div>
+      <div class="stat"><div class="stat-num" style="color:#dc2626">${escalated}</div><div class="stat-label">Escalated</div></div>
+    `;
+  }
+
+  function renderLeads(leads) {
+    const el = document.getElementById('leads-list');
+    if (!leads.length) { el.innerHTML = '<div class="empty">No leads yet — they\'ll appear here as customers text in.</div>'; return; }
+    el.innerHTML = leads.map((l, i) => {
+      const messages = Array.isArray(l.messages) ? l.messages : (JSON.parse(l.messages || '[]'));
+      const date = new Date(l.updated_at).toLocaleString('en-CA', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      const badgeClass = l.status === 'booked' ? 'badge-booked' : l.status === 'escalated' ? 'badge-escalated' : 'badge-active';
+
+      return `
+        <div class="lead-card" id="lcard-${i}">
+          <div class="lead-header" onclick="toggle(${i})">
+            <div class="lead-phone">${l.customer_phone}</div>
+            <div class="lead-meta">
+              <span class="badge ${badgeClass}">${l.status}</span>
+              ${l.booking_id ? `<span class="badge" style="background:#fef3c7;color:#92400e;">#${l.booking_id}</span>` : ''}
+            </div>
+            <div class="lead-time">${date}</div>
+            <div class="lead-chevron">▼</div>
+          </div>
+          <div class="lead-messages">${renderMessages(messages, l)}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function renderMessages(messages, lead) {
+    const filtered = messages.filter(m => m.role === 'user' || m.role === 'assistant');
+    if (!filtered.length) return '<div style="color:#9ca3af;font-size:0.85rem;">No messages.</div>';
+    let html = filtered.map(m => {
+      const isUser = m.role === 'user';
+      const content = typeof m.content === 'string' ? m.content : '';
+      if (!content || content.startsWith('[')) return '';
+      return `<div class="msg-row ${isUser ? 'msg-user' : 'msg-bot'}">
+        <div>
+          <div class="msg-bubble">${content.replace(/</g,'&lt;')}</div>
+          <div class="msg-label">${isUser ? 'Customer' : 'Your AI'}</div>
+        </div>
+      </div>`;
+    }).join('');
+    if (lead.booking_id) html += `<div class="booking-badge">✓ Booked — Confirmation #${lead.booking_id}</div>`;
+    return html;
+  }
+
+  function toggle(i) {
+    document.getElementById('lcard-' + i).classList.toggle('open');
+  }
+
+  // Auto-login if token exists
+  if (localStorage.getItem(TOKEN_KEY)) showDashboard();
+</script>
+</body>
+</html>
