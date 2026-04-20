@@ -71,26 +71,26 @@ app.post("/api/stripe-webhook", express.raw({ type: "application/json" }), async
     const m = session.metadata || {};
     console.log(`[Stripe] New signup: ${m.business} (${m.email})`);
     try {
-      await sendNewSignupEmails({
-        name: m.name,
-        business: m.business,
-        email: m.email,
-        phone: m.phone,
+      // Create partial client record immediately
+      const client = await createPartialClient({
+        business_name: m.business,
         trade: m.trade,
+        owner_name: m.name,
+        owner_email: m.email?.toLowerCase().trim(),
+        owner_phone: m.phone || null,
         plan: m.plan,
-        stripeCustomerId: session.customer,
+        stripe_customer_id: session.customer,
       });
+
+      // Generate setup token (expires in 7 days)
+      const token = randomBytes(32).toString("hex");
+      const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+      await setSetupToken(client.id, token, expires);
+
+      // Send setup email to client + notify Jordan
+      await sendSetupEmail({ client, token, plan: m.plan });
     } catch (err) {
-      console.error("[Stripe webhook] Email error:", err.message);
-    }
-    // Save Stripe customer ID to DB so we can create billing portal sessions
-    if (m.email && session.customer) {
-      try {
-        const client = await getClientByEmail(m.email.toLowerCase().trim());
-        if (client) await setStripeCustomerId(client.id, session.customer);
-      } catch (err) {
-        console.error("[Stripe] Failed to save customer ID:", err.message);
-      }
+      console.error("[Stripe webhook] Setup error:", err.message);
     }
   }
 
