@@ -239,6 +239,14 @@
           }
         </td>
         <td>
+          ${c.widget_key
+            ? `<button class="btn btn-secondary btn-sm" style="background:#f0fdf4;color:#166534;" onclick="showEmbed(${c.id}, '${c.widget_key}', '${c.business_name.replace(/'/g,"\\'")}')">Get Code</button>`
+            : (c.plan === 'pro'
+                ? `<button class="btn btn-secondary btn-sm" onclick="generateWidgetKey(${c.id})">Generate</button>`
+                : `<span style="color:#9ca3af;font-size:0.78rem;">Pro only</span>`)
+          }
+        </td>
+        <td>
           <div class="actions">
             <button class="btn btn-secondary btn-sm" onclick="editClient(${c.id})">Edit</button>
             <button class="btn btn-secondary btn-sm" style="background:#eff6ff;color:#1e40af;" onclick="openPasswordModal(${c.id}, '${c.business_name.replace(/'/g,"\\'")}')">Password</button>
