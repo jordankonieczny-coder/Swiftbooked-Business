@@ -16,7 +16,8 @@
       "Bash(curl -sf https://swiftbooked-business-production.up.railway.app/)",
       "Bash(curl -sf https://swiftbooked-business-production.up.railway.app/health)",
       "Bash(railway variables *)",
-      "Bash(curl *)"
+      "Bash(curl *)",
+      "Bash(railway status *)"
     ]
   }
 }
