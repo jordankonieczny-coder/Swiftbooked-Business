@@ -123,6 +123,22 @@ export async function setClientPassword(clientId, passwordHash) {
   await pool.query("UPDATE clients SET password_hash = $1 WHERE id = $2", [passwordHash, clientId]);
 }
 
+export async function getClientByWidgetKey(key) {
+  const { rows } = await pool.query(
+    "SELECT * FROM clients WHERE widget_key = $1 AND active = true",
+    [key]
+  );
+  return rows[0] || null;
+}
+
+export async function setWidgetKey(clientId, key) {
+  const { rows } = await pool.query(
+    "UPDATE clients SET widget_key = $1 WHERE id = $2 RETURNING *",
+    [key, clientId]
+  );
+  return rows[0];
+}
+
 // ── Leads ─────────────────────────────────────────────────────────────────────
 
 export async function upsertLead(clientId, customerPhone, messages, status, bookingId) {
