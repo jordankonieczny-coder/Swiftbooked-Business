@@ -424,6 +424,7 @@ export async function handleIncomingMessage(phone, text, name = null, clientConf
     area:    process.env.SERVICE_AREA || "Edmonton and surrounding area",
   };
   if (name) config.customerName = name;
+  config.customerPhone = phone;
 
   return await handleChat(`sms_${phone}`, text, config);
 }
