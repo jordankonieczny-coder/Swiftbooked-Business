@@ -449,6 +449,115 @@ app.post("/api/signup", async (req, res) => {
 });
 
 // ═════════════════════════════════════════════════════════════════════════════
+// POST /api/create-checkout-session — Stripe hosted checkout
+// ═════════════════════════════════════════════════════════════════════════════
+app.post("/api/create-checkout-session", async (req, res) => {
+  if (!stripe) return res.status(500).json({ error: "Stripe not configured" });
+
+  const { name, business, email, phone, trade, trade_other, plan } = req.body;
+  if (!name || !email || !business) {
+    return res.status(400).json({ error: "Name, email, and business name are required" });
+  }
+
+  const tradeName = trade === "other" ? (trade_other || "other") : (trade || "other");
+  const isPro = plan === "pro-299";
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      mode: "subscription",
+      customer_email: email,
+      line_items: [{
+        price_data: {
+          currency: "cad",
+          product_data: {
+            name: isPro ? "Swiftbooked Pro" : "Swiftbooked Essential",
+            description: isPro
+              ? "AI SMS bot + website chat widget — unlimited leads, 24/7 coverage"
+              : "AI SMS text bot — unlimited leads, 24/7 coverage",
+          },
+          unit_amount: isPro ? 29900 : 19900,
+          recurring: { interval: "month" },
+        },
+        quantity: 1,
+      }],
+      subscription_data: { trial_period_days: 30 },
+      metadata: { name, business, email, phone: phone || "", trade: tradeName, plan: isPro ? "pro" : "essential" },
+      success_url: `${BASE_URL}/?signup=success`,
+      cancel_url: `${BASE_URL}/#signup`,
+    });
+
+    res.json({ url: session.url });
+  } catch (err) {
+    console.error("[create-checkout-session error]", err.message);
+    res.status(500).json({ error: "Failed to create checkout session" });
+  }
+});
+
+// ── Shared signup email helper (called by webhook + legacy /api/signup) ───────
+async function sendNewSignupEmails({ name, business, email, phone, trade, plan, stripeCustomerId }) {
+  const firstName = name.split(" ")[0];
+  const planLabel = plan === "pro" ? "Pro — $299/mo" : "Essential — $199/mo";
+
+  const customerHtml = `
+<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;color:#111;">
+  <div style="background:#1a56db;padding:28px 32px;border-radius:10px 10px 0 0;">
+    <h1 style="color:#fff;margin:0;font-size:1.4rem;">Welcome to Swiftbooked, ${firstName}!</h1>
+    <p style="color:rgba(255,255,255,0.85);margin:8px 0 0;font-size:0.95rem;">Your AI text bot is almost ready. One quick form and you're done.</p>
+  </div>
+  <div style="background:#f9fafb;padding:28px 32px;border-radius:0 0 10px 10px;border:1px solid #e5e7eb;border-top:none;">
+    <p style="margin-top:0;">Hi ${firstName},</p>
+    <p>We're setting up your Swiftbooked AI text bot for <strong>${business}</strong>. To get it live within 48 hours, fill out the short setup form below — it takes about 3 minutes.</p>
+    <div style="text-align:center;margin:28px 0;">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScKpzHwAr-r3_Mwg8fsh-lRGeXnaJlZ8GQYE0Qbs1czr5Y3cQ/viewform"
+         style="display:inline-block;background:#1a56db;color:#fff;padding:16px 36px;border-radius:10px;text-decoration:none;font-weight:700;font-size:1.05rem;">
+        Fill Out Setup Form →
+      </a>
+      <p style="color:#6b7280;font-size:0.85rem;margin:12px 0 0;">Takes about 3 minutes · No account required</p>
+    </div>
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:18px 24px;margin:20px 0;">
+      <p style="margin:0 0 10px;font-weight:700;font-size:0.95rem;color:#374151;">The form covers:</p>
+      <ul style="margin:0;padding-left:20px;color:#6b7280;font-size:0.9rem;line-height:1.9;">
+        <li>Your services &amp; pricing</li>
+        <li>Service area &amp; business hours</li>
+        <li>Emergency contact number</li>
+        <li>Calendar connection</li>
+        <li>Common customer Q&amp;A</li>
+        <li>Anything else the AI should know</li>
+      </ul>
+    </div>
+    <p>Your first month is <strong>free</strong> — no charge for 30 days. After that your ${planLabel} subscription begins automatically.</p>
+    <p>Once you submit the form, we'll configure your bot and have it live within <strong>48 hours</strong>. You'll get a test text to confirm everything is working before we go live.</p>
+    <p>Questions? Reply to this email or call/text Jordan directly at <a href="tel:5875687784" style="color:#1a56db;">587-568-7784</a>.</p>
+    <p style="margin-bottom:0;">— Jordan Konieczny<br><span style="color:#6b7280;font-size:0.9rem;">Swiftbooked</span></p>
+  </div>
+</div>`;
+
+  const ownerHtml = `
+<div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;">
+  <h2 style="color:#1a56db;">New Swiftbooked Signup 🎉</h2>
+  <table style="border-collapse:collapse;width:100%;">
+    <tr><td style="padding:8px 0;font-weight:700;width:130px;">Name</td><td>${name}</td></tr>
+    <tr><td style="padding:8px 0;font-weight:700;">Business</td><td>${business}</td></tr>
+    <tr><td style="padding:8px 0;font-weight:700;">Email</td><td><a href="mailto:${email}">${email}</a></td></tr>
+    <tr><td style="padding:8px 0;font-weight:700;">Phone</td><td><a href="tel:${phone}">${phone}</a></td></tr>
+    <tr><td style="padding:8px 0;font-weight:700;">Trade</td><td>${trade}</td></tr>
+    <tr><td style="padding:8px 0;font-weight:700;">Plan</td><td>${planLabel}</td></tr>
+    ${stripeCustomerId ? `<tr><td style="padding:8px 0;font-weight:700;">Stripe</td><td><a href="https://dashboard.stripe.com/customers/${stripeCustomerId}">${stripeCustomerId}</a></td></tr>` : ""}
+  </table>
+  <p style="color:#6b7280;font-size:0.9rem;">Card on file — trial ends in 30 days then auto-charges. Setup form sent to customer.</p>
+</div>`;
+
+  if (resend) {
+    await Promise.all([
+      sendEmail({ to: email, subject: `Welcome to Swiftbooked — let's get your AI bot live`, html: customerHtml }),
+      sendEmail({ to: process.env.OWNER_EMAIL, subject: `New signup: ${business} (${trade}) — ${planLabel}`, html: ownerHtml }),
+    ]);
+  } else {
+    console.log(`[Signup emails not sent - Resend not configured] ${name} | ${business} | ${email}`);
+  }
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
 // ADMIN — password protected client management
 // ═════════════════════════════════════════════════════════════════════════════
 function requireAdmin(req, res, next) {
