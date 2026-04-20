@@ -16,6 +16,7 @@ import rateLimit from "express-rate-limit";
 import twilio from "twilio";
 import { Resend } from "resend";
 import { google } from "googleapis";
+import Stripe from "stripe";
 import { handleChat, handleIncomingMessage } from "./ai-engine.js";
 import { initDB, getClientByNumber, getAllClients, createClient, updateClient, deleteClient } from "./db.js";
 import { fileURLToPath } from "url";
