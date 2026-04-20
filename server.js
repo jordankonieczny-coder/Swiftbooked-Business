@@ -608,6 +608,24 @@ async function sendClientAlerts({ client, customerPhone, fromNumber, result, las
   }
 }
 
+// Demo checkout — admin only, skips Stripe, sends real emails, creates client record
+app.post("/api/demo-checkout", requireAdmin, async (req, res) => {
+  const { name, business, email, phone, trade, trade_other, plan } = req.body;
+  if (!name || !email || !business) return res.status(400).json({ error: "Name, email, and business required" });
+
+  const tradeName = trade === "other" ? (trade_other || "other") : (trade || "other");
+  const planLabel = plan === "pro-299" ? "pro" : "essential";
+
+  try {
+    await sendNewSignupEmails({ name, business, email, phone, trade: tradeName, plan: planLabel, stripeCustomerId: null });
+    console.log(`[Demo signup] ${name} | ${business} | ${email}`);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("[Demo checkout error]", err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ── Shared signup email helper (called by webhook + legacy /api/signup) ───────
 async function sendNewSignupEmails({ name, business, email, phone, trade, plan, stripeCustomerId }) {
   const firstName = name.split(" ")[0];
