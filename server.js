@@ -18,7 +18,8 @@ import { Resend } from "resend";
 import { google } from "googleapis";
 import Stripe from "stripe";
 import { handleChat, handleIncomingMessage } from "./ai-engine.js";
-import { initDB, getClientByNumber, getAllClients, createClient, updateClient, deleteClient } from "./db.js";
+import { initDB, getClientByNumber, getAllClients, createClient, updateClient, deleteClient, saveCalendarToken, getClientByEmail } from "./db.js";
+import { makeConnectUrl } from "./calendar.js";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
