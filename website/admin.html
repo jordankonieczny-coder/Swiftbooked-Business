@@ -183,6 +183,28 @@
   </div>
 </div>
 
+<!-- Password Modal -->
+<div class="overlay" id="pw-overlay">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-header">
+      <h3 id="pw-modal-title">Set Portal Password</h3>
+      <button class="modal-close" onclick="closePasswordModal()">✕</button>
+    </div>
+    <div class="modal-body" style="grid-template-columns:1fr;">
+      <p id="pw-modal-sub" style="color:#6b7280;font-size:0.85rem;margin:0;"></p>
+      <div class="field">
+        <label>New Password (min 6 characters)</label>
+        <input type="password" id="pw-input" placeholder="••••••••" autocomplete="new-password">
+      </div>
+      <div id="pw-error" style="color:#dc2626;font-size:0.82rem;display:none;"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closePasswordModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="savePassword()">Set Password</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
