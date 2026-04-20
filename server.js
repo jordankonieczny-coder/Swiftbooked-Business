@@ -151,14 +151,15 @@ app.post("/webhook/sms", smsLimiter, async (req, res) => {
     // Look up which client owns this Twilio number
     const client = toNumber ? await getClientByNumber(toNumber) : null;
     const config = client ? {
-      bizName:    client.business_name,
-      trade:      client.trade,
-      hours:      client.hours,
-      area:       client.service_area,
-      callout:    client.callout_fee,
-      job1:       client.job1,
-      job2:       client.job2,
-      faq:        client.faq,
+      bizName:             client.business_name,
+      trade:               client.trade,
+      hours:               client.hours,
+      area:                client.service_area,
+      callout:             client.callout_fee,
+      job1:                client.job1,
+      job2:                client.job2,
+      faq:                 client.faq,
+      googleRefreshToken:  client.google_refresh_token || null,
     } : null;
 
     const result = await handleIncomingMessage(phone, messageText, null, config);
