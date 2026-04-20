@@ -166,6 +166,17 @@ app.post("/webhook/sms", smsLimiter, async (req, res) => {
 
     const result = await handleIncomingMessage(phone, messageText, null, config);
     await sendSMSFrom(phone, result.reply, toNumber);
+
+    // Persist lead to DB
+    if (client) {
+      const session = getSession(`sms_${phone}`);
+      const messages = session?.messages || [];
+      const status = result.booked ? "booked" : (result.escalated ? "escalated" : "active");
+      upsertLead(client.id, phone, messages, status, result.bookingId || null).catch(err =>
+        console.error("[Lead save error]", err.message)
+      );
+    }
+
     res.type("text/xml").send("<Response/>");
   } catch (err) {
     console.error("[SMS webhook error]", err.message);
