@@ -43,6 +43,7 @@ export async function initDB() {
     );
     CREATE INDEX IF NOT EXISTS leads_client_id_idx ON leads(client_id);
     CREATE INDEX IF NOT EXISTS leads_customer_phone_idx ON leads(customer_phone);
+    ALTER TABLE clients ADD COLUMN IF NOT EXISTS widget_key VARCHAR(20) UNIQUE;
   `);
   console.log("[DB] tables ready");
 }
