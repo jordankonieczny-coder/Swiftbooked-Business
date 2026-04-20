@@ -45,6 +45,10 @@ export async function initDB() {
     CREATE INDEX IF NOT EXISTS leads_customer_phone_idx ON leads(customer_phone);
     ALTER TABLE clients ADD COLUMN IF NOT EXISTS widget_key VARCHAR(20) UNIQUE;
     ALTER TABLE clients ADD COLUMN IF NOT EXISTS stripe_customer_id VARCHAR(50);
+    ALTER TABLE clients ADD COLUMN IF NOT EXISTS setup_token VARCHAR(64) UNIQUE;
+    ALTER TABLE clients ADD COLUMN IF NOT EXISTS setup_token_expires TIMESTAMP;
+    ALTER TABLE clients ADD COLUMN IF NOT EXISTS setup_completed BOOLEAN DEFAULT false;
+    ALTER TABLE clients ALTER COLUMN twilio_number DROP NOT NULL;
   `);
   console.log("[DB] tables ready");
 }
