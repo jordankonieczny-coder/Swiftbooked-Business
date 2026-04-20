@@ -761,22 +761,12 @@ app.get("/admin", requireAdmin, (req, res) => {
   res.sendFile(join(__dirname, "website", "admin.html"));
 });
 
-// Demo mode — full site with Stripe bypassed
-app.get("/demo", requireAdmin, (req, res) => {
-  const fs = await import("fs/promises").then(m => m).catch(() => null);
-  res.send(""); // handled below
-});
-
-// Use async handler properly
+// Demo mode — full site with Stripe bypassed (admin only)
 app.get("/demo", requireAdmin, async (req, res) => {
   try {
     const { readFile } = await import("fs/promises");
     let html = await readFile(join(__dirname, "website", "index.html"), "utf-8");
-    // Inject demo flag before closing </body>
-    html = html.replace(
-      "</body>",
-      `<script>window.__SB_DEMO__ = true;</script>\n</body>`
-    );
+    html = html.replace("</body>", `<script>window.__SB_DEMO__ = true;</script>\n</body>`);
     res.type("html").send(html);
   } catch (err) {
     res.status(500).send("Could not load demo page.");
