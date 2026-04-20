@@ -167,7 +167,7 @@ app.post("/webhook/sms", smsLimiter, async (req, res) => {
     const result = await handleIncomingMessage(phone, messageText, null, config);
     await sendSMSFrom(phone, result.reply, toNumber);
 
-    // Persist lead to DB
+    // Persist lead to DB + fire owner alerts
     if (client) {
       const session = getSession(`sms_${phone}`);
       const messages = session?.messages || [];
@@ -175,6 +175,12 @@ app.post("/webhook/sms", smsLimiter, async (req, res) => {
       upsertLead(client.id, phone, messages, status, result.bookingId || null).catch(err =>
         console.error("[Lead save error]", err.message)
       );
+
+      if (result.escalated || result.booked) {
+        const lastCustomerMsg = [...messages].reverse().find(m => m.role === "user")?.content || "";
+        sendClientAlerts({ client, customerPhone: phone, fromNumber: toNumber, result, lastCustomerMsg })
+          .catch(err => console.error("[Alert error]", err.message));
+      }
     }
 
     res.type("text/xml").send("<Response/>");
