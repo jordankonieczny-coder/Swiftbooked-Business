@@ -371,7 +371,7 @@ export async function handleChat(sessionId, userMessage, config = {}) {
         const toolResults = [];
         for (const block of response.content) {
           if (block.type === "tool_use") {
-            const result = await executeTool(block.name, block.input);
+            const result = await executeTool(block.name, block.input, session.config);
 
             if (block.name === "confirm_booking" && result.success) {
               session.booked = true;
