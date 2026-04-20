@@ -784,7 +784,15 @@ app.get("/demo", requireAdmin, async (req, res) => {
   try {
     const { readFile } = await import("fs/promises");
     let html = await readFile(join(__dirname, "website", "index.html"), "utf-8");
-    html = html.replace("</body>", `<script>window.__SB_DEMO__ = true;</script>\n</body>`);
+    html = html.replace("</body>", `<script>
+window.__SB_DEMO__ = true;
+(function(){
+  var bar = document.createElement('div');
+  bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#f59e0b;color:#111;text-align:center;padding:8px;font-family:monospace;font-size:0.85rem;font-weight:700;';
+  bar.textContent = '\\u26a0 DEMO MODE \\u2014 Stripe bypassed. Real emails will be sent.';
+  document.body.prepend(bar);
+})();
+</script>\n</body>`);
     res.type("html").send(html);
   } catch (err) {
     res.status(500).send("Could not load demo page.");
