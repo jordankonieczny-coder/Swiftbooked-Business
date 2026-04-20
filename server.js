@@ -52,14 +52,14 @@ app.post("/api/stripe-webhook", express.raw({ type: "application/json" }), async
   const sig = req.headers["stripe-signature"];
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
+  if (!webhookSecret) {
+    console.error("[Stripe] STRIPE_WEBHOOK_SECRET not set — rejecting webhook");
+    return res.status(400).send("Webhook Error: webhook secret not configured");
+  }
+
   let event;
   try {
-    if (webhookSecret) {
-      event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
-    } else {
-      event = JSON.parse(req.body.toString());
-      console.warn("[Stripe] No STRIPE_WEBHOOK_SECRET — skipping signature verification");
-    }
+    event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
   } catch (err) {
     console.error("[Stripe webhook] Invalid signature:", err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
