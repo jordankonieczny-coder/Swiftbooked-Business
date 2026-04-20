@@ -128,6 +128,54 @@ export async function setClientPassword(clientId, passwordHash) {
   await pool.query("UPDATE clients SET password_hash = $1 WHERE id = $2", [passwordHash, clientId]);
 }
 
+export async function createPartialClient(data) {
+  const { rows } = await pool.query(
+    `INSERT INTO clients
+      (business_name, trade, owner_name, owner_email, owner_phone, plan, stripe_customer_id, active)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,false)
+     RETURNING *`,
+    [
+      data.business_name, data.trade || "trades",
+      data.owner_name || null, data.owner_email || null,
+      data.owner_phone || null, data.plan || "essential",
+      data.stripe_customer_id || null,
+    ]
+  );
+  return rows[0];
+}
+
+export async function setSetupToken(clientId, token, expires) {
+  await pool.query(
+    "UPDATE clients SET setup_token=$1, setup_token_expires=$2 WHERE id=$3",
+    [token, expires, clientId]
+  );
+}
+
+export async function getClientBySetupToken(token) {
+  const { rows } = await pool.query(
+    "SELECT * FROM clients WHERE setup_token=$1 AND setup_token_expires > NOW()",
+    [token]
+  );
+  return rows[0] || null;
+}
+
+export async function completeSetup(clientId, data, passwordHash) {
+  const { rows } = await pool.query(
+    `UPDATE clients SET
+       trade=$1, hours=$2, service_area=$3, callout_fee=$4,
+       job1=$5, job2=$6, faq=$7, owner_phone=$8,
+       password_hash=$9, setup_completed=true,
+       setup_token=NULL, setup_token_expires=NULL
+     WHERE id=$10 RETURNING *`,
+    [
+      data.trade, data.hours, data.service_area, data.callout_fee || null,
+      data.job1 || null, data.job2 || null, data.faq || null,
+      data.owner_phone || null, passwordHash, clientId,
+    ]
+  );
+  return rows[0];
+}
+
 export async function setStripeCustomerId(clientId, stripeCustomerId) {
   await pool.query(
     "UPDATE clients SET stripe_customer_id = $1 WHERE id = $2",
