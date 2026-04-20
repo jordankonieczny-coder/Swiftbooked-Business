@@ -669,6 +669,10 @@ async function sendNewSignupEmails({ name, business, email, phone, trade, plan, 
     </div>
     <p>Your first month is <strong>free</strong> — no charge for 30 days. After that your ${planLabel} subscription begins automatically.</p>
     <p>Once you submit the form, we'll configure your bot and have it live within <strong>48 hours</strong>. You'll get a test text to confirm everything is working before we go live.</p>
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px 20px;margin:20px 0;">
+      <p style="margin:0 0 6px;font-weight:700;color:#166534;">Your Client Portal</p>
+      <p style="margin:0;font-size:0.9rem;color:#166534;">Track your leads, bookings, and manage billing anytime at: <a href="${BASE_URL}/portal" style="color:#15803d;font-weight:700;">${BASE_URL}/portal</a></p>
+    </div>
     <p>Questions? Reply to this email or call/text Jordan directly at <a href="tel:5875687784" style="color:#1a56db;">587-568-7784</a>.</p>
     <p style="margin-bottom:0;">— Jordan Konieczny<br><span style="color:#6b7280;font-size:0.9rem;">Swiftbooked</span></p>
   </div>
