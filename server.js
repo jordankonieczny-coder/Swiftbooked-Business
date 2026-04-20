@@ -800,6 +800,8 @@ app.get("/api/setup/validate/:token", async (req, res) => {
     owner_name: client.owner_name,
     trade: client.trade,
     owner_phone: client.owner_phone || "",
+    calendar_url: `${BASE_URL}/connect-calendar/${client.id}`,
+    has_calendar: !!client.google_refresh_token,
   });
 });
 
