@@ -2769,20 +2769,32 @@ Which works best?</div>
     const form = e.target;
     const data = Object.fromEntries(new FormData(form));
     const button = form.querySelector('button[type="submit"]');
+    const isDemo = !!window.__SB_DEMO__;
     button.disabled = true;
-    button.textContent = 'Redirecting to checkout...';
+    button.textContent = isDemo ? 'Processing demo signup…' : 'Redirecting to checkout...';
 
     try {
-      const response = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      const result = await response.json();
-      if (result.url) {
-        window.location.href = result.url;
+      if (isDemo) {
+        const response = await fetch('/api/demo-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        if (!result.success) throw new Error(result.error || 'Demo signup failed');
+        window.location.href = '/?signup=success';
       } else {
-        throw new Error(result.error || 'Failed to start checkout');
+        const response = await fetch('/api/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        if (result.url) {
+          window.location.href = result.url;
+        } else {
+          throw new Error(result.error || 'Failed to start checkout');
+        }
       }
     } catch (err) {
       console.error('Checkout error:', err);
