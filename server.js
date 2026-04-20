@@ -684,10 +684,18 @@ app.post("/api/demo-checkout", requireAdmin, async (req, res) => {
   if (!name || !email || !business) return res.status(400).json({ error: "Name, email, and business required" });
 
   const tradeName = trade === "other" ? (trade_other || "other") : (trade || "other");
-  const planLabel = plan === "pro-299" ? "pro" : "essential";
+  const planKey = plan === "pro-299" ? "pro" : "essential";
 
   try {
-    await sendNewSignupEmails({ name, business, email, phone, trade: tradeName, plan: planLabel, stripeCustomerId: null });
+    const client = await createPartialClient({
+      business_name: business, trade: tradeName,
+      owner_name: name, owner_email: email.toLowerCase().trim(),
+      owner_phone: phone || null, plan: planKey,
+    });
+    const token = randomBytes(32).toString("hex");
+    const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    await setSetupToken(client.id, token, expires);
+    await sendSetupEmail({ client, token, plan: planKey });
     console.log(`[Demo signup] ${name} | ${business} | ${email}`);
     res.json({ success: true });
   } catch (err) {
