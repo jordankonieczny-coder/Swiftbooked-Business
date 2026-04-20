@@ -9,29 +9,45 @@ const pool = new Pool({
 export async function initDB() {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS clients (
-      id              SERIAL PRIMARY KEY,
-      twilio_number   VARCHAR(20)  UNIQUE NOT NULL,
-      business_name   VARCHAR(100) NOT NULL,
-      trade           VARCHAR(50)  DEFAULT 'trades',
-      hours           VARCHAR(200) DEFAULT 'Mon–Fri 8am–5pm, Sat 9am–1pm',
-      service_area    VARCHAR(200) DEFAULT 'Edmonton and surrounding area',
-      callout_fee     VARCHAR(100),
-      job1            VARCHAR(200),
-      job2            VARCHAR(200),
-      faq             TEXT,
-      owner_name      VARCHAR(100),
-      owner_email     VARCHAR(100),
-      owner_phone     VARCHAR(20),
-      plan            VARCHAR(20)  DEFAULT 'essential',
-      active          BOOLEAN      DEFAULT true,
-      created_at             TIMESTAMP    DEFAULT NOW(),
-      google_refresh_token   TEXT
+      id                   SERIAL PRIMARY KEY,
+      twilio_number        VARCHAR(20)  UNIQUE NOT NULL,
+      business_name        VARCHAR(100) NOT NULL,
+      trade                VARCHAR(50)  DEFAULT 'trades',
+      hours                VARCHAR(200) DEFAULT 'Mon–Fri 8am–5pm, Sat 9am–1pm',
+      service_area         VARCHAR(200) DEFAULT 'Edmonton and surrounding area',
+      callout_fee          VARCHAR(100),
+      job1                 VARCHAR(200),
+      job2                 VARCHAR(200),
+      faq                  TEXT,
+      owner_name           VARCHAR(100),
+      owner_email          VARCHAR(100),
+      owner_phone          VARCHAR(20),
+      plan                 VARCHAR(20)  DEFAULT 'essential',
+      active               BOOLEAN      DEFAULT true,
+      created_at           TIMESTAMP    DEFAULT NOW(),
+      google_refresh_token TEXT,
+      password_hash        TEXT
     );
-    -- Add column if upgrading existing table
     ALTER TABLE clients ADD COLUMN IF NOT EXISTS google_refresh_token TEXT;
+    ALTER TABLE clients ADD COLUMN IF NOT EXISTS password_hash TEXT;
+
+    CREATE TABLE IF NOT EXISTS leads (
+      id             SERIAL PRIMARY KEY,
+      client_id      INTEGER REFERENCES clients(id) ON DELETE CASCADE,
+      customer_phone VARCHAR(20) NOT NULL,
+      messages       JSONB       DEFAULT '[]',
+      status         VARCHAR(20) DEFAULT 'active',
+      booking_id     VARCHAR(20),
+      created_at     TIMESTAMP   DEFAULT NOW(),
+      updated_at     TIMESTAMP   DEFAULT NOW()
+    );
+    CREATE INDEX IF NOT EXISTS leads_client_id_idx ON leads(client_id);
+    CREATE INDEX IF NOT EXISTS leads_customer_phone_idx ON leads(customer_phone);
   `);
-  console.log("[DB] clients table ready");
+  console.log("[DB] tables ready");
 }
+
+// ── Clients ───────────────────────────────────────────────────────────────────
 
 export async function getClientByNumber(twilioNumber) {
   const { rows } = await pool.query(
@@ -42,9 +58,7 @@ export async function getClientByNumber(twilioNumber) {
 }
 
 export async function getAllClients() {
-  const { rows } = await pool.query(
-    "SELECT * FROM clients ORDER BY created_at DESC"
-  );
+  const { rows } = await pool.query("SELECT * FROM clients ORDER BY created_at DESC");
   return rows;
 }
 
@@ -102,4 +116,51 @@ export async function getClientByEmail(email) {
     [email]
   );
   return rows[0] || null;
+}
+
+export async function setClientPassword(clientId, passwordHash) {
+  await pool.query("UPDATE clients SET password_hash = $1 WHERE id = $2", [passwordHash, clientId]);
+}
+
+// ── Leads ─────────────────────────────────────────────────────────────────────
+
+export async function upsertLead(clientId, customerPhone, messages, status, bookingId) {
+  const existing = await pool.query(
+    "SELECT id FROM leads WHERE client_id = $1 AND customer_phone = $2 ORDER BY created_at DESC LIMIT 1",
+    [clientId, customerPhone]
+  );
+
+  if (existing.rows.length) {
+    const { rows } = await pool.query(
+      `UPDATE leads SET messages=$1, status=$2, booking_id=$3, updated_at=NOW()
+       WHERE id=$4 RETURNING *`,
+      [JSON.stringify(messages), status, bookingId || null, existing.rows[0].id]
+    );
+    return rows[0];
+  } else {
+    const { rows } = await pool.query(
+      `INSERT INTO leads (client_id, customer_phone, messages, status, booking_id)
+       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [clientId, customerPhone, JSON.stringify(messages), status, bookingId || null]
+    );
+    return rows[0];
+  }
+}
+
+export async function getAllLeads() {
+  const { rows } = await pool.query(`
+    SELECT l.*, c.business_name, c.trade
+    FROM leads l
+    LEFT JOIN clients c ON l.client_id = c.id
+    ORDER BY l.updated_at DESC
+  `);
+  return rows;
+}
+
+export async function getLeadsByClient(clientId) {
+  const { rows } = await pool.query(
+    `SELECT * FROM leads WHERE client_id = $1 ORDER BY updated_at DESC`,
+    [clientId]
+  );
+  return rows;
 }
