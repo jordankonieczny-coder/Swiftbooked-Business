@@ -218,6 +218,7 @@
         <td>
           <div class="actions">
             <button class="btn btn-secondary btn-sm" onclick="editClient(${c.id})">Edit</button>
+            <button class="btn btn-secondary btn-sm" style="background:#eff6ff;color:#1e40af;" onclick="openPasswordModal(${c.id}, '${c.business_name.replace(/'/g,"\\'")}')">Password</button>
             <button class="btn btn-danger btn-sm" onclick="deleteClientById(${c.id}, '${c.business_name.replace(/'/g,"\\'")}')">Delete</button>
           </div>
         </td>
