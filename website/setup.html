@@ -358,11 +358,11 @@ Q: Do you offer financing? A: Yes, we offer 0% financing on jobs over $1,000."><
   }
 
   async function submitSetup() {
-    clearError(4);
+    clearError(5);
     const password = document.getElementById('f-password').value;
     const password2 = document.getElementById('f-password2').value;
-    if (!password || password.length < 6) { showError(4, 'Password must be at least 6 characters.'); return; }
-    if (password !== password2) { showError(4, 'Passwords do not match.'); return; }
+    if (!password || password.length < 6) { showError(5, 'Password must be at least 6 characters.'); return; }
+    if (password !== password2) { showError(5, 'Passwords do not match.'); return; }
 
     const btn = document.getElementById('submit-btn');
     btn.disabled = true;
