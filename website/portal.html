@@ -238,6 +238,31 @@
     document.getElementById('lcard-' + i).classList.toggle('open');
   }
 
+  async function openBillingPortal() {
+    const token = localStorage.getItem(TOKEN_KEY);
+    const btn = document.getElementById('billing-btn');
+    btn.disabled = true;
+    btn.textContent = 'Loading…';
+    try {
+      const res = await fetch('/api/portal/billing', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || 'Could not open billing portal. Contact Jordan at 587-568-7784.');
+        btn.disabled = false;
+        btn.textContent = 'Manage Billing';
+      }
+    } catch (err) {
+      alert('Could not connect. Please try again or contact Jordan at 587-568-7784.');
+      btn.disabled = false;
+      btn.textContent = 'Manage Billing';
+    }
+  }
+
   // Auto-login if token exists
   if (localStorage.getItem(TOKEN_KEY)) showDashboard();
 </script>
