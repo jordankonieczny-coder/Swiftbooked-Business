@@ -81,7 +81,7 @@
       </tr>
     </thead>
     <tbody id="clients-body">
-      <tr><td colspan="7" class="empty">Loading...</td></tr>
+      <tr><td colspan="8" class="empty">Loading...</td></tr>
     </tbody>
   </table>
 </div>
@@ -195,7 +195,7 @@
   function renderTable() {
     const tbody = document.getElementById('clients-body');
     if (!clients.length) {
-      tbody.innerHTML = '<tr><td colspan="7" class="empty">No clients yet. Click "Add Client" to get started.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" class="empty">No clients yet. Click "Add Client" to get started.</td></tr>';
       return;
     }
     tbody.innerHTML = clients.map(c => `
