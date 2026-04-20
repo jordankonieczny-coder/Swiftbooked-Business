@@ -36,6 +36,53 @@ app.use(
   })
 );
 
+// ── Stripe ────────────────────────────────────────────────────────────────────
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY)
+  : null;
+
+// Stripe webhook — raw body MUST be parsed before express.json()
+app.post("/api/stripe-webhook", express.raw({ type: "application/json" }), async (req, res) => {
+  if (!stripe) return res.status(500).send("Stripe not configured");
+
+  const sig = req.headers["stripe-signature"];
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  let event;
+  try {
+    if (webhookSecret) {
+      event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+    } else {
+      event = JSON.parse(req.body.toString());
+      console.warn("[Stripe] No STRIPE_WEBHOOK_SECRET — skipping signature verification");
+    }
+  } catch (err) {
+    console.error("[Stripe webhook] Invalid signature:", err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object;
+    const m = session.metadata || {};
+    console.log(`[Stripe] New signup: ${m.business} (${m.email})`);
+    try {
+      await sendNewSignupEmails({
+        name: m.name,
+        business: m.business,
+        email: m.email,
+        phone: m.phone,
+        trade: m.trade,
+        plan: m.plan,
+        stripeCustomerId: session.customer,
+      });
+    } catch (err) {
+      console.error("[Stripe webhook] Email error:", err.message);
+    }
+  }
+
+  res.json({ received: true });
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
