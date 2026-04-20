@@ -740,13 +740,18 @@ app.post("/api/admin/clients/:id/widget-key", requireAdmin, async (req, res) => 
 // ADMIN — password protected client management
 // ═════════════════════════════════════════════════════════════════════════════
 
-const JWT_SECRET = process.env.JWT_SECRET || "swiftbooked-portal-secret-change-in-prod";
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) throw new Error("JWT_SECRET environment variable is not set");
+
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+if (!ADMIN_PASSWORD) throw new Error("ADMIN_PASSWORD environment variable is not set");
+
 function requireAdmin(req, res, next) {
   const auth = req.headers.authorization || "";
   const [scheme, encoded] = auth.split(" ");
   if (scheme === "Basic" && encoded) {
     const [, pass] = Buffer.from(encoded, "base64").toString().split(":");
-    if (pass === (process.env.ADMIN_PASSWORD || "swiftbooked")) return next();
+    if (pass === ADMIN_PASSWORD) return next();
   }
   res.set("WWW-Authenticate", 'Basic realm="Swiftbooked Admin"');
   res.status(401).send("Unauthorized");
