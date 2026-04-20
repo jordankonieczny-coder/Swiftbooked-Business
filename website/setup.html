@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swiftbooked — Bot Setup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f9fafb; color: #111827; font-size: 0.9rem; min-height: 100vh; }
+    header { background: #1a56db; color: #fff; padding: 16px 24px; text-align: center; }
+    header h1 { font-size: 1.1rem; font-weight: 700; }
+    .container { max-width: 600px; margin: 0 auto; padding: 32px 24px 60px; }
+
+    /* Progress bar */
+    .progress { display: flex; gap: 6px; margin-bottom: 32px; }
+    .progress-step { flex: 1; height: 4px; border-radius: 4px; background: #e5e7eb; transition: background 0.3s; }
+    .progress-step.done { background: #1a56db; }
+    .progress-step.active { background: #93c5fd; }
+
+    .step { display: none; }
+    .step.active { display: block; }
+
+    .step-label { font-size: 0.75rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .step-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 6px; }
+    .step-sub { color: #6b7280; font-size: 0.88rem; margin-bottom: 28px; line-height: 1.5; }
+
+    .field { margin-bottom: 18px; }
+    .field label { display: block; font-weight: 600; font-size: 0.82rem; margin-bottom: 6px; color: #374151; }
+    .field .hint { font-size: 0.78rem; color: #9ca3af; margin-top: 4px; }
+    input, select, textarea { width: 100%; padding: 11px 14px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color 0.15s; background: #fff; }
+    input:focus, select:focus, textarea:focus { border-color: #1a56db; }
+    textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 500px) { .row { grid-template-columns: 1fr; } }
+
+    .btn-row { display: flex; gap: 12px; margin-top: 28px; }
+    .btn { padding: 13px 24px; border-radius: 8px; border: none; font-family: inherit; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: background 0.15s; }
+    .btn-primary { background: #1a56db; color: #fff; flex: 1; }
+    .btn-primary:hover { background: #1342a8; }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-secondary { background: #e5e7eb; color: #374151; }
+    .btn-secondary:hover { background: #d1d5db; }
+
+    .error-msg { color: #dc2626; font-size: 0.82rem; margin-top: 12px; padding: 10px 14px; background: #fef2f2; border-radius: 8px; display: none; }
+
+    /* Done screen */
+    .done-box { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 40px 32px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+    .done-icon { font-size: 3.5rem; margin-bottom: 16px; }
+    .done-box h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; }
+    .done-box p { color: #6b7280; line-height: 1.6; margin-bottom: 12px; }
+    .done-steps { background: #f9fafb; border-radius: 10px; padding: 18px 20px; margin: 20px 0; text-align: left; }
+    .done-steps p { margin: 0; font-size: 0.88rem; color: #374151; line-height: 2; }
+    .btn-portal { display: inline-block; margin-top: 16px; background: #1a56db; color: #fff; padding: 13px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.95rem; }
+    .btn-portal:hover { background: #1342a8; }
+
+    /* Invalid token screen */
+    .invalid-box { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 40px 32px; text-align: center; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Swiftbooked — Bot Setup</h1>
+</header>
+
+<div class="container" id="main">
+  <div style="text-align:center;padding:60px 0;color:#9ca3af;">Loading…</div>
+</div>
+
+<script>
+  const token = new URLSearchParams(window.location.search).get('token');
+  const main = document.getElementById('main');
+
+  let clientData = {};
+  let currentStep = 1;
+  const TOTAL_STEPS = 4;
+
+  async function init() {
+    if (!token) { showInvalid("No setup token found. Check your welcome email for the setup link."); return; }
+    try {
+      const res = await fetch(`/api/setup/validate/${token}`);
+      const data = await res.json();
+      if (!res.ok) { showInvalid(data.error); return; }
+      clientData = data;
+      renderWizard();
+    } catch (e) {
+      showInvalid("Could not connect. Please try again or contact Jordan at 587-568-7784.");
+    }
+  }
+
+  function showInvalid(msg) {
+    main.innerHTML = `<div class="invalid-box">
+      <div style="font-size:2.5rem;margin-bottom:16px;">🔗</div>
+      <h2 style="font-size:1.2rem;margin-bottom:10px;">Link unavailable</h2>
+      <p style="color:#6b7280;">${msg}</p>
+      <p style="margin-top:20px;font-size:0.85rem;color:#9ca3af;">Need help? Call or text Jordan at <a href="tel:5875687784" style="color:#1a56db;">587-568-7784</a></p>
+    </div>`;
+  }
+
+  function renderWizard() {
+    main.innerHTML = `
+      <div class="progress" id="progress-bar">
+        ${Array.from({length: TOTAL_STEPS}, (_, i) =>
+          `<div class="progress-step ${i + 1 < currentStep ? 'done' : i + 1 === currentStep ? 'active' : ''}" id="ps-${i+1}"></div>`
+        ).join('')}
+      </div>
+
+      <!-- Step 1: Business basics -->
+      <div class="step ${currentStep === 1 ? 'active' : ''}" id="step-1">
+        <div class="step-label">Step 1 of 4</div>
+        <div class="step-title">Your Business</div>
+        <div class="step-sub">Tell us the basics — your AI bot uses this to answer customer questions correctly.</div>
+
+        <div class="field">
+          <label>Trade / Industry *</label>
+          <select id="f-trade">
+            <option value="">Select your trade…</option>
+            <option value="hvac">HVAC</option>
+            <option value="plumbing">Plumbing</option>
+            <option value="electrical">Electrical</option>
+            <option value="roofing">Roofing</option>
+            <option value="landscaping">Landscaping</option>
+            <option value="contracting">General Contracting</option>
+            <option value="painting">Painting</option>
+            <option value="appliance">Appliance Repair</option>
+            <option value="garage">Garage Doors</option>
+            <option value="pest">Pest Control</option>
+            <option value="cleaning">Cleaning Services</option>
+            <option value="flooring">Flooring</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Business Hours *</label>
+          <input type="text" id="f-hours" placeholder="Mon–Fri 8am–5pm, Sat 9am–1pm, emergency service available">
+          <div class="hint">Be specific — the bot will quote these to customers who ask.</div>
+        </div>
+        <div class="field">
+          <label>Service Area *</label>
+          <input type="text" id="f-service_area" placeholder="Edmonton and surrounding area (within 50km)">
+        </div>
+        <div class="field">
+          <label>Your Cell Phone (for escalation alerts)</label>
+          <input type="tel" id="f-owner_phone" placeholder="+17801234567" value="${clientData.owner_phone || ''}">
+          <div class="hint">We'll text you when a customer asks to speak with a real person.</div>
+        </div>
+        <div class="error-msg" id="err-1"></div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="nextStep(1)">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Services & pricing -->
+      <div class="step ${currentStep === 2 ? 'active' : ''}" id="step-2">
+        <div class="step-label">Step 2 of 4</div>
+        <div class="step-title">Services & Pricing</div>
+        <div class="step-sub">Your bot will quote these prices when customers ask. Leave blank if you prefer to quote on-site.</div>
+
+        <div class="field">
+          <label>Service / Diagnostic Fee</label>
+          <input type="text" id="f-callout_fee" placeholder="$120 service call fee">
+          <div class="hint">e.g. "$120 service call, waived if you proceed with repairs"</div>
+        </div>
+        <div class="field">
+          <label>Most Common Service #1 + Price</label>
+          <input type="text" id="f-job1" placeholder="Furnace tune-up — $179">
+        </div>
+        <div class="field">
+          <label>Most Common Service #2 + Price</label>
+          <input type="text" id="f-job2" placeholder="AC installation — $4,000–$6,000 depending on unit">
+        </div>
+        <div class="error-msg" id="err-2"></div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="prevStep(2)">← Back</button>
+          <button class="btn btn-primary" onclick="nextStep(2)">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 3: FAQ / custom info -->
+      <div class="step ${currentStep === 3 ? 'active' : ''}" id="step-3">
+        <div class="step-label">Step 3 of 4</div>
+        <div class="step-title">Custom Q&A</div>
+        <div class="step-sub">Anything your customers frequently ask? Add it here and your bot will answer it perfectly every time.</div>
+
+        <div class="field">
+          <label>Frequently Asked Questions</label>
+          <textarea id="f-faq" placeholder="Q: Are you licensed and insured? A: Yes, fully licensed and insured in Alberta.
+Q: Do you offer same-day service? A: Yes, we often have same-day availability for urgent jobs.
+Q: Do you offer financing? A: Yes, we offer 0% financing on jobs over $1,000."></textarea>
+          <div class="hint">Format: one Q&A per line. The more you add, the smarter your bot gets.</div>
+        </div>
+        <div class="error-msg" id="err-3"></div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="prevStep(3)">← Back</button>
+          <button class="btn btn-primary" onclick="nextStep(3)">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Portal password -->
+      <div class="step ${currentStep === 4 ? 'active' : ''}" id="step-4">
+        <div class="step-label">Step 4 of 4</div>
+        <div class="step-title">Secure Your Account</div>
+        <div class="step-sub">Create a password for your client portal — where you'll track leads, view conversations, and manage billing.</div>
+
+        <div class="field">
+          <label>Email</label>
+          <input type="text" value="${clientData.owner_name ? clientData.owner_name + ' — ' : ''}your account email" disabled style="background:#f3f4f6;color:#6b7280;">
+        </div>
+        <div class="field">
+          <label>Password *</label>
+          <input type="password" id="f-password" placeholder="At least 6 characters" autocomplete="new-password">
+        </div>
+        <div class="field">
+          <label>Confirm Password *</label>
+          <input type="password" id="f-password2" placeholder="Repeat your password" autocomplete="new-password">
+        </div>
+        <div class="error-msg" id="err-4"></div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="prevStep(4)">← Back</button>
+          <button class="btn btn-primary" id="submit-btn" onclick="submitSetup()">Complete Setup →</button>
+        </div>
+      </div>
+
+      <!-- Done -->
+      <div class="step ${currentStep === 5 ? 'active' : ''}" id="step-5">
+        <div class="done-box">
+          <div class="done-icon">🎉</div>
+          <h2>You're all set!</h2>
+          <p>Jordan has been notified and will have your AI bot live within <strong>48 hours</strong>. You'll receive a test text to confirm everything is working.</p>
+          <div class="done-steps">
+            <p>✅ &nbsp;Bot configured</p>
+            <p>✅ &nbsp;Portal account created</p>
+            <p>⏳ &nbsp;Jordan assigns your phone number</p>
+            <p>⏳ &nbsp;Test text sent to confirm</p>
+            <p>🚀 &nbsp;You go live</p>
+          </div>
+          <a href="/portal" class="btn-portal">Go to My Portal →</a>
+          <p style="margin-top:16px;font-size:0.82rem;">Questions? Call or text Jordan at <a href="tel:5875687784" style="color:#1a56db;">587-568-7784</a></p>
+        </div>
+      </div>
+    `;
+
+    // Pre-fill trade if we have it
+    if (clientData.trade && clientData.trade !== 'trades') {
+      const sel = document.getElementById('f-trade');
+      if (sel) sel.value = clientData.trade;
+    }
+  }
+
+  function updateProgress(step) {
+    for (let i = 1; i <= TOTAL_STEPS; i++) {
+      const el = document.getElementById('ps-' + i);
+      if (!el) continue;
+      el.className = 'progress-step ' + (i < step ? 'done' : i === step ? 'active' : '');
+    }
+  }
+
+  function showError(step, msg) {
+    const el = document.getElementById('err-' + step);
+    if (!el) return;
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  function clearError(step) {
+    const el = document.getElementById('err-' + step);
+    if (el) el.style.display = 'none';
+  }
+
+  function nextStep(from) {
+    clearError(from);
+    if (from === 1) {
+      const trade = document.getElementById('f-trade').value;
+      const hours = document.getElementById('f-hours').value.trim();
+      const area = document.getElementById('f-service_area').value.trim();
+      if (!trade) { showError(1, 'Please select your trade.'); return; }
+      if (!hours) { showError(1, 'Please enter your business hours.'); return; }
+      if (!area) { showError(1, 'Please enter your service area.'); return; }
+    }
+    showStep(from + 1);
+  }
+
+  function prevStep(from) {
+    showStep(from - 1);
+  }
+
+  function showStep(n) {
+    currentStep = n;
+    document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+    const el = document.getElementById('step-' + n);
+    if (el) el.classList.add('active');
+    if (n <= TOTAL_STEPS) updateProgress(n);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async function submitSetup() {
+    clearError(4);
+    const password = document.getElementById('f-password').value;
+    const password2 = document.getElementById('f-password2').value;
+    if (!password || password.length < 6) { showError(4, 'Password must be at least 6 characters.'); return; }
+    if (password !== password2) { showError(4, 'Passwords do not match.'); return; }
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    const payload = {
+      trade:        document.getElementById('f-trade').value,
+      hours:        document.getElementById('f-hours').value.trim(),
+      service_area: document.getElementById('f-service_area').value.trim(),
+      owner_phone:  document.getElementById('f-owner_phone').value.trim(),
+      callout_fee:  document.getElementById('f-callout_fee').value.trim(),
+      job1:         document.getElementById('f-job1').value.trim(),
+      job2:         document.getElementById('f-job2').value.trim(),
+      faq:          document.getElementById('f-faq').value.trim(),
+      password,
+    };
+
+    try {
+      const res = await fetch(`/api/setup/${token}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) { showError(4, data.error || 'Something went wrong.'); btn.disabled = false; btn.textContent = 'Complete Setup →'; return; }
+      showStep(5);
+    } catch (e) {
+      showError(4, 'Could not connect. Please try again.');
+      btn.disabled = false;
+      btn.textContent = 'Complete Setup →';
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>
