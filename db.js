@@ -24,8 +24,11 @@ export async function initDB() {
       owner_phone     VARCHAR(20),
       plan            VARCHAR(20)  DEFAULT 'essential',
       active          BOOLEAN      DEFAULT true,
-      created_at      TIMESTAMP    DEFAULT NOW()
+      created_at             TIMESTAMP    DEFAULT NOW(),
+      google_refresh_token   TEXT
     );
+    -- Add column if upgrading existing table
+    ALTER TABLE clients ADD COLUMN IF NOT EXISTS google_refresh_token TEXT;
   `);
   console.log("[DB] clients table ready");
 }
