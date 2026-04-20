@@ -387,10 +387,10 @@ Q: Do you offer financing? A: Yes, we offer 0% financing on jobs over $1,000."><
         body: JSON.stringify(payload),
       });
       const data = await res.json();
-      if (!res.ok) { showError(4, data.error || 'Something went wrong.'); btn.disabled = false; btn.textContent = 'Complete Setup →'; return; }
-      showStep(5);
+      if (!res.ok) { showError(5, data.error || 'Something went wrong.'); btn.disabled = false; btn.textContent = 'Complete Setup →'; return; }
+      showStep(6);
     } catch (e) {
-      showError(4, 'Could not connect. Please try again.');
+      showError(5, 'Could not connect. Please try again.');
       btn.disabled = false;
       btn.textContent = 'Complete Setup →';
     }
