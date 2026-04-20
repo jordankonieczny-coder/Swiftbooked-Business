@@ -92,8 +92,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // ── Rate limiting ─────────────────────────────────────────────────────────────
 const demoLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 50,                   // 50 requests per IP per 15 min
+  windowMs: 15 * 60 * 1000,
+  max: 50,
   message: { error: "Too many requests — please try again in a few minutes." },
 });
 
@@ -101,6 +101,12 @@ const smsLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 20,
   message: { error: "Rate limit exceeded" },
+});
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { error: "Too many login attempts — please try again in 15 minutes." },
 });
 
 // ── Twilio client ─────────────────────────────────────────────────────────────
