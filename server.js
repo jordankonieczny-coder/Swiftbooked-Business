@@ -611,6 +611,8 @@ app.get("/connect-calendar/:id", (req, res) => {
 // ═════════════════════════════════════════════════════════════════════════════
 // ADMIN — password protected client management
 // ═════════════════════════════════════════════════════════════════════════════
+
+const JWT_SECRET = process.env.JWT_SECRET || "swiftbooked-portal-secret-change-in-prod";
 function requireAdmin(req, res, next) {
   const auth = req.headers.authorization || "";
   const [scheme, encoded] = auth.split(" ");
