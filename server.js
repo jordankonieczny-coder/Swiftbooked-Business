@@ -678,6 +678,59 @@ app.get("/connect-calendar/:id", (req, res) => {
 });
 
 // ═════════════════════════════════════════════════════════════════════════════
+// WIDGET — embeddable chat for Pro clients
+// ═════════════════════════════════════════════════════════════════════════════
+
+// Return business name so widget can greet with the right name
+app.get("/api/widget/config", async (req, res) => {
+  const { key } = req.query;
+  if (!key) return res.status(400).json({ error: "key required" });
+  const client = await getClientByWidgetKey(key).catch(() => null);
+  if (!client) return res.status(404).json({ error: "Widget not found" });
+  res.json({ business_name: client.business_name });
+});
+
+// Handle chat messages from embedded widget
+app.post("/api/widget/chat", demoLimiter, async (req, res) => {
+  const { key, sessionId, message } = req.body;
+  if (!key || !sessionId || !message) return res.status(400).json({ error: "key, sessionId, and message required" });
+  if (message.length > 500) return res.status(400).json({ error: "Message too long" });
+
+  const client = await getClientByWidgetKey(key).catch(() => null);
+  if (!client) return res.status(404).json({ error: "Widget not found" });
+
+  const config = {
+    bizName:  client.business_name,
+    trade:    client.trade,
+    hours:    client.hours,
+    area:     client.service_area,
+    callout:  client.callout_fee,
+    job1:     client.job1,
+    job2:     client.job2,
+    faq:      client.faq,
+  };
+
+  try {
+    const result = await handleChat(`widget_${key}_${sessionId}`, message, config);
+    res.json({ reply: result.reply });
+  } catch (err) {
+    console.error("[Widget chat error]", err.message);
+    res.status(500).json({ reply: "Sorry, I'm having trouble right now. Please call us directly." });
+  }
+});
+
+// Generate (or regenerate) a widget key for a client
+app.post("/api/admin/clients/:id/widget-key", requireAdmin, async (req, res) => {
+  const key = "sb_" + Math.random().toString(36).slice(2, 10);
+  try {
+    const client = await setWidgetKey(parseInt(req.params.id), key);
+    res.json({ widget_key: client.widget_key });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ═════════════════════════════════════════════════════════════════════════════
 // ADMIN — password protected client management
 // ═════════════════════════════════════════════════════════════════════════════
 
