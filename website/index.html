@@ -2750,7 +2750,19 @@ Which works best?</div>
     obs.observe(signup);
   })();
 
-  // ─── Form submission ──────────────────────────────────────────────────────────
+  // ─── Form submission → Stripe Checkout ───────────────────────────────────────
+
+  // Show success state if Stripe redirected back after payment
+  if (new URLSearchParams(window.location.search).get('signup') === 'success') {
+    const form = document.getElementById('signup-form');
+    const success = document.getElementById('form-success');
+    if (form) form.style.display = 'none';
+    if (success) {
+      success.style.display = 'block';
+      document.getElementById('signup').scrollIntoView({ behavior: 'smooth' });
+    }
+    history.replaceState({}, '', window.location.pathname);
+  }
 
   document.getElementById('signup-form').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -2758,24 +2770,25 @@ Which works best?</div>
     const data = Object.fromEntries(new FormData(form));
     const button = form.querySelector('button[type="submit"]');
     button.disabled = true;
-    button.textContent = 'Submitting...';
+    button.textContent = 'Redirecting to checkout...';
 
     try {
-      const response = await fetch('/api/signup', {
+      const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
-      if (response.ok) {
-        form.style.display = 'none';
-        document.getElementById('form-success').style.display = 'block';
-      } else { throw new Error('failed'); }
-    } catch {
-      const subject = encodeURIComponent(`Swiftbooked Signup - ${data.business}`);
-      const body = encodeURIComponent(`New signup:\n\nName: ${data.name}\nBusiness: ${data.business}\nEmail: ${data.email}\nPhone: ${data.phone}\nTrade: ${data.trade}${data.trade_other ? ' / ' + data.trade_other : ''}\nPlan: ${data.plan}`);
-      window.location.href = `mailto:jordankonieczny@gmail.com?subject=${subject}&body=${body}`;
-      form.style.display = 'none';
-      document.getElementById('form-success').style.display = 'block';
+      const result = await response.json();
+      if (result.url) {
+        window.location.href = result.url;
+      } else {
+        throw new Error(result.error || 'Failed to start checkout');
+      }
+    } catch (err) {
+      console.error('Checkout error:', err);
+      button.disabled = false;
+      button.textContent = 'Start My Free Month';
+      alert('Something went wrong. Please try again or email jordankonieczny@gmail.com directly.');
     }
   });
   </script>
