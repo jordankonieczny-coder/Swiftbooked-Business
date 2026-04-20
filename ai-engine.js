@@ -264,16 +264,39 @@ const tools = [
 ];
 
 // ── Tool executor ─────────────────────────────────────────────────────────────
-async function executeTool(toolName, toolInput) {
+async function executeTool(toolName, toolInput, context = {}) {
   switch (toolName) {
     case "confirm_booking": {
-      const bookingId =
-        "BK" +
-        Math.random().toString(36).substring(2, 6).toUpperCase();
+      const bookingId = "BK" + Math.random().toString(36).substring(2, 6).toUpperCase();
       const emergency = toolInput.is_emergency;
+
+      let calendarBooked = false;
+      if (context.googleRefreshToken && toolInput.date && toolInput.start_time && toolInput.end_time) {
+        try {
+          await createBookingEvent(context.googleRefreshToken, {
+            summary: `${emergency ? "⚡ EMERGENCY: " : ""}${toolInput.service_type} — ${toolInput.customer_name}`,
+            description: [
+              `Booking ID: ${bookingId}`,
+              `Customer: ${toolInput.customer_name}`,
+              `Phone: ${context.customerPhone || "Unknown"}`,
+              `Address: ${toolInput.address || "TBD"}`,
+              emergency ? "⚠️ EMERGENCY — after-hours surcharge applies" : null,
+            ].filter(Boolean).join("\n"),
+            date: toolInput.date,
+            startTime: toolInput.start_time,
+            endTime: toolInput.end_time,
+          });
+          calendarBooked = true;
+          console.log(`[Calendar] Booked ${bookingId} for ${context.bizName || "client"}`);
+        } catch (err) {
+          console.error(`[Calendar] Failed to create event:`, err.message);
+        }
+      }
+
       return {
         success: true,
         booking_id: bookingId,
+        calendar_booked: calendarBooked,
         customer_name: toolInput.customer_name,
         service: toolInput.service_type,
         slot: toolInput.time_slot,
