@@ -657,6 +657,93 @@ app.delete("/api/admin/clients/:id", requireAdmin, async (req, res) => {
 });
 
 // ═════════════════════════════════════════════════════════════════════════════
+// ADMIN — Lead log
+// ═════════════════════════════════════════════════════════════════════════════
+app.get("/admin/leads", requireAdmin, (req, res) => {
+  res.sendFile(join(__dirname, "website", "admin-leads.html"));
+});
+
+app.get("/api/admin/leads", requireAdmin, async (req, res) => {
+  try {
+    const leads = await getAllLeads();
+    res.json(leads);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Set password for a client (admin only)
+app.post("/api/admin/clients/:id/password", requireAdmin, async (req, res) => {
+  const { password } = req.body;
+  if (!password || password.length < 6) return res.status(400).json({ error: "Password must be at least 6 characters" });
+  try {
+    const hash = await bcrypt.hash(password, 10);
+    await setClientPassword(parseInt(req.params.id), hash);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ═════════════════════════════════════════════════════════════════════════════
+// CLIENT PORTAL — /portal
+// ═════════════════════════════════════════════════════════════════════════════
+app.get("/portal", (req, res) => {
+  res.sendFile(join(__dirname, "website", "portal.html"));
+});
+
+app.post("/api/portal/login", async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ error: "Email and password required" });
+
+  try {
+    const client = await getClientByEmail(email.toLowerCase().trim());
+    if (!client || !client.password_hash) return res.status(401).json({ error: "Invalid email or password" });
+
+    const valid = await bcrypt.compare(password, client.password_hash);
+    if (!valid) return res.status(401).json({ error: "Invalid email or password" });
+
+    const token = jwt.sign({ clientId: client.id, email: client.owner_email }, JWT_SECRET, { expiresIn: "7d" });
+    res.json({ token, client: { id: client.id, business_name: client.business_name, owner_name: client.owner_name, plan: client.plan } });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+function requirePortalAuth(req, res, next) {
+  const auth = req.headers.authorization || "";
+  const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
+  if (!token) return res.status(401).json({ error: "Not authenticated" });
+  try {
+    req.portalUser = jwt.verify(token, JWT_SECRET);
+    next();
+  } catch {
+    res.status(401).json({ error: "Session expired — please log in again" });
+  }
+}
+
+app.get("/api/portal/leads", requirePortalAuth, async (req, res) => {
+  try {
+    const leads = await getLeadsByClient(req.portalUser.clientId);
+    res.json(leads);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/api/portal/me", requirePortalAuth, async (req, res) => {
+  try {
+    const clients = await getAllClients();
+    const client = clients.find(c => c.id === req.portalUser.clientId);
+    if (!client) return res.status(404).json({ error: "Client not found" });
+    const { password_hash, google_refresh_token, ...safe } = client;
+    res.json(safe);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ═════════════════════════════════════════════════════════════════════════════
 // GET /health
 // ═════════════════════════════════════════════════════════════════════════════
 app.get("/health", (req, res) => {
