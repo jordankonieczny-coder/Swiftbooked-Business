@@ -716,6 +716,67 @@ app.get("/connect-calendar/:id", (req, res) => {
 });
 
 // ═════════════════════════════════════════════════════════════════════════════
+// SETUP WIZARD — client self-onboarding
+// ═════════════════════════════════════════════════════════════════════════════
+
+app.get("/setup", (req, res) => {
+  res.sendFile(join(__dirname, "website", "setup.html"));
+});
+
+app.get("/api/setup/validate/:token", async (req, res) => {
+  const client = await getClientBySetupToken(req.params.token).catch(() => null);
+  if (!client) return res.status(404).json({ error: "This setup link is invalid or has expired. Contact Jordan at 587-568-7784." });
+  if (client.setup_completed) return res.status(410).json({ error: "Setup is already complete. Log in at swiftbooked.ca/portal" });
+  res.json({
+    business_name: client.business_name,
+    owner_name: client.owner_name,
+    trade: client.trade,
+    owner_phone: client.owner_phone || "",
+  });
+});
+
+app.post("/api/setup/:token", async (req, res) => {
+  const client = await getClientBySetupToken(req.params.token).catch(() => null);
+  if (!client) return res.status(404).json({ error: "Invalid or expired setup link." });
+  if (client.setup_completed) return res.status(410).json({ error: "Already completed." });
+
+  const { trade, hours, service_area, callout_fee, job1, job2, faq, owner_phone, password } = req.body;
+  if (!trade || !hours || !service_area) return res.status(400).json({ error: "Trade, hours, and service area are required." });
+  if (!password || password.length < 6) return res.status(400).json({ error: "Password must be at least 6 characters." });
+
+  try {
+    const passwordHash = await bcrypt.hash(password, 10);
+    await completeSetup(client.id, { trade, hours, service_area, callout_fee, job1, job2, faq, owner_phone }, passwordHash);
+
+    // Notify Jordan
+    await sendEmail({
+      to: process.env.OWNER_EMAIL,
+      subject: `✅ Setup complete — ${client.business_name} is ready to activate`,
+      html: `<div style="font-family:Arial,sans-serif;max-width:500px;">
+        <h2 style="color:#1a56db;">Client Setup Complete 🎉</h2>
+        <p><strong>${client.business_name}</strong> just finished their onboarding form. All they need is a Twilio number to go live.</p>
+        <table style="border-collapse:collapse;width:100%;font-size:0.9rem;">
+          <tr><td style="padding:6px 0;font-weight:700;width:140px;">Owner</td><td>${client.owner_name}</td></tr>
+          <tr><td style="padding:6px 0;font-weight:700;">Email</td><td>${client.owner_email}</td></tr>
+          <tr><td style="padding:6px 0;font-weight:700;">Phone</td><td>${owner_phone || client.owner_phone || "—"}</td></tr>
+          <tr><td style="padding:6px 0;font-weight:700;">Trade</td><td>${trade}</td></tr>
+          <tr><td style="padding:6px 0;font-weight:700;">Hours</td><td>${hours}</td></tr>
+          <tr><td style="padding:6px 0;font-weight:700;">Service Area</td><td>${service_area}</td></tr>
+          <tr><td style="padding:6px 0;font-weight:700;">Plan</td><td>${client.plan}</td></tr>
+        </table>
+        <p style="margin-top:16px;"><strong>Next step:</strong> Assign a Twilio number in the admin panel and set them to Active.</p>
+        <a href="${BASE_URL}/admin" style="display:inline-block;background:#1a56db;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;margin-top:8px;">Open Admin Panel →</a>
+      </div>`,
+    }).catch(err => console.error("[Setup notify error]", err.message));
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("[Setup complete error]", err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ═════════════════════════════════════════════════════════════════════════════
 // WIDGET — embeddable chat for Pro clients
 // ═════════════════════════════════════════════════════════════════════════════
 
