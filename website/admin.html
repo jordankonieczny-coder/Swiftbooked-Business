@@ -207,6 +207,12 @@
         <td><span class="badge badge-${c.plan}">${c.plan}</span></td>
         <td><span class="badge ${c.active ? 'badge-active' : 'badge-inactive'}">${c.active ? 'Active' : 'Inactive'}</span></td>
         <td>
+          ${c.google_refresh_token
+            ? '<span class="badge badge-cal">✓ Connected</span>'
+            : `<a href="/connect-calendar/${c.id}" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration:none;">Send Link</a>`
+          }
+        </td>
+        <td>
           <div class="actions">
             <button class="btn btn-secondary btn-sm" onclick="editClient(${c.id})">Edit</button>
             <button class="btn btn-danger btn-sm" onclick="deleteClientById(${c.id}, '${c.business_name.replace(/'/g,"\\'")}')">Delete</button>
