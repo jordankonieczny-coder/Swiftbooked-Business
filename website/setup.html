@@ -198,16 +198,49 @@ Q: Do you offer financing? A: Yes, we offer 0% financing on jobs over $1,000."><
         </div>
       </div>
 
-      <!-- Step 4: Portal password -->
+      <!-- Step 4: Google Calendar -->
       <div class="step ${currentStep === 4 ? 'active' : ''}" id="step-4">
-        <div class="step-label">Step 4 of 4</div>
+        <div class="step-label">Step 4 of 5</div>
+        <div class="step-title">Connect Your Calendar</div>
+        <div class="step-sub">When your AI bot books an appointment, it lands directly in your Google Calendar — no manual entry needed.</div>
+
+        <div id="cal-status" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:20px 24px;margin-bottom:20px;display:none;">
+          <p style="color:#166534;font-weight:700;margin:0;">✅ Calendar connected!</p>
+          <p style="color:#166534;font-size:0.85rem;margin:6px 0 0;">Bookings will flow straight into your Google Calendar.</p>
+        </div>
+
+        <div id="cal-connect-box" style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:24px;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:10px;">📅</div>
+          <p style="font-weight:700;color:#1e40af;margin-bottom:6px;">Link Google Calendar</p>
+          <p style="color:#3b82f6;font-size:0.85rem;margin-bottom:18px;">We never see your password — Google handles the login securely.</p>
+          <a id="cal-link" href="#" target="_blank" onclick="calClicked()" style="display:inline-block;background:#1a56db;color:#fff;padding:13px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:0.95rem;">Connect Google Calendar →</a>
+          <p style="margin-top:12px;font-size:0.78rem;color:#6b7280;">Opens in a new tab. Come back here when done.</p>
+        </div>
+
+        <div id="cal-confirm" style="display:none;margin-top:16px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px 20px;text-align:center;">
+          <p style="font-size:0.88rem;color:#374151;margin-bottom:12px;">Did the calendar connection succeed?</p>
+          <div style="display:flex;gap:10px;justify-content:center;">
+            <button class="btn btn-primary" style="flex:0;padding:9px 20px;" onclick="calConnected()">Yes, it worked ✓</button>
+            <button class="btn btn-secondary" style="padding:9px 20px;" onclick="showStep(5)">Skip for now</button>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;text-align:center;">
+          <button style="background:none;border:none;color:#9ca3af;font-size:0.82rem;cursor:pointer;text-decoration:underline;" onclick="showStep(5)">Skip — I'll connect later</button>
+        </div>
+
+        <div class="error-msg" id="err-4"></div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="prevStep(4)">← Back</button>
+        </div>
+      </div>
+
+      <!-- Step 5: Portal password -->
+      <div class="step ${currentStep === 5 ? 'active' : ''}" id="step-5">
+        <div class="step-label">Step 5 of 5</div>
         <div class="step-title">Secure Your Account</div>
         <div class="step-sub">Create a password for your client portal — where you'll track leads, view conversations, and manage billing.</div>
 
-        <div class="field">
-          <label>Email</label>
-          <input type="text" value="${clientData.owner_name ? clientData.owner_name + ' — ' : ''}your account email" disabled style="background:#f3f4f6;color:#6b7280;">
-        </div>
         <div class="field">
           <label>Password *</label>
           <input type="password" id="f-password" placeholder="At least 6 characters" autocomplete="new-password">
@@ -216,15 +249,15 @@ Q: Do you offer financing? A: Yes, we offer 0% financing on jobs over $1,000."><
           <label>Confirm Password *</label>
           <input type="password" id="f-password2" placeholder="Repeat your password" autocomplete="new-password">
         </div>
-        <div class="error-msg" id="err-4"></div>
+        <div class="error-msg" id="err-5"></div>
         <div class="btn-row">
-          <button class="btn btn-secondary" onclick="prevStep(4)">← Back</button>
+          <button class="btn btn-secondary" onclick="prevStep(5)">← Back</button>
           <button class="btn btn-primary" id="submit-btn" onclick="submitSetup()">Complete Setup →</button>
         </div>
       </div>
 
       <!-- Done -->
-      <div class="step ${currentStep === 5 ? 'active' : ''}" id="step-5">
+      <div class="step ${currentStep === 6 ? 'active' : ''}" id="step-6">
         <div class="done-box">
           <div class="done-icon">🎉</div>
           <h2>You're all set!</h2>
