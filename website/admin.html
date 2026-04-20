@@ -184,6 +184,28 @@
   </div>
 </div>
 
+<!-- Embed Code Modal -->
+<div class="overlay" id="embed-overlay">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-header">
+      <h3>Widget Embed Code</h3>
+      <button class="modal-close" onclick="document.getElementById('embed-overlay').classList.remove('open')">✕</button>
+    </div>
+    <div class="modal-body" style="grid-template-columns:1fr;">
+      <p id="embed-sub" style="color:#6b7280;font-size:0.85rem;margin:0;"></p>
+      <div class="field">
+        <label>Paste this before the &lt;/body&gt; tag on their website</label>
+        <textarea id="embed-code" style="font-family:monospace;font-size:0.8rem;min-height:80px;" readonly onclick="this.select()"></textarea>
+      </div>
+      <p style="font-size:0.82rem;color:#6b7280;margin:0;">The widget appears as a floating chat button in the bottom-right corner. Works on any website.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="document.getElementById('embed-overlay').classList.remove('open')">Close</button>
+      <button class="btn btn-primary" onclick="copyEmbed()">Copy Code</button>
+    </div>
+  </div>
+</div>
+
 <!-- Password Modal -->
 <div class="overlay" id="pw-overlay">
   <div class="modal" style="max-width:400px;">
