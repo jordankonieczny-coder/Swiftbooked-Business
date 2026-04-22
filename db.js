@@ -194,6 +194,14 @@ export async function getClientByWidgetKey(key) {
   return rows[0] || null;
 }
 
+export async function activateClientWithNumber(clientId, twilioNumber) {
+  const { rows } = await pool.query(
+    "UPDATE clients SET twilio_number=$1, active=true WHERE id=$2 RETURNING *",
+    [twilioNumber, clientId]
+  );
+  return rows[0];
+}
+
 export async function setWidgetKey(clientId, key) {
   const { rows } = await pool.query(
     "UPDATE clients SET widget_key = $1 WHERE id = $2 RETURNING *",
