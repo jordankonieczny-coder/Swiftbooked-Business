@@ -49,6 +49,7 @@ export async function initDB() {
     ALTER TABLE clients ADD COLUMN IF NOT EXISTS setup_token_expires TIMESTAMP;
     ALTER TABLE clients ADD COLUMN IF NOT EXISTS setup_completed BOOLEAN DEFAULT false;
     ALTER TABLE clients ALTER COLUMN twilio_number DROP NOT NULL;
+    ALTER TABLE clients ADD COLUMN IF NOT EXISTS calendly_url VARCHAR(255);
   `);
   console.log("[DB] tables ready");
 }
