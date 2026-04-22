@@ -154,6 +154,57 @@ app.post("/api/chat", demoLimiter, async (req, res) => {
 });
 
 // ═════════════════════════════════════════════════════════════════════════════
+// POST /webhook/voice — Twilio inbound call → play message → SMS the caller back
+// ═════════════════════════════════════════════════════════════════════════════
+app.post("/webhook/voice", async (req, res) => {
+  const { From: callerPhone, To: twilioNumber } = req.body;
+
+  console.log(`[Voice in] ${callerPhone} → ${twilioNumber}`);
+
+  // Respond to Twilio immediately with TwiML (must reply within 5s)
+  res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="alice">Thanks for calling! We're with a customer right now but we'll text you back in just a moment.</Say>
+</Response>`);
+
+  // Fire missed-call SMS in background — don't block the TwiML response
+  if (callerPhone && twilioNumber && callerPhone !== twilioNumber) {
+    processMissedCall(callerPhone, twilioNumber).catch(err =>
+      console.error("[Missed call SMS error]", err.message)
+    );
+  }
+});
+
+async function processMissedCall(callerPhone, twilioNumber) {
+  const client = await getClientByNumber(twilioNumber);
+  const config = client ? {
+    bizName:            client.business_name,
+    trade:              client.trade,
+    hours:              client.hours,
+    area:               client.service_area,
+    callout:            client.callout_fee,
+    job1:               client.job1,
+    job2:               client.job2,
+    faq:                client.faq,
+    googleRefreshToken: client.google_refresh_token || null,
+    calendly_url:       client.calendly_url || null,
+  } : null;
+
+  const result = await handleIncomingMessage(callerPhone, "__missed_call__", null, config);
+  await sendSMSFrom(callerPhone, result.reply, twilioNumber);
+
+  if (client) {
+    const session = getSession(`sms_${callerPhone}`);
+    const messages = session?.messages || [];
+    upsertLead(client.id, callerPhone, messages, "active", null).catch(err =>
+      console.error("[Lead save error]", err.message)
+    );
+  }
+
+  console.log(`[Missed call] Texted ${callerPhone} from ${twilioNumber}`);
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
 // POST /webhook/sms — Twilio inbound SMS
 // ═════════════════════════════════════════════════════════════════════════════
 app.post("/webhook/sms", smsLimiter, async (req, res) => {
