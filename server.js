@@ -889,28 +889,71 @@ app.post("/api/setup/:token", async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10);
     await completeSetup(client.id, { trade, hours, service_area, callout_fee, job1, job2, faq, owner_phone, calendly_url }, passwordHash);
 
+    // Auto-provision Twilio number
+    let twilioNumber = null;
+    let provisionError = null;
+    try {
+      twilioNumber = await provisionTwilioNumber(client.id, client.business_name);
+    } catch (err) {
+      provisionError = err.message;
+      console.error("[Twilio provision error]", err.message);
+    }
+
     // Notify Jordan
     await sendEmail({
       to: process.env.OWNER_EMAIL,
-      subject: `✅ Setup complete — ${client.business_name} is ready to activate`,
+      subject: `✅ Setup complete — ${client.business_name} is ${twilioNumber ? "LIVE" : "ready (manual number needed)"}`,
       html: `<div style="font-family:Arial,sans-serif;max-width:500px;">
         <h2 style="color:#1a56db;">Client Setup Complete 🎉</h2>
-        <p><strong>${client.business_name}</strong> just finished their onboarding form. All they need is a Twilio number to go live.</p>
+        <p><strong>${client.business_name}</strong> just finished their onboarding form.</p>
         <table style="border-collapse:collapse;width:100%;font-size:0.9rem;">
           <tr><td style="padding:6px 0;font-weight:700;width:140px;">Owner</td><td>${client.owner_name}</td></tr>
           <tr><td style="padding:6px 0;font-weight:700;">Email</td><td>${client.owner_email}</td></tr>
           <tr><td style="padding:6px 0;font-weight:700;">Phone</td><td>${owner_phone || client.owner_phone || "—"}</td></tr>
           <tr><td style="padding:6px 0;font-weight:700;">Trade</td><td>${trade}</td></tr>
-          <tr><td style="padding:6px 0;font-weight:700;">Hours</td><td>${hours}</td></tr>
-          <tr><td style="padding:6px 0;font-weight:700;">Service Area</td><td>${service_area}</td></tr>
           <tr><td style="padding:6px 0;font-weight:700;">Plan</td><td>${client.plan}</td></tr>
+          <tr><td style="padding:6px 0;font-weight:700;">Twilio #</td><td>${twilioNumber || `⚠️ Auto-provision failed: ${provisionError}`}</td></tr>
         </table>
-        <p style="margin-top:16px;"><strong>Next step:</strong> Assign a Twilio number in the admin panel and set them to Active.</p>
-        <a href="${BASE_URL}/admin" style="display:inline-block;background:#1a56db;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;margin-top:8px;">Open Admin Panel →</a>
+        ${twilioNumber
+          ? `<p style="margin-top:16px;color:#16a34a;font-weight:700;">✅ Bot is live — Twilio number assigned automatically.</p>
+             <p style="font-size:0.9rem;color:#374151;">Send the client their Swiftbooked number so they can set up call forwarding: <strong>${twilioNumber}</strong></p>`
+          : `<p style="margin-top:16px;color:#dc2626;"><strong>Action needed:</strong> Auto-provision failed. Assign a Twilio number manually in the admin panel.</p>
+             <a href="${BASE_URL}/admin" style="display:inline-block;background:#1a56db;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;margin-top:8px;">Open Admin Panel →</a>`}
       </div>`,
     }).catch(err => console.error("[Setup notify error]", err.message));
 
-    res.json({ success: true });
+    // Email client their Twilio number if provisioned
+    if (twilioNumber && client.owner_email) {
+      const firstName = (client.owner_name || "there").split(" ")[0];
+      await sendEmail({
+        to: client.owner_email,
+        subject: `Your Swiftbooked number is ready — ${twilioNumber}`,
+        html: `<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;color:#111;">
+          <div style="background:#16a34a;padding:24px 28px;border-radius:10px 10px 0 0;">
+            <h1 style="color:#fff;margin:0;font-size:1.2rem;">Your AI bot is live, ${firstName}! 🎉</h1>
+          </div>
+          <div style="background:#f9fafb;padding:24px 28px;border-radius:0 0 10px 10px;border:1px solid #e5e7eb;border-top:none;">
+            <p style="margin-top:0;">Your Swiftbooked number is:</p>
+            <div style="background:#fff;border:2px solid #16a34a;border-radius:10px;padding:18px 24px;text-align:center;margin:16px 0;">
+              <div style="font-size:1.8rem;font-weight:800;color:#16a34a;letter-spacing:1px;">${twilioNumber}</div>
+              <p style="color:#6b7280;font-size:0.85rem;margin:6px 0 0;">Forward your unanswered calls to this number</p>
+            </div>
+            <p style="font-weight:700;margin-bottom:8px;">To set up call forwarding:</p>
+            <ul style="padding-left:20px;color:#374151;font-size:0.9rem;line-height:2;margin-bottom:16px;">
+              <li><strong>iPhone:</strong> Settings → Phone → Call Forwarding → enter the number above</li>
+              <li><strong>Rogers / Bell / Telus:</strong> Dial <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">*61*${twilioNumber.replace(/\+/,"")}#</code> and press call</li>
+            </ul>
+            <p style="font-size:0.88rem;color:#6b7280;margin-bottom:20px;"><strong>Tip:</strong> Disable carrier voicemail so your bot gets the call first — dial <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">#404#</code> (Bell/Telus) or <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">#BAL#</code> (Rogers).</p>
+            <div style="text-align:center;">
+              <a href="${BASE_URL}/portal" style="display:inline-block;background:#1a56db;color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;">View Your Portal →</a>
+            </div>
+            <p style="margin-top:20px;margin-bottom:0;color:#6b7280;font-size:0.85rem;">Questions? Call or text Jordan at <a href="tel:5875687784" style="color:#1a56db;">587-568-7784</a>.</p>
+          </div>
+        </div>`,
+      }).catch(err => console.error("[Number notify error]", err.message));
+    }
+
+    res.json({ success: true, twilioNumber });
   } catch (err) {
     console.error("[Setup complete error]", err.message);
     res.status(500).json({ error: err.message });
