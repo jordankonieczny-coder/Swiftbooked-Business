@@ -22,7 +22,8 @@
       "Bash(git commit -m 'Fix calculator sliders and add auto-playing iPhone conversation *)",
       "Bash(git commit -m 'Fix calculator math and center range slider thumb *)",
       "Bash(git commit -m 'Faster booking flow + Calendly integration *)",
-      "Bash(git commit -m 'Add missed call voice webhook — core feature *)"
+      "Bash(git commit -m 'Add missed call voice webhook — core feature *)",
+      "Bash(git commit -m 'Terms/Privacy pages, Twilio auto-provision, weekly digest, call forwarding for all plans *)"
     ]
   }
 }
