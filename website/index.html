@@ -2851,6 +2851,18 @@ Which works best?</div>
       alert('Something went wrong. Please try again or email jordankonieczny@gmail.com directly.');
     }
   });
+  // Calculator
+  function calcUpdate() {
+    const calls = parseInt(document.getElementById('calc-calls').value);
+    const job   = parseInt(document.getElementById('calc-job').value);
+    document.getElementById('calc-calls-val').textContent = calls;
+    document.getElementById('calc-job-val').textContent = '$' + job.toLocaleString();
+    const monthly = calls * 4.33 * job;
+    document.getElementById('calc-result').textContent = '$' + Math.round(monthly / 100) * 100 < 1000
+      ? '$' + Math.round(monthly / 100) * 100
+      : '$' + (Math.round(monthly / 100) * 100).toLocaleString();
+  }
+  calcUpdate();
   </script>
 
 </body>
