@@ -19,7 +19,8 @@
       "Bash(curl *)",
       "Bash(railway status *)",
       "Bash(git add *)",
-      "Bash(git commit -m 'Fix calculator sliders and add auto-playing iPhone conversation *)"
+      "Bash(git commit -m 'Fix calculator sliders and add auto-playing iPhone conversation *)",
+      "Bash(git commit -m 'Fix calculator math and center range slider thumb *)"
     ]
   }
 }
