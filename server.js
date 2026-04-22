@@ -811,13 +811,13 @@ app.post("/api/setup/:token", async (req, res) => {
   if (!client) return res.status(404).json({ error: "Invalid or expired setup link." });
   if (client.setup_completed) return res.status(410).json({ error: "Already completed." });
 
-  const { trade, hours, service_area, callout_fee, job1, job2, faq, owner_phone, password } = req.body;
+  const { trade, hours, service_area, callout_fee, job1, job2, faq, owner_phone, password, calendly_url } = req.body;
   if (!trade || !hours || !service_area) return res.status(400).json({ error: "Trade, hours, and service area are required." });
   if (!password || password.length < 6) return res.status(400).json({ error: "Password must be at least 6 characters." });
 
   try {
     const passwordHash = await bcrypt.hash(password, 10);
-    await completeSetup(client.id, { trade, hours, service_area, callout_fee, job1, job2, faq, owner_phone }, passwordHash);
+    await completeSetup(client.id, { trade, hours, service_area, callout_fee, job1, job2, faq, owner_phone, calendly_url }, passwordHash);
 
     // Notify Jordan
     await sendEmail({
