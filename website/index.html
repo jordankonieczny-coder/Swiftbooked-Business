@@ -2826,7 +2826,7 @@
     document.getElementById('calc-calls-val').textContent = calls;
     document.getElementById('calc-job-val').textContent = '$' + job.toLocaleString();
 
-    const monthly = Math.round(calls * 4.33 * job * 0.5 / 100) * 100;
+    const monthly = Math.round(calls * 4.33 * job / 100) * 100;
     document.getElementById('calc-result').textContent = '$' + monthly.toLocaleString();
 
     const roi = Math.round(monthly / 199);
