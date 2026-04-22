@@ -2657,11 +2657,9 @@
     initTradeGrid();
     initMobileSheetGrid();
 
-    // Desktop only: auto-launch HVAC so visitors can type immediately
+    // Desktop: auto-launch HVAC so phone is interactive immediately
     if (window.innerWidth > 768) {
-      const hvac = TRADES[0];
-      showConfigStep(hvac);
-      setTimeout(() => { document.getElementById('cfg-skip').click(); }, 30);
+      launchChat(TRADES[0], {});
     }
 
     document.getElementById('demo-send').addEventListener('click', demoSend);
