@@ -1222,6 +1222,95 @@ function normalizePhone(raw) {
   return `+${digits}`;
 }
 
+// ── Twilio number auto-provisioning ──────────────────────────────────────────
+async function provisionTwilioNumber(clientId, bizName) {
+  if (!twilioClient) throw new Error("Twilio not configured");
+
+  // Try Edmonton area codes in order
+  let available = [];
+  for (const areaCode of ["780", "825"]) {
+    available = await twilioClient.availablePhoneNumbers("CA").local.list({ areaCode, limit: 1 });
+    if (available.length) break;
+  }
+  if (!available.length) throw new Error("No local Edmonton numbers available");
+
+  const purchased = await twilioClient.incomingPhoneNumbers.create({
+    phoneNumber: available[0].phoneNumber,
+    voiceUrl:    `${BASE_URL}/webhook/voice`,
+    voiceMethod: "POST",
+    smsUrl:      `${BASE_URL}/webhook/sms`,
+    smsMethod:   "POST",
+    friendlyName: bizName,
+  });
+
+  await activateClientWithNumber(clientId, purchased.phoneNumber);
+  console.log(`[Twilio] Provisioned ${purchased.phoneNumber} for client ${clientId}`);
+  return purchased.phoneNumber;
+}
+
+// ── Weekly digest email ───────────────────────────────────────────────────────
+async function sendWeeklyDigests() {
+  if (!resend) return;
+  const clients = await getAllClients();
+  const active  = clients.filter(c => c.active && c.setup_completed && c.owner_email);
+  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+  for (const c of active) {
+    try {
+      const leads    = await getLeadsByClient(c.id);
+      const thisWeek = leads.filter(l => new Date(l.created_at) >= weekAgo);
+      const bookings = leads.filter(l => l.status === "booked" && new Date(l.updated_at) >= weekAgo);
+      const total    = leads.length;
+      const firstName = (c.owner_name || "there").split(" ")[0];
+
+      await sendEmail({
+        to: c.owner_email,
+        subject: `Your Swiftbooked weekly report — ${bookings.length} booking${bookings.length !== 1 ? "s" : ""} this week`,
+        html: `<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;color:#111;">
+          <div style="background:#1a56db;padding:24px 28px;border-radius:10px 10px 0 0;">
+            <h1 style="color:#fff;margin:0;font-size:1.2rem;">Weekly Summary — ${c.business_name}</h1>
+            <p style="color:rgba(255,255,255,0.8);margin:6px 0 0;font-size:0.88rem;">Week ending ${new Date().toLocaleDateString("en-CA", { weekday:"long", month:"long", day:"numeric" })}</p>
+          </div>
+          <div style="background:#f9fafb;padding:24px 28px;border-radius:0 0 10px 10px;border:1px solid #e5e7eb;border-top:none;">
+            <p style="margin-top:0;">Hi ${firstName},</p>
+            <p>Here's how your AI bot performed this week:</p>
+            <div style="display:flex;gap:16px;margin:20px 0;flex-wrap:wrap;">
+              <div style="flex:1;min-width:120px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px 20px;text-align:center;">
+                <div style="font-size:2rem;font-weight:800;color:#1a56db;">${thisWeek.length}</div>
+                <div style="font-size:0.82rem;color:#6b7280;margin-top:4px;">New leads</div>
+              </div>
+              <div style="flex:1;min-width:120px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px 20px;text-align:center;">
+                <div style="font-size:2rem;font-weight:800;color:#16a34a;">${bookings.length}</div>
+                <div style="font-size:0.82rem;color:#6b7280;margin-top:4px;">Bookings made</div>
+              </div>
+              <div style="flex:1;min-width:120px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px 20px;text-align:center;">
+                <div style="font-size:2rem;font-weight:800;color:#374151;">${total}</div>
+                <div style="font-size:0.82rem;color:#6b7280;margin-top:4px;">All-time leads</div>
+              </div>
+            </div>
+            ${thisWeek.length === 0
+              ? `<p style="color:#6b7280;font-size:0.9rem;">Quiet week — make sure your call forwarding is active so your bot catches every missed call.</p>`
+              : `<p style="font-size:0.9rem;">Your bot responded to every lead instantly — <strong>no missed opportunities</strong> while you were on the job.</p>`}
+            <div style="text-align:center;margin:24px 0;">
+              <a href="${BASE_URL}/portal" style="display:inline-block;background:#1a56db;color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:0.95rem;">View Your Portal →</a>
+            </div>
+            <p style="margin-bottom:0;color:#6b7280;font-size:0.85rem;">Questions? Call or text Jordan at <a href="tel:5875687784" style="color:#1a56db;">587-568-7784</a>.</p>
+          </div>
+        </div>`,
+      });
+      console.log(`[Digest] Sent to ${c.owner_email}`);
+    } catch (err) {
+      console.error(`[Digest error] ${c.owner_email}:`, err.message);
+    }
+  }
+}
+
+// Run every Monday at 8:00 AM Edmonton time (UTC-6 / UTC-7)
+cron.schedule("0 14 * * 1", () => {
+  console.log("[Cron] Sending weekly digests...");
+  sendWeeklyDigests().catch(err => console.error("[Digest cron error]", err.message));
+}, { timezone: "America/Edmonton" });
+
 // ── Start ─────────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
 
