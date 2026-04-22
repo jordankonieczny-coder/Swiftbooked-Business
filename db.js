@@ -166,12 +166,14 @@ export async function completeSetup(clientId, data, passwordHash) {
        trade=$1, hours=$2, service_area=$3, callout_fee=$4,
        job1=$5, job2=$6, faq=$7, owner_phone=$8,
        password_hash=$9, setup_completed=true,
-       setup_token=NULL, setup_token_expires=NULL
-     WHERE id=$10 RETURNING *`,
+       setup_token=NULL, setup_token_expires=NULL,
+       calendly_url=$10
+     WHERE id=$11 RETURNING *`,
     [
       data.trade, data.hours, data.service_area, data.callout_fee || null,
       data.job1 || null, data.job2 || null, data.faq || null,
-      data.owner_phone || null, passwordHash, clientId,
+      data.owner_phone || null, passwordHash,
+      data.calendly_url || null, clientId,
     ]
   );
   return rows[0];
