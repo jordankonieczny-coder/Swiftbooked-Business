@@ -2585,6 +2585,33 @@
     botRespond(text);
   }
 
+  function openMobileTradeSheet() {
+    document.getElementById('mobile-trade-sheet').classList.add('open');
+  }
+
+  function closeMobileTradeSheet() {
+    document.getElementById('mobile-trade-sheet').classList.remove('open');
+  }
+
+  // Close sheet on backdrop click
+  document.getElementById('mobile-trade-sheet').addEventListener('click', function(e) {
+    if (e.target === this) closeMobileTradeSheet();
+  });
+
+  function initMobileSheetGrid() {
+    const grid = document.getElementById('mobile-sheet-grid');
+    TRADES.filter(t => !t.isOther).forEach(trade => {
+      const btn = document.createElement('button');
+      btn.className = 'mobile-sheet-btn';
+      btn.textContent = trade.label;
+      btn.addEventListener('click', () => {
+        closeMobileTradeSheet();
+        startDemoWithTrade(trade);
+      });
+      grid.appendChild(btn);
+    });
+  }
+
   function initTradeGrid() {
     const grid = document.getElementById('trade-grid');
     TRADES.forEach(trade => {
