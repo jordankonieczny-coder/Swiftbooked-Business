@@ -33,6 +33,8 @@ app.set("trust proxy", 1);
 
 // ── Serve static website ─────────────────────────────────────────────────────
 app.use(express.static(join(__dirname, "website")));
+app.get("/terms",   (req, res) => res.sendFile(join(__dirname, "website", "terms.html")));
+app.get("/privacy", (req, res) => res.sendFile(join(__dirname, "website", "privacy.html")));
 
 // ── CORS — allow website demo to call this API ───────────────────────────────
 app.use(
