@@ -161,10 +161,10 @@ app.post("/webhook/voice", async (req, res) => {
 
   console.log(`[Voice in] ${callerPhone} → ${twilioNumber}`);
 
-  // Respond to Twilio immediately with TwiML (must reply within 5s)
+  // Reject the call silently — no voicemail, no message, caller just gets a text
   res.type("text/xml").send(`<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-  <Say voice="alice">Thanks for calling! We're with a customer right now but we'll text you back in just a moment.</Say>
+  <Reject/>
 </Response>`);
 
   // Fire missed-call SMS in background — don't block the TwiML response
