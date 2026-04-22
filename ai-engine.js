@@ -343,10 +343,13 @@ export async function handleChat(sessionId, userMessage, config = {}) {
     session.config = { ...session.config, ...config };
   }
 
-  // Handle greeting trigger from demo widget
-  const isGreeting = userMessage === "__greeting__";
+  // Handle special triggers
+  const isGreeting   = userMessage === "__greeting__";
+  const isMissedCall = userMessage === "__missed_call__";
   const actualMessage = isGreeting
     ? `Send a warm, natural opening text message as ${session.config.bizName || "the business"}. Say something like "Hi, this is [business name] — how can we help you today?" Keep it to 1 sentence. Do not mention SwiftBot or Swiftbooked.`
+    : isMissedCall
+    ? `Send a short, warm text message as ${session.config.bizName || "the business"} to someone who just called but couldn't be answered. Example: "Hey! You just called [Business Name] — sorry we missed you. What can we help you with?" Keep it to 1–2 sentences. Do not mention SwiftBot or Swiftbooked.`
     : userMessage;
 
   // Add user message
