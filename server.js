@@ -430,7 +430,7 @@ app.post("/api/signup", async (req, res) => {
         <p style="font-weight:700;font-size:1rem;margin:0 0 8px;color:#166534;">📅 Connect Your Calendar</p>
         <p style="color:#166534;font-size:0.9rem;margin:0 0 16px;">Click below to securely link your Google Calendar. We never see your password — Google handles the login.</p>
         <a href="${calendarConnectUrl}" style="display:inline-block;background:#1a56db;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:1rem;">Connect Google Calendar →</a>
-        <p style="color:#6b7280;font-size:0.8rem;margin:12px 0 0;">Using Outlook, Apple Calendar, or Calendly? Let us know in your questionnaire reply and we'll walk you through it.</p>
+        <p style="color:#6b7280;font-size:0.8rem;margin:12px 0 0;">Using Outlook or Calendly? Let us know in your questionnaire reply and we'll walk you through it.</p>
       </div>`
     : `<p><strong>5. Calendar app &amp; access</strong><br><span style="color:#6b7280;font-size:0.9rem;">Which calendar do you use? (Google Calendar, Apple Calendar, Outlook, Calendly, or other). We'll send you a secure connect link.</span></p>`;
 
