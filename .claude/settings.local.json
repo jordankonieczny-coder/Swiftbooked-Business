@@ -17,7 +17,9 @@
       "Bash(curl -sf https://swiftbooked-business-production.up.railway.app/health)",
       "Bash(railway variables *)",
       "Bash(curl *)",
-      "Bash(railway status *)"
+      "Bash(railway status *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'Fix calculator sliders and add auto-playing iPhone conversation *)"
     ]
   }
 }
