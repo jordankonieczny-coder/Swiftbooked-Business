@@ -2825,6 +2825,65 @@
     document.getElementById('calc-roi').textContent = roi + '×';
   }
   calcUpdate();
+
+  // ── Auto-playing iPhone conversation ──────────────────────────────────────
+  (function() {
+    const script = [
+      { side: 'customer', text: 'Hey my furnace stopped working, it\'s freezing in here', delay: 800 },
+      { side: 'bot',      text: 'That sounds urgent — we\'ll get someone out ASAP. Can I get your address?', delay: 1800 },
+      { side: 'customer', text: '4521 109 St NW Edmonton', delay: 1200 },
+      { side: 'bot',      text: 'Thanks! We have these openings near you:\n\n1. Today 5:00–7:00 PM\n2. Tomorrow 8:00–10:00 AM\n3. Tomorrow 1:00–3:00 PM\n\nWhich works best?', delay: 2200 },
+      { side: 'customer', text: 'Today please', delay: 1000 },
+      { side: 'bot',      text: 'Booked! ✅ Your tech arrives today 5–7 PM and will call 20 min before. Confirmation #BK7X2R. Help is on the way! 🔧', delay: 1800 },
+    ];
+
+    const body = document.getElementById('demo-chat-body');
+    let step = 0;
+    let playing = false;
+
+    function addTyping(side) {
+      const el = document.createElement('div');
+      el.className = 'msg ' + side + ' typing-indicator';
+      el.innerHTML = '<span></span><span></span><span></span>';
+      body.appendChild(el);
+      body.scrollTop = body.scrollHeight;
+      return el;
+    }
+
+    function addMsg(side, text) {
+      const el = document.createElement('div');
+      el.className = 'msg ' + side;
+      el.style.whiteSpace = 'pre-line';
+      el.textContent = text;
+      body.appendChild(el);
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function playStep() {
+      if (step >= script.length) {
+        // Pause then restart
+        setTimeout(restartPlay, 4000);
+        return;
+      }
+      const s = script[step++];
+      const typingDuration = s.side === 'bot' ? Math.min(s.text.length * 18, 1400) : 500;
+      const typing = addTyping(s.side);
+      setTimeout(() => {
+        typing.remove();
+        addMsg(s.side, s.text);
+        setTimeout(playStep, s.delay);
+      }, typingDuration);
+    }
+
+    function restartPlay() {
+      body.innerHTML = '';
+      step = 0;
+      setTimeout(playStep, 800);
+    }
+
+    // Start after a short delay so the page settles
+    setTimeout(playStep, 1200);
+  })();
   </script>
 
 </body>
