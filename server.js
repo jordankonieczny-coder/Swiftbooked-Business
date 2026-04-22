@@ -706,6 +706,22 @@ async function sendSetupEmail({ client, token, plan }) {
             <p style="margin:0 0 6px;font-weight:700;color:#166534;">Your Client Portal</p>
             <p style="margin:0;font-size:0.9rem;color:#166534;">After setup, track your leads and manage billing at: <a href="${BASE_URL}/portal" style="color:#15803d;font-weight:700;">${BASE_URL}/portal</a></p>
           </div>
+          ${plan === "pro" ? `
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:20px 24px;margin:20px 0;">
+            <p style="margin:0 0 12px;font-weight:700;font-size:1rem;color:#1e40af;">📞 Step 1 — Set Up Call Forwarding</p>
+            <p style="margin:0 0 10px;font-size:0.9rem;color:#1e3a8a;">When you miss a call, your AI bot will automatically text that person back. To enable this, forward unanswered calls to your Swiftbooked number. We'll send your number once your account is activated.</p>
+            <p style="margin:0 0 6px;font-weight:600;font-size:0.88rem;color:#1e40af;">How to set it up:</p>
+            <ul style="margin:0 0 10px;padding-left:20px;color:#1e3a8a;font-size:0.88rem;line-height:2;">
+              <li><strong>iPhone:</strong> Settings → Phone → Call Forwarding → enter your Swiftbooked number</li>
+              <li><strong>Any phone (Rogers/Bell/Telus):</strong> Dial <code style="background:#dbeafe;padding:1px 5px;border-radius:3px;">*61*+1YOURNUMBER#</code> and press call</li>
+            </ul>
+            <p style="margin:0;font-size:0.85rem;color:#3b82f6;"><strong>Tip:</strong> Disable your carrier voicemail so your bot gets the call first — contact your carrier or dial <code style="background:#dbeafe;padding:1px 5px;border-radius:3px;">#404#</code> (Bell/Telus) or <code style="background:#dbeafe;padding:1px 5px;border-radius:3px;">#BAL#</code> (Rogers).</p>
+          </div>
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:20px 24px;margin:20px 0;">
+            <p style="margin:0 0 12px;font-weight:700;font-size:1rem;color:#1e40af;">💬 Step 2 — Add the Chat Widget to Your Website</p>
+            <p style="margin:0 0 10px;font-size:0.9rem;color:#1e3a8a;">Your Pro plan includes an AI chat widget for your website. Once your account is activated, Jordan will send you a one-line code snippet. Paste it anywhere before the <code style="background:#dbeafe;padding:1px 5px;border-radius:3px;">&lt;/body&gt;</code> tag on your site — it works on WordPress, Wix, Squarespace, or any custom site.</p>
+            <p style="margin:0;font-size:0.88rem;color:#1e3a8a;">It looks like this: <code style="background:#dbeafe;padding:2px 8px;border-radius:3px;font-size:0.82rem;">&lt;script src="https://swiftbooked.ca/widget.js" data-key="YOUR_KEY"&gt;&lt;/script&gt;</code></p>
+          </div>` : ""}
           <p>Your first month is <strong>free</strong> — no charge for 30 days (${planLabel} after that).</p>
           <p>Questions? Call or text Jordan at <a href="tel:5875687784" style="color:#1a56db;">587-568-7784</a>.</p>
           <p style="margin-bottom:0;">— Jordan Konieczny<br><span style="color:#6b7280;font-size:0.9rem;">Swiftbooked</span></p>
