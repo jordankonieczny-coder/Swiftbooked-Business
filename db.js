@@ -92,14 +92,14 @@ export async function updateClient(id, data) {
     `UPDATE clients SET
        twilio_number=$1, business_name=$2, trade=$3, hours=$4, service_area=$5,
        callout_fee=$6, job1=$7, job2=$8, faq=$9, owner_name=$10,
-       owner_email=$11, owner_phone=$12, plan=$13, active=$14
-     WHERE id=$15 RETURNING *`,
+       owner_email=$11, owner_phone=$12, plan=$13, active=$14, calendly_url=$15
+     WHERE id=$16 RETURNING *`,
     [
       data.twilio_number, data.business_name, data.trade, data.hours,
       data.service_area, data.callout_fee || null, data.job1 || null,
       data.job2 || null, data.faq || null, data.owner_name || null,
       data.owner_email || null, data.owner_phone || null,
-      data.plan, data.active ?? true, id,
+      data.plan, data.active ?? true, data.calendly_url || null, id,
     ]
   );
   return rows[0];
