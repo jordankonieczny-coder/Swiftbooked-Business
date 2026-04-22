@@ -2554,11 +2554,12 @@
 
   function startDemoWithTrade(trade, customLabel) {
     if (window.innerWidth <= 768) {
-      // Skip config on mobile — go straight to fullscreen chat
       document.getElementById('demo-step-1').style.display = 'none';
       launchChat(trade, {}, customLabel);
     } else {
-      showConfigStep(trade, customLabel);
+      // Desktop: skip config, launch directly
+      document.getElementById('demo-step-1').style.display = 'none';
+      launchChat(trade, {}, customLabel);
     }
   }
 
