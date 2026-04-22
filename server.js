@@ -724,6 +724,13 @@ async function sendSetupEmail({ client, token, plan }) {
             <p style="margin:0 0 12px;font-weight:700;font-size:1rem;color:#1e40af;">💬 Chat Widget for Your Website</p>
             <p style="margin:0 0 10px;font-size:0.9rem;color:#1e3a8a;">Your Pro plan includes an AI chat widget for your website. Once your account is activated, Jordan will send you a one-line code snippet. Paste it anywhere before the <code style="background:#dbeafe;padding:1px 5px;border-radius:3px;">&lt;/body&gt;</code> tag — works on WordPress, Wix, Squarespace, or any custom site.</p>
             <p style="margin:0;font-size:0.88rem;color:#1e3a8a;">It looks like this: <code style="background:#dbeafe;padding:2px 8px;border-radius:3px;font-size:0.82rem;">&lt;script src="https://swiftbooked.ca/widget.js" data-key="YOUR_KEY"&gt;&lt;/script&gt;</code></p>
+          </div>
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:20px 24px;margin:20px 0;">
+            <p style="margin:0 0 12px;font-weight:700;font-size:1rem;color:#1e40af;">📋 Website Contact Form Integration</p>
+            <p style="margin:0 0 10px;font-size:0.9rem;color:#1e3a8a;">When someone fills out a contact form on your website, Swiftbooked can automatically text them back within seconds. Your web developer just adds one line to the form's submit action:</p>
+            <p style="margin:0 0 10px;background:#dbeafe;border-radius:6px;padding:10px 12px;font-family:monospace;font-size:0.82rem;color:#1e3a8a;">POST https://swiftbooked.ca/webhook/form<br>Fields: name, phone, message, service</p>
+            <p style="margin:0 0 4px;font-weight:600;font-size:0.88rem;color:#1e40af;">Using Google Forms?</p>
+            <p style="margin:0;font-size:0.88rem;color:#1e3a8a;">Connect it in 5 minutes with Zapier: <strong>Google Forms → Zapier → Swiftbooked</strong>. In Zapier, create a Zap: trigger = "New Form Response", action = "Webhooks by Zapier" → POST to <code style="background:#dbeafe;padding:1px 4px;border-radius:3px;">https://swiftbooked.ca/webhook/form</code> with the name and phone fields mapped. Questions? Jordan will walk you through it — just reply to this email.</p>
           </div>` : ""}
           <p>Your first month is <strong>free</strong> — no charge for 30 days (${planLabel} after that).</p>
           <p>Questions? Call or text Jordan at <a href="tel:5875687784" style="color:#1a56db;">587-568-7784</a>.</p>
