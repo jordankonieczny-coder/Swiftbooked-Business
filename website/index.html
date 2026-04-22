@@ -38,10 +38,11 @@
       position: sticky;
       top: 0;
       background: #ffffff;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
       z-index: 100;
       padding: 0 24px;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.06);
     }
     .nav-inner {
       max-width: 1080px;
@@ -49,21 +50,50 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 112px;
+      height: 80px;
     }
     .logo-img-link { display: inline-flex; align-items: center; text-decoration: none; }
-    .nav-logo { height: 96px; width: auto; display: block; mix-blend-mode: multiply; }
+    .nav-logo { height: 64px; width: auto; display: block; mix-blend-mode: multiply; }
+    .nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-phone {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+    .nav-phone:hover { background: var(--bg-off); }
+    .nav-login {
+      color: #0f766e;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1.5px solid #0f766e;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-login:hover { background: #0f766e; color: #fff; }
     nav a.cta-nav {
       background: var(--brand);
       color: #fff;
-      padding: 10px 20px;
+      padding: 9px 18px;
       border-radius: 8px;
       text-decoration: none;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       transition: background 0.2s;
     }
     nav a.cta-nav:hover { background: var(--brand-dark); }
+    @media (max-width: 768px) {
+      .nav-inner { height: 64px; }
+      .nav-logo { height: 48px; }
+      .nav-phone { font-size: 0.82rem; padding: 7px 8px; }
+      .nav-login { font-size: 0.78rem; padding: 6px 10px; }
+      nav a.cta-nav { font-size: 0.8rem; padding: 7px 12px; }
+    }
 
     /* ── Sections ────────────────────────────────── */
     section { padding: 80px 24px; }
