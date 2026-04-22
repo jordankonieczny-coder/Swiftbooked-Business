@@ -432,7 +432,7 @@ app.post("/api/signup", async (req, res) => {
         <a href="${calendarConnectUrl}" style="display:inline-block;background:#1a56db;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:1rem;">Connect Google Calendar →</a>
         <p style="color:#6b7280;font-size:0.8rem;margin:12px 0 0;">Using Outlook or Calendly? Let us know in your questionnaire reply and we'll walk you through it.</p>
       </div>`
-    : `<p><strong>5. Calendar app &amp; access</strong><br><span style="color:#6b7280;font-size:0.9rem;">Which calendar do you use? (Google Calendar, Apple Calendar, Outlook, Calendly, or other). We'll send you a secure connect link.</span></p>`;
+    : `<p><strong>5. Calendar app &amp; access</strong><br><span style="color:#6b7280;font-size:0.9rem;">Which calendar do you use? (Google Calendar, Outlook, Calendly, or other). We'll send you a secure connect link.</span></p>`;
 
   // Email to customer — setup questionnaire via Google Form
   const customerHtml = `
