@@ -1511,15 +1511,14 @@
 
       <div class="demo-layout">
 
-        <!-- Left: trade picker + info -->
+        <!-- Left: try demo CTA -->
         <div class="demo-left">
-          <h3>Customize the demo for your business</h3>
-          <p>Select your trade and the AI responds exactly like it would to your real customers via SMS — pricing, availability, booking and all.</p>
+          <h3>See exactly what your customers experience</h3>
+          <p>The phone shows a real conversation — this is what happens every time someone misses a call. Click below to type your own message and try it live.</p>
 
-          <!-- Step 1: Trade picker -->
+          <!-- Default: Try Demo button -->
           <div id="demo-step-1">
-            <div class="demo-trade-label">What type of business do you run?</div>
-            <p class="trade-note" style="font-size:0.82rem; color:var(--text-muted); margin-bottom:12px;">All trades supported — select yours or type it in.</p>
+            <div class="demo-trade-label" style="margin-bottom:12px;">What type of business do you run?</div>
             <div class="trade-grid" id="trade-grid"></div>
             <div class="demo-other-wrap" id="demo-other-wrap" style="display:none;">
               <input type="text" id="demo-other-input" class="demo-other-input" placeholder="e.g. Duct Cleaning, Chimney Sweep…">
@@ -1527,28 +1526,13 @@
             </div>
           </div>
 
-          <!-- Step 1.5: Business config -->
+          <!-- Hidden config fields kept for JS compatibility -->
           <div id="demo-step-config" style="display:none;">
-            <div class="demo-config" style="padding:24px; box-shadow:none; border-color:var(--border);">
-              <h3 style="font-size:1rem;">Personalize your demo</h3>
-              <p class="config-sub">Enter your real details or skip to use example values.</p>
-              <div class="config-field">
-                <label>Business name</label>
-                <input type="text" id="cfg-bizname" placeholder="e.g. Apex Heating & Cooling">
-              </div>
-              <div class="config-field">
-                <label>Most common job &amp; price</label>
-                <input type="text" id="cfg-job1" placeholder="e.g. Furnace tune-up — $179">
-              </div>
-              <div class="config-field">
-                <label>Service area</label>
-                <input type="text" id="cfg-area" placeholder="e.g. Edmonton &amp; Sherwood Park">
-              </div>
-              <div class="config-actions">
-                <button class="btn-primary" id="cfg-start">Launch Demo</button>
-                <button class="config-skip" id="cfg-skip">Skip</button>
-              </div>
-            </div>
+            <input type="hidden" id="cfg-bizname">
+            <input type="hidden" id="cfg-job1">
+            <input type="hidden" id="cfg-area">
+            <button id="cfg-start" style="display:none;"></button>
+            <button id="cfg-skip" style="display:none;"></button>
           </div>
 
           <div id="demo-step-2-controls" style="display:none;">
