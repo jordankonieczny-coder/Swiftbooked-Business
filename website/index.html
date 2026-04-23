@@ -2665,11 +2665,6 @@
     initTradeGrid();
     initMobileSheetGrid();
 
-    // Desktop: auto-launch HVAC so phone is interactive immediately
-    if (window.innerWidth > 768) {
-      launchChat(TRADES[0], {});
-    }
-
     document.getElementById('demo-send').addEventListener('click', demoSend);
     document.getElementById('demo-input').addEventListener('keydown', e => { if(e.key==='Enter') demoSend(); });
 
