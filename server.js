@@ -332,18 +332,25 @@ app.post("/webhook/lsa", async (req, res) => {
 // ── Email transporter ─────────────────────────────────────────────────────────
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
+const RESEND_FROM = process.env.RESEND_FROM_EMAIL || "Swiftbooked <onboarding@resend.dev>";
+
 async function sendEmail({ to, subject, html }) {
   if (!resend) {
     console.log(`[Email - not configured] To: ${to} | Subject: ${subject}`);
     return;
   }
-  const { error } = await resend.emails.send({
-    from: "Swiftbooked <onboarding@resend.dev>",
+  console.log(`[Email] Sending to ${to} | From: ${RESEND_FROM} | Subject: ${subject}`);
+  const { data, error } = await resend.emails.send({
+    from: RESEND_FROM,
     to,
     subject,
     html,
   });
-  if (error) throw new Error(error.message);
+  if (error) {
+    console.error(`[Email error] To: ${to} | ${JSON.stringify(error)}`);
+    throw new Error(error.message);
+  }
+  console.log(`[Email] Sent OK → id: ${data?.id}`);
 }
 
 if (resend) console.log("[Email] Resend configured");
