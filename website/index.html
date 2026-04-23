@@ -2462,6 +2462,9 @@
   }
 
   async function launchChat(trade, custom, customLabel) {
+    // Stop the auto-play demo so the user can type freely
+    autoPlayStopped = true;
+
     const bizName = custom.bizName || customLabel || trade.bizName;
 
     demoSession = {
