@@ -188,6 +188,14 @@ export async function setStripeCustomerId(clientId, stripeCustomerId) {
   );
 }
 
+export async function deactivateClientByStripeId(stripeCustomerId) {
+  const { rows } = await pool.query(
+    "UPDATE clients SET active = false WHERE stripe_customer_id = $1 RETURNING *",
+    [stripeCustomerId]
+  );
+  return rows[0] || null;
+}
+
 export async function getClientByWidgetKey(key) {
   const { rows } = await pool.query(
     "SELECT * FROM clients WHERE widget_key = $1 AND active = true",
