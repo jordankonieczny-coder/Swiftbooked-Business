@@ -2845,24 +2845,6 @@
       alert('Something went wrong. Please try again or email jordankonieczny@gmail.com directly.');
     }
   });
-  // Calculator
-  function calcUpdate() {
-    const callsEl = document.getElementById('calc-calls');
-    const jobEl   = document.getElementById('calc-job');
-    const calls = parseInt(callsEl.value);
-    const job   = parseInt(jobEl.value);
-
-    document.getElementById('calc-calls-val').textContent = calls;
-    document.getElementById('calc-job-val').textContent = '$' + job.toLocaleString();
-
-    const monthly = Math.round(calls * 4.33 * job / 100) * 100;
-    document.getElementById('calc-result').textContent = '$' + monthly.toLocaleString();
-
-    const roi = Math.round(monthly / 199);
-    document.getElementById('calc-roi').textContent = roi + '×';
-  }
-  calcUpdate();
-
   // ── Auto-playing iPhone conversation ──────────────────────────────────────
   // Stopped when a trade is selected so the user can type freely
   let autoPlayStopped = false;
