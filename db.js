@@ -133,14 +133,15 @@ export async function setClientPassword(clientId, passwordHash) {
 export async function createPartialClient(data) {
   const { rows } = await pool.query(
     `INSERT INTO clients
-      (business_name, trade, owner_name, owner_email, owner_phone, plan, stripe_customer_id, active)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,false)
+      (business_name, trade, owner_name, owner_email, owner_phone, plan, stripe_customer_id, active, is_demo)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,false,$8)
      RETURNING *`,
     [
       data.business_name, data.trade || "trades",
       data.owner_name || null, data.owner_email || null,
       data.owner_phone || null, data.plan || "essential",
       data.stripe_customer_id || null,
+      data.is_demo || false,
     ]
   );
   return rows[0];
