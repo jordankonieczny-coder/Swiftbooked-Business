@@ -10,14 +10,16 @@
     body { font-family: 'Inter', sans-serif; background: #f9fafb; color: #111827; font-size: 0.9rem; min-height: 100vh; }
     header { background: #1a56db; color: #fff; padding: 16px 24px; text-align: center; }
     header h1 { font-size: 1.1rem; font-weight: 700; }
-    .container { max-width: 600px; margin: 0 auto; padding: 32px 24px 60px; }
 
     /* Progress bar */
-    .progress { display: flex; gap: 6px; margin-bottom: 32px; }
-    .progress-step { flex: 1; height: 4px; border-radius: 4px; background: #e5e7eb; transition: background 0.3s; }
+    .progress-wrap { margin-bottom: 8px; }
+    .progress-track { display: flex; gap: 6px; margin-bottom: 6px; }
+    .progress-step { flex: 1; height: 5px; border-radius: 4px; background: #e5e7eb; transition: background 0.3s; }
     .progress-step.done { background: #1a56db; }
     .progress-step.active { background: #93c5fd; }
+    .progress-label { font-size: 0.75rem; color: #9ca3af; text-align: right; }
 
+    .container { max-width: 600px; margin: 0 auto; padding: 28px 24px 60px; }
     .step { display: none; }
     .step.active { display: block; }
 
@@ -28,22 +30,28 @@
     .field { margin-bottom: 18px; }
     .field label { display: block; font-weight: 600; font-size: 0.82rem; margin-bottom: 6px; color: #374151; }
     .field .hint { font-size: 0.78rem; color: #9ca3af; margin-top: 4px; }
+    .optional-tag { font-weight: 400; color: #9ca3af; font-size: 0.78rem; margin-left: 4px; }
     input, select, textarea { width: 100%; padding: 11px 14px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color 0.15s; background: #fff; }
     input:focus, select:focus, textarea:focus { border-color: #1a56db; }
-    textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+    textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
 
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     @media (max-width: 500px) { .row { grid-template-columns: 1fr; } }
 
-    .btn-row { display: flex; gap: 12px; margin-top: 28px; }
+    .btn-row { display: flex; gap: 12px; margin-top: 28px; align-items: center; flex-wrap: wrap; }
     .btn { padding: 13px 24px; border-radius: 8px; border: none; font-family: inherit; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: background 0.15s; }
     .btn-primary { background: #1a56db; color: #fff; flex: 1; }
     .btn-primary:hover { background: #1342a8; }
     .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
     .btn-secondary { background: #e5e7eb; color: #374151; }
     .btn-secondary:hover { background: #d1d5db; }
+    .btn-skip { background: none; border: none; color: #9ca3af; font-size: 0.82rem; cursor: pointer; font-family: inherit; text-decoration: underline; padding: 4px; }
+    .btn-skip:hover { color: #6b7280; }
+
+    .skip-note { margin-top: 12px; font-size: 0.78rem; color: #9ca3af; text-align: center; }
 
     .error-msg { color: #dc2626; font-size: 0.82rem; margin-top: 12px; padding: 10px 14px; background: #fef2f2; border-radius: 8px; display: none; }
+    .faq-prefill-note { font-size: 0.78rem; color: #1a56db; background: #eff6ff; border-radius: 6px; padding: 6px 10px; margin-bottom: 10px; display: none; }
 
     /* Done screen */
     .done-box { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 40px 32px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
@@ -55,7 +63,6 @@
     .btn-portal { display: inline-block; margin-top: 16px; background: #1a56db; color: #fff; padding: 13px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.95rem; }
     .btn-portal:hover { background: #1342a8; }
 
-    /* Invalid token screen */
     .invalid-box { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 40px 32px; text-align: center; }
   </style>
 </head>
@@ -76,6 +83,81 @@
   let clientData = {};
   let currentStep = 1;
   const TOTAL_STEPS = 5;
+
+  // Trade-specific FAQ pre-fills
+  const TRADE_FAQS = {
+    hvac: `Q: Are you licensed and insured? A: Yes, fully licensed and insured in Alberta.
+Q: Do you offer emergency service? A: Yes, we offer 24/7 emergency service for heating and cooling failures.
+Q: Do you service all brands? A: Yes, we service all major HVAC brands including Carrier, Lennox, Trane, and more.
+Q: How long does a furnace tune-up take? A: About 45–60 minutes.
+Q: Do you offer financing? A: Yes, we offer financing options on equipment over $1,000.`,
+
+    plumbing: `Q: Are you licensed and insured? A: Yes, fully licensed and insured in Alberta.
+Q: Do you offer emergency service? A: Yes, we offer 24/7 emergency plumbing service.
+Q: Do you handle drain cleaning? A: Yes, we offer drain cleaning and camera inspections.
+Q: Can you replace a water heater same day? A: In most cases yes, depending on parts availability.
+Q: Do you offer free estimates? A: Yes, free estimates on all major jobs.`,
+
+    electrical: `Q: Are you licensed and insured? A: Yes, fully licensed electricians, insured in Alberta.
+Q: Do you pull permits? A: Yes, we handle all permits required by Alberta Safety Codes.
+Q: Do you do panel upgrades? A: Yes, we specialize in electrical panel upgrades and replacements.
+Q: How quickly can you come out? A: We typically have availability within 1–2 business days, same day for emergencies.
+Q: Do you offer free estimates? A: Yes, free estimates on all work.`,
+
+    roofing: `Q: Are you licensed and insured? A: Yes, fully licensed and insured in Alberta.
+Q: Do you offer free estimates? A: Yes, all estimates are free with no obligation.
+Q: What roofing materials do you use? A: We work with asphalt shingles, metal, and flat roofing systems.
+Q: Do you offer a warranty? A: Yes, we offer a workmanship warranty on all installations.
+Q: How long does a roof replacement take? A: Most residential roofs take 1–2 days.`,
+
+    landscaping: `Q: Do you offer free estimates? A: Yes, all estimates are free.
+Q: Are you insured? A: Yes, fully insured.
+Q: Do you do spring and fall cleanup? A: Yes, we offer seasonal cleanup packages.
+Q: Do you offer recurring maintenance? A: Yes, we offer weekly, bi-weekly, and monthly maintenance plans.
+Q: What areas do you service? A: Edmonton and surrounding area within 50km.`,
+
+    contracting: `Q: Are you licensed and insured? A: Yes, fully licensed general contractor, insured in Alberta.
+Q: Do you offer free estimates? A: Yes, free estimates on all projects.
+Q: How long do projects typically take? A: It depends on the scope — we provide a detailed timeline with every quote.
+Q: Do you handle permits? A: Yes, we manage all required permits.
+Q: Do you have references? A: Yes, we're happy to provide references from recent projects.`,
+
+    painting: `Q: Do you offer free estimates? A: Yes, free estimates on all interior and exterior painting.
+Q: Are you insured? A: Yes, fully insured.
+Q: Is prep work included? A: Yes, we handle all prep including patching, sanding, and priming.
+Q: What brands of paint do you use? A: We use premium paints including Sherwin-Williams and Benjamin Moore.
+Q: How long does an average interior paint job take? A: Most homes take 2–4 days depending on size.`,
+
+    appliance: `Q: Are you insured? A: Yes, fully insured.
+Q: What brands do you service? A: We service all major appliance brands including Samsung, LG, Whirlpool, Bosch, and more.
+Q: Do you offer same-day service? A: Yes, we often have same-day availability.
+Q: Do you warranty your repairs? A: Yes, we offer a 90-day warranty on all parts and labour.
+Q: Do you bring parts with you? A: We carry common parts on our truck and can order anything else quickly.`,
+
+    garage: `Q: Are you insured? A: Yes, fully insured.
+Q: Do you offer emergency service? A: Yes, if your door won't open or close we can usually come same day.
+Q: What brands do you work with? A: We work with all major brands including LiftMaster, Chamberlain, and Genie.
+Q: Do you sell new doors? A: Yes, we supply and install new garage doors and openers.
+Q: Do you offer a warranty? A: Yes, all installs come with a 1-year warranty on parts and labour.`,
+
+    pest: `Q: Are you licensed? A: Yes, fully licensed pest control operators in Alberta.
+Q: Are your treatments safe for kids and pets? A: Yes, we use treatments that are safe once dry — usually 1–2 hours.
+Q: Do you offer a guarantee? A: Yes, we offer a satisfaction guarantee and will re-treat if needed.
+Q: What pests do you treat? A: We treat ants, wasps, mice, bedbugs, cockroaches, and more.
+Q: How quickly can you come out? A: Usually within 24–48 hours, same day for wasps and urgent situations.`,
+
+    cleaning: `Q: Are you bonded and insured? A: Yes, fully bonded and insured.
+Q: Do you bring your own supplies? A: Yes, we bring all cleaning supplies and equipment.
+Q: Do you offer recurring cleaning? A: Yes, we offer weekly, bi-weekly, and monthly plans at a discounted rate.
+Q: How long does a cleaning take? A: A standard home takes 2–4 hours depending on size.
+Q: Do you offer deep cleaning? A: Yes, we offer one-time deep cleans and move-in/move-out cleans.`,
+
+    flooring: `Q: Are you insured? A: Yes, fully insured.
+Q: Do you offer free estimates? A: Yes, free in-home estimates with no obligation.
+Q: What types of flooring do you install? A: Hardwood, laminate, vinyl plank, tile, and carpet.
+Q: Do you remove old flooring? A: Yes, demo and disposal is included in our quotes.
+Q: How long does installation take? A: Most rooms take 1–2 days. Full homes take 3–5 days.`,
+  };
 
   async function init() {
     if (!token) { showInvalid("No setup token found. Check your welcome email for the setup link."); return; }
@@ -101,21 +183,23 @@
 
   function renderWizard() {
     main.innerHTML = `
-      <div class="progress" id="progress-bar">
-        ${Array.from({length: TOTAL_STEPS}, (_, i) =>
-          `<div class="progress-step ${i + 1 < currentStep ? 'done' : i + 1 === currentStep ? 'active' : ''}" id="ps-${i+1}"></div>`
-        ).join('')}
+      <div class="progress-wrap">
+        <div class="progress-track" id="progress-bar">
+          ${Array.from({length: TOTAL_STEPS}, (_, i) =>
+            `<div class="progress-step ${i + 1 < currentStep ? 'done' : i + 1 === currentStep ? 'active' : ''}" id="ps-${i+1}"></div>`
+          ).join('')}
+        </div>
+        <div class="progress-label" id="progress-label">Step 1 of ${TOTAL_STEPS}</div>
       </div>
 
       <!-- Step 1: Business basics -->
-      <div class="step ${currentStep === 1 ? 'active' : ''}" id="step-1">
-        <div class="step-label">Step 1 of 4</div>
+      <div class="step active" id="step-1">
         <div class="step-title">Your Business</div>
         <div class="step-sub">Tell us the basics — your AI bot uses this to answer customer questions correctly.</div>
 
         <div class="field">
           <label>Trade / Industry *</label>
-          <select id="f-trade">
+          <select id="f-trade" onchange="onTradeChange()">
             <option value="">Select your trade…</option>
             <option value="hvac">HVAC</option>
             <option value="plumbing">Plumbing</option>
@@ -134,15 +218,15 @@
         </div>
         <div class="field">
           <label>Business Hours *</label>
-          <input type="text" id="f-hours" placeholder="Mon–Fri 8am–5pm, Sat 9am–1pm, emergency service available">
-          <div class="hint">Be specific — the bot will quote these to customers who ask.</div>
+          <input type="text" id="f-hours" placeholder="Mon–Fri 8am–5pm, Sat 9am–1pm">
+          <div class="hint">The bot will quote these to customers who ask.</div>
         </div>
         <div class="field">
           <label>Service Area *</label>
           <input type="text" id="f-service_area" placeholder="Edmonton and surrounding area (within 50km)">
         </div>
         <div class="field">
-          <label>Your Cell Phone (for escalation alerts)</label>
+          <label>Your Cell Phone <span class="optional-tag">(optional)</span></label>
           <input type="tel" id="f-owner_phone" placeholder="+17801234567" value="${clientData.owner_phone || ''}">
           <div class="hint">We'll text you when a customer asks to speak with a real person.</div>
         </div>
@@ -153,61 +237,58 @@
       </div>
 
       <!-- Step 2: Services & pricing -->
-      <div class="step ${currentStep === 2 ? 'active' : ''}" id="step-2">
-        <div class="step-label">Step 2 of 4</div>
+      <div class="step" id="step-2">
         <div class="step-title">Services & Pricing</div>
-        <div class="step-sub">Your bot will quote these prices when customers ask. Leave blank if you prefer to quote on-site.</div>
+        <div class="step-sub">Your bot will quote these when customers ask. All fields are optional — you can fill them in later from your portal.</div>
 
         <div class="field">
-          <label>Service / Diagnostic Fee</label>
-          <input type="text" id="f-callout_fee" placeholder="$120 service call fee">
-          <div class="hint">e.g. "$120 service call, waived if you proceed with repairs"</div>
+          <label>Service / Call-out Fee <span class="optional-tag">(optional)</span></label>
+          <input type="text" id="f-callout_fee" placeholder="$120 service call fee, waived if you proceed with repairs">
         </div>
         <div class="field">
-          <label>Most Common Service #1 + Price</label>
+          <label>Most Common Service #1 + Price <span class="optional-tag">(optional)</span></label>
           <input type="text" id="f-job1" placeholder="Furnace tune-up — $179">
         </div>
         <div class="field">
-          <label>Most Common Service #2 + Price</label>
-          <input type="text" id="f-job2" placeholder="AC installation — $4,000–$6,000 depending on unit">
+          <label>Most Common Service #2 + Price <span class="optional-tag">(optional)</span></label>
+          <input type="text" id="f-job2" placeholder="AC installation — $4,000–$6,000">
         </div>
         <div class="field">
-          <label>Calendly Booking Link <span style="font-weight:400;color:#9ca3af;">(optional)</span></label>
+          <label>Calendly Booking Link <span class="optional-tag">(optional)</span></label>
           <input type="url" id="f-calendly_url" placeholder="https://calendly.com/your-business/service">
-          <div class="hint">If provided, the AI will text customers your Calendly link so they can pick a time themselves — no back-and-forth needed.</div>
+          <div class="hint">The AI will send customers your Calendly link so they pick a time themselves.</div>
         </div>
         <div class="error-msg" id="err-2"></div>
         <div class="btn-row">
           <button class="btn btn-secondary" onclick="prevStep(2)">← Back</button>
           <button class="btn btn-primary" onclick="nextStep(2)">Next →</button>
         </div>
+        <p class="skip-note"><button class="btn-skip" onclick="showStep(3)">Skip this step — fill in later from portal</button></p>
       </div>
 
-      <!-- Step 3: FAQ / custom info -->
-      <div class="step ${currentStep === 3 ? 'active' : ''}" id="step-3">
-        <div class="step-label">Step 3 of 4</div>
-        <div class="step-title">Custom Q&A</div>
-        <div class="step-sub">Anything your customers frequently ask? Add it here and your bot will answer it perfectly every time.</div>
+      <!-- Step 3: FAQ -->
+      <div class="step" id="step-3">
+        <div class="step-title">Common Questions</div>
+        <div class="step-sub">We've pre-filled common Q&amp;As for your trade. Edit, add, or remove anything. You can also skip and update later from your portal.</div>
 
+        <div class="faq-prefill-note" id="faq-prefill-note">FAQs pre-filled for your trade — edit anything that doesn't apply.</div>
         <div class="field">
-          <label>Frequently Asked Questions</label>
-          <textarea id="f-faq" placeholder="Q: Are you licensed and insured? A: Yes, fully licensed and insured in Alberta.
-Q: Do you offer same-day service? A: Yes, we often have same-day availability for urgent jobs.
-Q: Do you offer financing? A: Yes, we offer 0% financing on jobs over $1,000."></textarea>
-          <div class="hint">Format: one Q&A per line. The more you add, the smarter your bot gets.</div>
+          <label>Frequently Asked Questions <span class="optional-tag">(optional)</span></label>
+          <textarea id="f-faq" rows="10"></textarea>
+          <div class="hint">Format: Q: question A: answer — one per line. The more you add, the smarter your bot gets.</div>
         </div>
         <div class="error-msg" id="err-3"></div>
         <div class="btn-row">
           <button class="btn btn-secondary" onclick="prevStep(3)">← Back</button>
           <button class="btn btn-primary" onclick="nextStep(3)">Next →</button>
         </div>
+        <p class="skip-note"><button class="btn-skip" onclick="showStep(4)">Skip this step — fill in later from portal</button></p>
       </div>
 
       <!-- Step 4: Google Calendar -->
-      <div class="step ${currentStep === 4 ? 'active' : ''}" id="step-4">
-        <div class="step-label">Step 4 of 5</div>
+      <div class="step" id="step-4">
         <div class="step-title">Connect Your Calendar</div>
-        <div class="step-sub">When your AI bot books an appointment, it lands directly in your Google Calendar — no manual entry needed.</div>
+        <div class="step-sub">When your AI books an appointment, it lands directly in your Google Calendar. You can also skip this and connect later.</div>
 
         <div id="cal-status" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:20px 24px;margin-bottom:20px;display:none;">
           <p style="color:#166534;font-weight:700;margin:0;">✅ Calendar connected!</p>
@@ -230,19 +311,15 @@ Q: Do you offer financing? A: Yes, we offer 0% financing on jobs over $1,000."><
           </div>
         </div>
 
-        <div style="margin-top:12px;text-align:center;">
-          <button style="background:none;border:none;color:#9ca3af;font-size:0.82rem;cursor:pointer;text-decoration:underline;" onclick="showStep(5)">Skip — I'll connect later</button>
-        </div>
-
         <div class="error-msg" id="err-4"></div>
         <div class="btn-row">
           <button class="btn btn-secondary" onclick="prevStep(4)">← Back</button>
         </div>
+        <p class="skip-note"><button class="btn-skip" onclick="showStep(5)">Skip — connect calendar later from portal</button></p>
       </div>
 
       <!-- Step 5: Portal password -->
-      <div class="step ${currentStep === 5 ? 'active' : ''}" id="step-5">
-        <div class="step-label">Step 5 of 5</div>
+      <div class="step" id="step-5">
         <div class="step-title">Create Your Portal Password</div>
         <div class="step-sub">You'll use this to log into your Swiftbooked portal at <strong>swiftbooked.ca/portal</strong> — where you track leads, view conversations, and manage billing.</div>
 
@@ -262,16 +339,16 @@ Q: Do you offer financing? A: Yes, we offer 0% financing on jobs over $1,000."><
       </div>
 
       <!-- Done -->
-      <div class="step ${currentStep === 6 ? 'active' : ''}" id="step-6">
+      <div class="step" id="step-6">
         <div class="done-box">
           <div class="done-icon">🎉</div>
           <h2>You're all set!</h2>
-          <p>Jordan has been notified and will have your AI bot live within <strong>48 hours</strong>. You'll receive a test text to confirm everything is working.</p>
+          <p>Your AI bot is being configured now. You'll get a text and email confirming your Swiftbooked number within minutes.</p>
           <div class="done-steps">
             <p>✅ &nbsp;Bot configured</p>
             <p>✅ &nbsp;Portal account created</p>
-            <p>⏳ &nbsp;Jordan assigns your phone number</p>
-            <p>⏳ &nbsp;Test text sent to confirm</p>
+            <p>⏳ &nbsp;Swiftbooked number being assigned</p>
+            <p>⏳ &nbsp;Confirmation text on its way</p>
             <p>🚀 &nbsp;You go live</p>
           </div>
           <a href="/portal" class="btn-portal">Go to My Portal →</a>
@@ -280,10 +357,13 @@ Q: Do you offer financing? A: Yes, we offer 0% financing on jobs over $1,000."><
       </div>
     `;
 
-    // Pre-fill trade if we have it
+    // Pre-fill trade if we have it from signup
     if (clientData.trade && clientData.trade !== 'trades') {
       const sel = document.getElementById('f-trade');
-      if (sel) sel.value = clientData.trade;
+      if (sel) {
+        sel.value = clientData.trade;
+        prefillFaq(clientData.trade);
+      }
     }
 
     // Set up calendar link
@@ -296,6 +376,24 @@ Q: Do you offer financing? A: Yes, we offer 0% financing on jobs over $1,000."><
       const status = document.getElementById('cal-status');
       if (box) box.style.display = 'none';
       if (status) status.style.display = 'block';
+    }
+  }
+
+  function onTradeChange() {
+    const trade = document.getElementById('f-trade').value;
+    prefillFaq(trade);
+  }
+
+  function prefillFaq(trade) {
+    const faqEl = document.getElementById('f-faq');
+    const noteEl = document.getElementById('faq-prefill-note');
+    if (!faqEl) return;
+    const faq = TRADE_FAQS[trade];
+    if (faq) {
+      faqEl.value = faq;
+      if (noteEl) noteEl.style.display = 'block';
+    } else {
+      if (noteEl) noteEl.style.display = 'none';
     }
   }
 
@@ -322,6 +420,8 @@ Q: Do you offer financing? A: Yes, we offer 0% financing on jobs over $1,000."><
       if (!el) continue;
       el.className = 'progress-step ' + (i < step ? 'done' : i === step ? 'active' : '');
     }
+    const label = document.getElementById('progress-label');
+    if (label && step <= TOTAL_STEPS) label.textContent = `Step ${step} of ${TOTAL_STEPS}`;
   }
 
   function showError(step, msg) {
@@ -341,17 +441,15 @@ Q: Do you offer financing? A: Yes, we offer 0% financing on jobs over $1,000."><
     if (from === 1) {
       const trade = document.getElementById('f-trade').value;
       const hours = document.getElementById('f-hours').value.trim();
-      const area = document.getElementById('f-service_area').value.trim();
+      const area  = document.getElementById('f-service_area').value.trim();
       if (!trade) { showError(1, 'Please select your trade.'); return; }
       if (!hours) { showError(1, 'Please enter your business hours.'); return; }
-      if (!area) { showError(1, 'Please enter your service area.'); return; }
+      if (!area)  { showError(1, 'Please enter your service area.'); return; }
     }
     showStep(from + 1);
   }
 
-  function prevStep(from) {
-    showStep(from - 1);
-  }
+  function prevStep(from) { showStep(from - 1); }
 
   function showStep(n) {
     currentStep = n;
@@ -364,7 +462,7 @@ Q: Do you offer financing? A: Yes, we offer 0% financing on jobs over $1,000."><
 
   async function submitSetup() {
     clearError(5);
-    const password = document.getElementById('f-password').value;
+    const password  = document.getElementById('f-password').value;
     const password2 = document.getElementById('f-password2').value;
     if (!password || password.length < 6) { showError(5, 'Password must be at least 6 characters.'); return; }
     if (password !== password2) { showError(5, 'Passwords do not match.'); return; }
