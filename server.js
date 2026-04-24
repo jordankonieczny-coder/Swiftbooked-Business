@@ -1029,6 +1029,15 @@ app.post("/api/setup/:token", async (req, res) => {
       }).catch(err => console.error("[Number notify error]", err.message));
     }
 
+    // Confirmation SMS to client if they have a phone number and bot is live
+    const clientPhone = owner_phone || client.owner_phone;
+    if (twilioNumber && clientPhone && twilioClient) {
+      const smsBody = `Hi ${(client.owner_name || "there").split(" ")[0]}, your Swiftbooked AI bot is live! Your number is ${twilioNumber} — forward unanswered calls to it and your bot will text every missed lead back within 30 seconds. Log in at swiftbooked.ca/portal. Questions? Text Jordan at 587-568-7784.`;
+      sendSMSFrom(clientPhone, smsBody, twilioNumber).catch(err =>
+        console.error("[Setup confirmation SMS error]", err.message)
+      );
+    }
+
     res.json({ success: true, twilioNumber, widgetKey });
   } catch (err) {
     console.error("[Setup complete error]", err.message);
