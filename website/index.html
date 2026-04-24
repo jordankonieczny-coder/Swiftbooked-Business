@@ -1452,52 +1452,6 @@
     </div>
   </section>
 
-  <!-- Calculator -->
-  <style>
-    .calc-range { -webkit-appearance:none; appearance:none; width:100%; height:28px; background:transparent; outline:none; cursor:pointer; }
-    .calc-range::-webkit-slider-runnable-track { height:6px; border-radius:99px; background:rgba(255,255,255,0.15); }
-    .calc-range::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:22px; height:22px; border-radius:50%; background:#818cf8; box-shadow:0 0 0 4px rgba(129,140,248,0.35); cursor:pointer; margin-top:-8px; }
-    .calc-range::-moz-range-track { height:6px; border-radius:99px; background:rgba(255,255,255,0.15); }
-    .calc-range::-moz-range-thumb { width:22px; height:22px; border-radius:50%; background:#818cf8; box-shadow:0 0 0 4px rgba(129,140,248,0.35); border:none; cursor:pointer; }
-  </style>
-  <section style="background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 100%);padding:64px 24px;">
-    <div class="container" style="max-width:600px;text-align:center;">
-      <div style="font-size:0.75rem;font-weight:700;color:#818cf8;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Revenue Calculator</div>
-      <h2 style="color:#fff;font-size:1.5rem;font-weight:800;margin-bottom:8px;">What are missed calls costing you?</h2>
-      <p style="color:#94a3b8;font-size:0.9rem;margin-bottom:36px;">Drag the sliders — see your real number instantly.</p>
-
-      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:36px 32px;">
-
-        <div style="margin-bottom:32px;text-align:left;">
-          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;">
-            <label style="font-weight:600;font-size:0.9rem;color:#e2e8f0;">Missed calls per week</label>
-            <span id="calc-calls-val" style="font-weight:800;color:#818cf8;font-size:1.5rem;line-height:1;">5</span>
-          </div>
-          <input type="range" class="calc-range" id="calc-calls" min="1" max="30" value="5" oninput="calcUpdate()">
-          <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:#475569;margin-top:6px;"><span>1</span><span>30</span></div>
-        </div>
-
-        <div style="margin-bottom:36px;text-align:left;">
-          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;">
-            <label style="font-weight:600;font-size:0.9rem;color:#e2e8f0;">Average job value</label>
-            <span id="calc-job-val" style="font-weight:800;color:#818cf8;font-size:1.5rem;line-height:1;">$500</span>
-          </div>
-          <input type="range" class="calc-range" id="calc-job" min="100" max="5000" step="50" value="500" oninput="calcUpdate()">
-          <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:#475569;margin-top:6px;"><span>$100</span><span>$5,000</span></div>
-        </div>
-
-        <div style="background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:16px;padding:28px 24px;text-align:center;">
-          <div style="font-size:0.82rem;color:rgba(255,255,255,0.7);margin-bottom:6px;">You're losing approximately</div>
-          <div id="calc-result" style="font-size:3.2rem;font-weight:800;color:#fff;line-height:1;letter-spacing:-1px;">$10,800</div>
-          <div style="font-size:0.82rem;color:rgba(255,255,255,0.7);margin-top:6px;">per month to missed calls</div>
-          <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.15);font-size:0.8rem;color:rgba(255,255,255,0.6);">Swiftbooked costs $199/mo &nbsp;·&nbsp; <strong style="color:#a5f3fc;" id="calc-roi">54×</strong> return on investment</div>
-        </div>
-
-      </div>
-      <p style="color:#475569;font-size:0.78rem;margin-top:16px;">Based on 4.33 weeks/month. Even recovering 20% of missed calls pays for itself many times over.</p>
-    </div>
-  </section>
-
   <!-- Loss Banner -->
   <div class="loss-banner">
     <p>Miss 2 calls a day at $500 a job — that's <strong>$30,000 a month</strong> going to whoever answered first.</p>
