@@ -74,7 +74,6 @@ app.post("/api/stripe-webhook", express.raw({ type: "application/json" }), async
     const m = session.metadata || {};
     console.log(`[Stripe] New signup: ${m.business} (${m.email})`);
     try {
-      // Create partial client record immediately
       const client = await createPartialClient({
         business_name: m.business,
         trade: m.trade,
@@ -84,16 +83,37 @@ app.post("/api/stripe-webhook", express.raw({ type: "application/json" }), async
         plan: m.plan,
         stripe_customer_id: session.customer,
       });
-
-      // Generate setup token (expires in 7 days)
       const token = randomBytes(32).toString("hex");
       const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
       await setSetupToken(client.id, token, expires);
-
-      // Send setup email to client + notify Jordan
       await sendSetupEmail({ client, token, plan: m.plan });
     } catch (err) {
       console.error("[Stripe webhook] Setup error:", err.message);
+    }
+  }
+
+  if (event.type === "customer.subscription.deleted" || event.type === "customer.subscription.paused") {
+    const sub = event.data.object;
+    const customerId = sub.customer;
+    console.log(`[Stripe] Subscription ${event.type} for customer ${customerId}`);
+    try {
+      const client = await deactivateClientByStripeId(customerId);
+      if (client) {
+        console.log(`[Stripe] Deactivated client: ${client.business_name}`);
+        await sendEmail({
+          to: process.env.OWNER_EMAIL,
+          subject: `⚠️ Subscription cancelled — ${client.business_name}`,
+          html: `<div style="font-family:Arial,sans-serif;max-width:500px;">
+            <h2 style="color:#dc2626;">Subscription Cancelled</h2>
+            <p><strong>${client.business_name}</strong> (${client.owner_email}) just cancelled or their subscription lapsed.</p>
+            <p>Their bot has been deactivated automatically. Twilio number is still assigned — release it manually if needed.</p>
+          </div>`,
+        }).catch(err => console.error("[Cancel notify error]", err.message));
+      } else {
+        console.warn(`[Stripe] No client found for Stripe customer ${customerId}`);
+      }
+    } catch (err) {
+      console.error("[Stripe cancellation error]", err.message);
     }
   }
 
