@@ -913,6 +913,22 @@ app.post("/api/setup/:token", async (req, res) => {
       console.error("[Twilio provision error]", err.message);
     }
 
+    // Auto-generate widget key for Pro clients
+    let widgetKey = null;
+    if (client.plan === "pro") {
+      try {
+        widgetKey = "sb_" + Math.random().toString(36).slice(2, 10);
+        await setWidgetKey(client.id, widgetKey);
+        console.log(`[Widget] Key generated for ${client.business_name}: ${widgetKey}`);
+      } catch (err) {
+        console.error("[Widget key error]", err.message);
+      }
+    }
+
+    const widgetSnippet = widgetKey
+      ? `<script src="${BASE_URL}/widget.js" data-key="${widgetKey}"></script>`
+      : null;
+
     // Notify Jordan
     await sendEmail({
       to: process.env.OWNER_EMAIL,
@@ -927,26 +943,37 @@ app.post("/api/setup/:token", async (req, res) => {
           <tr><td style="padding:6px 0;font-weight:700;">Trade</td><td>${trade}</td></tr>
           <tr><td style="padding:6px 0;font-weight:700;">Plan</td><td>${client.plan}</td></tr>
           <tr><td style="padding:6px 0;font-weight:700;">Twilio #</td><td>${twilioNumber || `⚠️ Auto-provision failed: ${provisionError}`}</td></tr>
+          ${widgetKey ? `<tr><td style="padding:6px 0;font-weight:700;">Widget Key</td><td>${widgetKey}</td></tr>` : ""}
         </table>
         ${twilioNumber
-          ? `<p style="margin-top:16px;color:#16a34a;font-weight:700;">✅ Bot is live — Twilio number assigned automatically.</p>
-             <p style="font-size:0.9rem;color:#374151;">Send the client their Swiftbooked number so they can set up call forwarding: <strong>${twilioNumber}</strong></p>`
+          ? `<p style="margin-top:16px;color:#16a34a;font-weight:700;">✅ Bot is live — Twilio number assigned automatically.</p>`
           : `<p style="margin-top:16px;color:#dc2626;"><strong>Action needed:</strong> Auto-provision failed. Assign a Twilio number manually in the admin panel.</p>
              <a href="${BASE_URL}/admin" style="display:inline-block;background:#1a56db;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;margin-top:8px;">Open Admin Panel →</a>`}
       </div>`,
     }).catch(err => console.error("[Setup notify error]", err.message));
 
-    // Email client their Twilio number if provisioned
-    if (twilioNumber && client.owner_email) {
+    // Email client their Twilio number (and widget snippet if Pro)
+    if (client.owner_email) {
       const firstName = (client.owner_name || "there").split(" ")[0];
+      const isPro = client.plan === "pro";
+
+      const widgetSection = widgetSnippet ? `
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:20px 24px;margin:20px 0;">
+            <p style="margin:0 0 8px;font-weight:700;font-size:1rem;color:#1e40af;">💬 Your Website Chat Widget</p>
+            <p style="margin:0 0 12px;font-size:0.9rem;color:#1e3a8a;">Paste this one line of code just before the <code style="background:#dbeafe;padding:1px 5px;border-radius:3px;">&lt;/body&gt;</code> tag on your website. Works on WordPress, Wix, Squarespace, or any custom site.</p>
+            <div style="background:#1e3a8a;border-radius:6px;padding:12px 16px;font-family:monospace;font-size:0.8rem;color:#bfdbfe;word-break:break-all;">${widgetSnippet.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
+            <p style="margin:10px 0 0;font-size:0.82rem;color:#3b82f6;">Your widget key: <strong>${widgetKey}</strong> — keep this safe.</p>
+          </div>` : "";
+
       await sendEmail({
         to: client.owner_email,
-        subject: `Your Swiftbooked number is ready — ${twilioNumber}`,
+        subject: `Your Swiftbooked${twilioNumber ? ` number is ready — ${twilioNumber}` : " bot is almost live"}`,
         html: `<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;color:#111;">
           <div style="background:#16a34a;padding:24px 28px;border-radius:10px 10px 0 0;">
-            <h1 style="color:#fff;margin:0;font-size:1.2rem;">Your AI bot is live, ${firstName}! 🎉</h1>
+            <h1 style="color:#fff;margin:0;font-size:1.2rem;">Your AI bot is live, ${firstName}!</h1>
           </div>
           <div style="background:#f9fafb;padding:24px 28px;border-radius:0 0 10px 10px;border:1px solid #e5e7eb;border-top:none;">
+            ${twilioNumber ? `
             <p style="margin-top:0;">Your Swiftbooked number is:</p>
             <div style="background:#fff;border:2px solid #16a34a;border-radius:10px;padding:18px 24px;text-align:center;margin:16px 0;">
               <div style="font-size:1.8rem;font-weight:800;color:#16a34a;letter-spacing:1px;">${twilioNumber}</div>
@@ -955,9 +982,11 @@ app.post("/api/setup/:token", async (req, res) => {
             <p style="font-weight:700;margin-bottom:8px;">To set up call forwarding:</p>
             <ul style="padding-left:20px;color:#374151;font-size:0.9rem;line-height:2;margin-bottom:16px;">
               <li><strong>iPhone:</strong> Settings → Phone → Call Forwarding → enter the number above</li>
-              <li><strong>Rogers / Bell / Telus:</strong> Dial <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">*61*${twilioNumber.replace(/\+/,"")}#</code> and press call</li>
+              <li><strong>Rogers / Bell / Telus:</strong> Dial <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">*61*${twilioNumber.replace(/\+/, "")}#</code> and press call</li>
             </ul>
             <p style="font-size:0.88rem;color:#6b7280;margin-bottom:20px;"><strong>Tip:</strong> Disable carrier voicemail so your bot gets the call first — dial <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">#404#</code> (Bell/Telus) or <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">#BAL#</code> (Rogers).</p>
+            ` : `<p style="margin-top:0;color:#dc2626;">We're assigning your Swiftbooked number — Jordan will email it to you within a few hours.</p>`}
+            ${widgetSection}
             <div style="text-align:center;">
               <a href="${BASE_URL}/portal" style="display:inline-block;background:#1a56db;color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;">View Your Portal →</a>
             </div>
@@ -967,7 +996,7 @@ app.post("/api/setup/:token", async (req, res) => {
       }).catch(err => console.error("[Number notify error]", err.message));
     }
 
-    res.json({ success: true, twilioNumber });
+    res.json({ success: true, twilioNumber, widgetKey });
   } catch (err) {
     console.error("[Setup complete error]", err.message);
     res.status(500).json({ error: err.message });
