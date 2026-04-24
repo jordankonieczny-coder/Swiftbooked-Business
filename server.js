@@ -975,34 +975,35 @@ app.post("/api/setup/:token", async (req, res) => {
         html: `<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;color:#111;">
           <div style="background:#16a34a;padding:24px 28px;border-radius:10px 10px 0 0;">
             <h1 style="color:#fff;margin:0;font-size:1.2rem;">Your AI bot is live, ${firstName}!</h1>
+            <p style="color:rgba(255,255,255,0.85);margin:6px 0 0;font-size:0.9rem;">Here's everything you need to get started.</p>
           </div>
-          <div style="background:#f9fafb;padding:24px 28px;border-radius:0 0 10px 10px;border:1px solid #e5e7eb;border-top:none;">
+          <div style="background:#f9fafb;padding:28px 32px;border-radius:0 0 10px 10px;border:1px solid #e5e7eb;border-top:none;">
+
             ${twilioNumber ? `
-            <p style="margin-top:0;">Your Swiftbooked number is:</p>
-            <div style="background:#fff;border:2px solid #16a34a;border-radius:10px;padding:18px 24px;text-align:center;margin:16px 0;">
+            <p style="margin-top:0;font-weight:700;font-size:1rem;">Your Swiftbooked number</p>
+            <div style="background:#fff;border:2px solid #16a34a;border-radius:10px;padding:16px 24px;text-align:center;margin:0 0 20px;">
               <div style="font-size:1.8rem;font-weight:800;color:#16a34a;letter-spacing:1px;">${twilioNumber}</div>
-              <p style="color:#6b7280;font-size:0.85rem;margin:6px 0 0;">Forward your unanswered calls to this number</p>
+              <p style="color:#6b7280;font-size:0.85rem;margin:4px 0 0;">Forward your unanswered calls to this number</p>
             </div>
-            <p style="font-weight:700;margin-bottom:8px;">To set up call forwarding:</p>
-            <ul style="padding-left:20px;color:#374151;font-size:0.9rem;line-height:2;margin-bottom:16px;">
-              <li><strong>iPhone:</strong> Settings → Phone → Call Forwarding → enter the number above</li>
-              <li><strong>Rogers / Bell / Telus:</strong> Dial <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">*61*${twilioNumber.replace(/\+/, "")}#</code> and press call</li>
-            </ul>
-            <p style="font-size:0.88rem;color:#6b7280;margin-bottom:20px;"><strong>Tip:</strong> Disable carrier voicemail so your bot gets the call first — dial <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">#404#</code> (Bell/Telus) or <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">#BAL#</code> (Rogers).</p>
-            ` : `<p style="margin-top:0;color:#dc2626;">We're assigning your Swiftbooked number — Jordan will email it to you within a few hours.</p>`}
-            ${widgetSection}
-            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:18px 24px;margin:20px 0;">
-              <p style="margin:0 0 10px;font-weight:700;color:#166534;">Your Client Portal Login</p>
-              <table style="border-collapse:collapse;width:100%;font-size:0.9rem;">
-                <tr><td style="padding:4px 0;font-weight:600;width:80px;color:#374151;">URL</td><td><a href="${BASE_URL}/portal" style="color:#1a56db;">${BASE_URL}/portal</a></td></tr>
-                <tr><td style="padding:4px 0;font-weight:600;color:#374151;">Email</td><td>${client.owner_email}</td></tr>
-                <tr><td style="padding:4px 0;font-weight:600;color:#374151;">Password</td><td>The password you just created</td></tr>
-              </table>
-            </div>
-            <div style="text-align:center;">
+            <p style="font-weight:700;margin-bottom:8px;">Setting up call forwarding</p>
+            <p style="margin:0 0 6px;color:#374151;font-size:0.9rem;"><strong>iPhone:</strong> Settings → Phone → Call Forwarding → enter the number above</p>
+            <p style="margin:0 0 6px;color:#374151;font-size:0.9rem;"><strong>Rogers / Bell / Telus:</strong> Dial <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">*61*${twilioNumber.replace(/\+/, "")}#</code> and press call</p>
+            <p style="margin:0 0 24px;font-size:0.85rem;color:#6b7280;"><strong>Tip:</strong> Disable carrier voicemail so your bot answers first — dial <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">#404#</code> (Bell/Telus) or <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">#BAL#</code> (Rogers).</p>
+            ` : `<p style="margin-top:0;color:#dc2626;">We're assigning your Swiftbooked number and will email it to you shortly.</p>`}
+
+            ${widgetSection ? widgetSection + `<div style="margin-bottom:24px;"></div>` : ""}
+
+            <p style="font-weight:700;font-size:1rem;margin-bottom:8px;">Your client portal</p>
+            <p style="margin:0 0 4px;color:#374151;font-size:0.9rem;">Log in anytime to view leads, conversations, and bookings.</p>
+            <p style="margin:0 0 4px;color:#374151;font-size:0.9rem;"><strong>URL:</strong> <a href="${BASE_URL}/portal" style="color:#1a56db;">${BASE_URL}/portal</a></p>
+            <p style="margin:0 0 4px;color:#374151;font-size:0.9rem;"><strong>Email:</strong> ${client.owner_email}</p>
+            <p style="margin:0 0 24px;color:#374151;font-size:0.9rem;"><strong>Password:</strong> The one you created during setup</p>
+
+            <div style="text-align:center;margin-bottom:24px;">
               <a href="${BASE_URL}/portal" style="display:inline-block;background:#1a56db;color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;">View Your Portal →</a>
             </div>
-            <p style="margin-top:20px;margin-bottom:0;color:#6b7280;font-size:0.85rem;">Questions? Call or text Jordan at <a href="tel:5875687784" style="color:#1a56db;">587-568-7784</a>.</p>
+
+            <p style="margin:0;color:#6b7280;font-size:0.85rem;">Questions? Call or text Jordan at <a href="tel:5875687784" style="color:#1a56db;">587-568-7784</a>.</p>
           </div>
         </div>`,
       }).catch(err => console.error("[Number notify error]", err.message));
