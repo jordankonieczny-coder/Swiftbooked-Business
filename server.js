@@ -775,7 +775,7 @@ app.post("/api/demo-checkout", requireAdmin, async (req, res) => {
     const client = await createPartialClient({
       business_name: business, trade: tradeName,
       owner_name: name, owner_email: email.toLowerCase().trim(),
-      owner_phone: phone || null, plan: planKey,
+      owner_phone: phone || null, plan: planKey, is_demo: true,
     });
     const token = randomBytes(32).toString("hex");
     const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
