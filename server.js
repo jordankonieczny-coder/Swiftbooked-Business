@@ -991,6 +991,14 @@ app.post("/api/setup/:token", async (req, res) => {
             <p style="font-size:0.88rem;color:#6b7280;margin-bottom:20px;"><strong>Tip:</strong> Disable carrier voicemail so your bot gets the call first — dial <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">#404#</code> (Bell/Telus) or <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">#BAL#</code> (Rogers).</p>
             ` : `<p style="margin-top:0;color:#dc2626;">We're assigning your Swiftbooked number — Jordan will email it to you within a few hours.</p>`}
             ${widgetSection}
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:18px 24px;margin:20px 0;">
+              <p style="margin:0 0 10px;font-weight:700;color:#166534;">Your Client Portal Login</p>
+              <table style="border-collapse:collapse;width:100%;font-size:0.9rem;">
+                <tr><td style="padding:4px 0;font-weight:600;width:80px;color:#374151;">URL</td><td><a href="${BASE_URL}/portal" style="color:#1a56db;">${BASE_URL}/portal</a></td></tr>
+                <tr><td style="padding:4px 0;font-weight:600;color:#374151;">Email</td><td>${client.owner_email}</td></tr>
+                <tr><td style="padding:4px 0;font-weight:600;color:#374151;">Password</td><td>The password you just created</td></tr>
+              </table>
+            </div>
             <div style="text-align:center;">
               <a href="${BASE_URL}/portal" style="display:inline-block;background:#1a56db;color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;">View Your Portal →</a>
             </div>
