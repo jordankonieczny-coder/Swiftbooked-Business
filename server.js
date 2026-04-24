@@ -903,19 +903,23 @@ app.post("/api/setup/:token", async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10);
     await completeSetup(client.id, { trade, hours, service_area, callout_fee, job1, job2, faq, owner_phone, calendly_url }, passwordHash);
 
-    // Auto-provision Twilio number
+    // Auto-provision Twilio number (skipped for demo signups)
     let twilioNumber = null;
     let provisionError = null;
-    try {
-      twilioNumber = await provisionTwilioNumber(client.id, client.business_name);
-    } catch (err) {
-      provisionError = err.message;
-      console.error("[Twilio provision error]", err.message);
+    if (client.is_demo) {
+      console.log(`[Setup] Demo client — skipping Twilio provisioning for ${client.business_name}`);
+    } else {
+      try {
+        twilioNumber = await provisionTwilioNumber(client.id, client.business_name);
+      } catch (err) {
+        provisionError = err.message;
+        console.error("[Twilio provision error]", err.message);
+      }
     }
 
-    // Auto-generate widget key for Pro clients
+    // Auto-generate widget key for Pro clients (skipped for demo)
     let widgetKey = null;
-    if (client.plan === "pro") {
+    if (client.plan === "pro" && !client.is_demo) {
       try {
         widgetKey = "sb_" + Math.random().toString(36).slice(2, 10);
         await setWidgetKey(client.id, widgetKey);
