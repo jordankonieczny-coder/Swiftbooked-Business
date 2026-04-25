@@ -2856,12 +2856,13 @@
 
   (function() {
     const script = [
-      { side: 'customer', text: 'Hey my furnace stopped working, it\'s freezing in here', delay: 800 },
-      { side: 'bot',      text: 'That sounds urgent — we\'ll get someone out ASAP. Can I get your address?', delay: 1800 },
-      { side: 'customer', text: '4521 109 St NW Edmonton', delay: 1200 },
-      { side: 'bot',      text: 'Thanks! We have these openings near you:\n\n1. Today 5:00–7:00 PM\n2. Tomorrow 8:00–10:00 AM\n3. Tomorrow 1:00–3:00 PM\n\nWhich works best?', delay: 2200 },
-      { side: 'customer', text: 'Today please', delay: 1000 },
-      { side: 'bot',      text: 'Booked! ✅ Your tech arrives today 5–7 PM and will call 20 min before. Confirmation #BK7X2R. Help is on the way! 🔧', delay: 1800 },
+      { side: 'bot',      text: 'Hi! You just called Apex Heating & Cooling but we missed you. We don\'t want you waiting — what can we help you with?', delay: 1200 },
+      { side: 'customer', text: 'My furnace stopped working, it\'s freezing in here', delay: 1000 },
+      { side: 'bot',      text: 'That sounds urgent — we\'ll get someone out ASAP. Can I get your name and address?', delay: 1800 },
+      { side: 'customer', text: 'Mike — 4521 109 St NW Edmonton', delay: 1200 },
+      { side: 'bot',      text: 'Thanks Mike! We have these openings:\n\n1. Today 5:00–7:00 PM\n2. Tomorrow 8:00–10:00 AM\n3. Tomorrow 1:00–3:00 PM\n\nWhich works best?', delay: 2200 },
+      { side: 'customer', text: 'Today please', delay: 900 },
+      { side: 'bot',      text: 'Booked! ✅ Your tech arrives today 5–7 PM and will call 20 min before. Confirmation #BK7X2R. Help is on the way!', delay: 1800 },
     ];
 
     const body = document.getElementById('demo-chat-body');
