@@ -764,6 +764,17 @@ async function sendClientAlerts({ client, customerPhone, fromNumber, result, las
     );
   }
 
+  // Fire outbound Zapier webhook on booking
+  if (!isEscalation && client.zapier_webhook_url) {
+    fireZapierWebhook(client.zapier_webhook_url, {
+      event:          "booking_confirmed",
+      business:       client.business_name,
+      customer_phone: customerPhone,
+      booking_id:     result.bookingId,
+      timestamp:      new Date().toISOString(),
+    }).catch(err => console.error("[Zapier outbound error]", err.message));
+  }
+
   // Notify Jordan on escalations
   if (isEscalation && process.env.OWNER_EMAIL) {
     await sendEmail({
