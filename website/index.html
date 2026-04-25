@@ -477,8 +477,9 @@
     /* Mobile tap overlay for demo phone */
     .mobile-tap-overlay {
       display: none;
-      position: absolute; inset: 0;
-      background: rgba(0,0,0,0.45);
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+      border-radius: 0 0 40px 40px;
       border-radius: inherit;
       align-items: center; justify-content: center;
       flex-direction: column; gap: 8px;
