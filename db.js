@@ -51,6 +51,7 @@ export async function initDB() {
     ALTER TABLE clients ALTER COLUMN twilio_number DROP NOT NULL;
     ALTER TABLE clients ADD COLUMN IF NOT EXISTS calendly_url VARCHAR(255);
     ALTER TABLE clients ADD COLUMN IF NOT EXISTS is_demo BOOLEAN DEFAULT false;
+    ALTER TABLE clients ADD COLUMN IF NOT EXISTS zapier_webhook_url TEXT;
   `);
   console.log("[DB] tables ready");
 }
