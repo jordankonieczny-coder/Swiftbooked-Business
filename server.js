@@ -349,6 +349,70 @@ app.post("/webhook/lsa", async (req, res) => {
   }
 });
 
+// ═════════════════════════════════════════════════════════════════════════════
+// POST /webhook/zapier/:widgetKey — Inbound lead from Zapier (Google Forms, etc.)
+// Zapier action: Webhooks by Zapier → POST → https://swiftbooked.ca/webhook/zapier/YOUR_KEY
+// Fields: name, phone, email, message, service
+// ═════════════════════════════════════════════════════════════════════════════
+app.post("/webhook/zapier/:widgetKey", async (req, res) => {
+  const { widgetKey } = req.params;
+  const { name, phone, email, message, service } = req.body;
+
+  if (!phone) return res.status(400).json({ error: "phone is required" });
+
+  const client = await getClientByWidgetKey(widgetKey).catch(() => null);
+  if (!client) return res.status(404).json({ error: "Invalid webhook key" });
+  if (!client.active) return res.status(403).json({ error: "Account inactive" });
+
+  const cleanPhone = normalizePhone(phone);
+  if (!cleanPhone) return res.status(400).json({ error: "Invalid phone number" });
+
+  const config = {
+    bizName:            client.business_name,
+    trade:              client.trade,
+    hours:              client.hours,
+    area:               client.service_area,
+    callout:            client.callout_fee,
+    job1:               client.job1,
+    job2:               client.job2,
+    faq:                client.faq,
+    googleRefreshToken: client.google_refresh_token || null,
+    calendly_url:       client.calendly_url || null,
+  };
+
+  const initialMsg = [
+    service ? `I need help with: ${service}` : null,
+    message || null,
+    name ? `My name is ${name}` : null,
+  ].filter(Boolean).join(". ");
+
+  try {
+    const result = await handleIncomingMessage(cleanPhone, initialMsg || "I'd like to book a service", name, config);
+
+    if (client.twilio_number) {
+      await sendSMSFrom(cleanPhone, result.reply, client.twilio_number);
+    }
+
+    const session = getSession(`sms_${cleanPhone}`);
+    const messages = session?.messages || [];
+    upsertLead(client.id, cleanPhone, messages, "active", null).catch(err =>
+      console.error("[Zapier lead save error]", err.message)
+    );
+
+    if (result.escalated || result.booked) {
+      const lastMsg = [...(session?.messages || [])].reverse().find(m => m.role === "user")?.content || "";
+      sendClientAlerts({ client, customerPhone: cleanPhone, fromNumber: client.twilio_number, result, lastCustomerMsg: lastMsg })
+        .catch(err => console.error("[Zapier alert error]", err.message));
+    }
+
+    console.log(`[Zapier in] ${client.business_name} ← ${name || "unknown"} (${cleanPhone})`);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("[Zapier webhook error]", err.message);
+    res.status(500).json({ error: "Failed to process lead" });
+  }
+});
+
 // ── Email transporter ─────────────────────────────────────────────────────────
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
