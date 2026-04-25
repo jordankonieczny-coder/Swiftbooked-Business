@@ -1080,24 +1080,9 @@ app.post("/api/setup/:token", async (req, res) => {
           </div>` : "";
 
       const zapierSection = widgetKey ? `
-          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:20px 24px;margin:20px 0;">
-            <p style="margin:0 0 4px;font-weight:700;font-size:1rem;color:#1e40af;">⚡ Connect Your Google Form (optional)</p>
-            <p style="margin:0 0 14px;font-size:0.88rem;color:#1e3a8a;">If you have a contact form or Google Form on your website, Swiftbooked can automatically text every person who fills it out — within 30 seconds of them submitting. Here's how to set it up in about 5 minutes using a free tool called Zapier.</p>
-
-            <p style="margin:0 0 6px;font-weight:700;font-size:0.88rem;color:#1e40af;">Your personal webhook URL:</p>
-            <div style="background:#dbeafe;border-radius:6px;padding:10px 14px;margin:0 0 16px;font-family:monospace;font-size:0.82rem;color:#1e3a8a;word-break:break-all;">${BASE_URL}/webhook/zapier/${widgetKey}</div>
-
-            <p style="margin:0 0 8px;font-weight:700;font-size:0.88rem;color:#1e40af;">Step-by-step setup:</p>
-            <table style="border-collapse:collapse;width:100%;font-size:0.87rem;color:#1e3a8a;">
-              <tr><td style="padding:6px 8px 6px 0;font-weight:700;white-space:nowrap;vertical-align:top;">Step 1</td><td style="padding:6px 0;">Go to <strong>zapier.com</strong> and sign up for a free account (or log in if you have one)</td></tr>
-              <tr><td style="padding:6px 8px 6px 0;font-weight:700;white-space:nowrap;vertical-align:top;">Step 2</td><td style="padding:6px 0;">Click the orange <strong>"Create Zap"</strong> button</td></tr>
-              <tr><td style="padding:6px 8px 6px 0;font-weight:700;white-space:nowrap;vertical-align:top;">Step 3</td><td style="padding:6px 0;"><strong>Trigger:</strong> Search for "Google Forms" → select <strong>New Form Response</strong> → connect your Google account → choose your form from the list</td></tr>
-              <tr><td style="padding:6px 8px 6px 0;font-weight:700;white-space:nowrap;vertical-align:top;">Step 4</td><td style="padding:6px 0;"><strong>Action:</strong> Search for "Webhooks by Zapier" → select <strong>POST</strong> → paste your webhook URL above into the URL field</td></tr>
-              <tr><td style="padding:6px 8px 6px 0;font-weight:700;white-space:nowrap;vertical-align:top;">Step 5</td><td style="padding:6px 0;"><strong>Map the fields:</strong> In "Data", add two rows — set <code style="background:#dbeafe;padding:1px 4px;border-radius:3px;">name</code> to your form's name field, and <code style="background:#dbeafe;padding:1px 4px;border-radius:3px;">phone</code> to your phone number field. Add <code style="background:#dbeafe;padding:1px 4px;border-radius:3px;">message</code> if you have a notes field.</td></tr>
-              <tr><td style="padding:6px 8px 6px 0;font-weight:700;white-space:nowrap;vertical-align:top;">Step 6</td><td style="padding:6px 0;">Click <strong>Test step</strong> to confirm it works, then click <strong>Publish</strong></td></tr>
-            </table>
-
-            <p style="margin:14px 0 0;font-size:0.82rem;color:#3b82f6;"><strong>Note:</strong> "Webhooks by Zapier" may ask you to upgrade to a paid Zapier plan ($20/mo). If that happens, just text Jordan at 587-568-7784 — there's a free alternative that works just as well.</p>
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px 20px;margin:20px 0;">
+            <p style="margin:0 0 6px;font-weight:700;color:#166534;">⚡ Have a Google Form or contact form on your website?</p>
+            <p style="margin:0;font-size:0.9rem;color:#166534;">Reply to this email with the link and we'll connect it for you within 24 hours — no setup needed on your end. Every form submission will get an AI text back within 30 seconds.</p>
           </div>` : "";
 
       await sendEmail({
