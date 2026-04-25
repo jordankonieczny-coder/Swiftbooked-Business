@@ -1122,7 +1122,8 @@ app.post("/api/setup/:token", async (req, res) => {
             <p style="margin:0 0 24px;font-size:0.85rem;color:#6b7280;"><strong>Tip:</strong> Disable carrier voicemail so your bot answers first — dial <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">#404#</code> (Bell/Telus) or <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">#BAL#</code> (Rogers).</p>
             ` : `<p style="margin-top:0;color:#dc2626;">We're assigning your Swiftbooked number and will email it to you shortly.</p>`}
 
-            ${widgetSection ? widgetSection + `<div style="margin-bottom:24px;"></div>` : ""}
+            ${widgetSection ? widgetSection + `<div style="margin-bottom:4px;"></div>` : ""}
+            ${zapierSection || ""}
 
             <p style="font-weight:700;font-size:1rem;margin-bottom:8px;">Your client portal</p>
             <p style="margin:0 0 4px;color:#374151;font-size:0.9rem;">Log in anytime to view leads, conversations, and bookings.</p>
