@@ -1220,6 +1220,10 @@ app.get("/admin", requireAdmin, (req, res) => {
   res.sendFile(join(__dirname, "website", "admin.html"));
 });
 
+app.get("/admin/guide", requireAdmin, (req, res) => {
+  res.sendFile(join(__dirname, "website", "admin-guide.html"));
+});
+
 // Demo mode — full site with Stripe bypassed (admin only)
 app.get("/demo", requireAdmin, async (req, res) => {
   try {
