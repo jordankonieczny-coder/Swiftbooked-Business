@@ -520,10 +520,14 @@
     @media (max-width: 900px) {
       .feature-cards-grid { grid-template-columns: repeat(3, 1fr) !important; }
     }
-    @media (max-width: 600px) {
-      .feature-cards-grid { grid-template-columns: 1fr !important; }
-      .steps-grid { grid-template-columns: 1fr; max-width: 340px; }
+    @media (max-width: 640px) {
+      .feature-cards-grid { grid-template-columns: 1fr 1fr !important; }
+      .steps-grid { grid-template-columns: 1fr; max-width: 380px; }
       .step-arrow { display: none; }
+      .step-card { padding: 22px 16px 18px; }
+    }
+    @media (max-width: 480px) {
+      .feature-cards-grid { grid-template-columns: 1fr !important; }
     }
     /* Deprecated styles kept for safety */
     .quote-stars { display: none; }
