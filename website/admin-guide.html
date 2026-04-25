@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swiftbooked — Operations Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f9fafb; color: #111827; font-size: 0.92rem; line-height: 1.6; }
+    header { background: #1a56db; color: #fff; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+    header h1 { font-size: 1rem; font-weight: 700; }
+    header nav { display: flex; gap: 12px; }
+    header a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.85rem; font-weight: 500; }
+    header a:hover { color: #fff; }
+    .layout { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 52px); }
+    .sidebar { background: #fff; border-right: 1px solid #e5e7eb; padding: 24px 0; position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; }
+    .sidebar-section { padding: 0 0 8px; }
+    .sidebar-label { padding: 6px 20px; font-size: 0.72rem; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; }
+    .sidebar a { display: block; padding: 7px 20px; color: #374151; text-decoration: none; font-size: 0.85rem; border-left: 3px solid transparent; transition: background 0.1s, border-color 0.1s; }
+    .sidebar a:hover { background: #f3f4f6; color: #1a56db; border-left-color: #1a56db; }
+    .sidebar a.active { background: #eff6ff; color: #1a56db; border-left-color: #1a56db; font-weight: 600; }
+    .content { padding: 32px 40px 80px; max-width: 820px; }
+    h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; padding-top: 8px; }
+    h3 { font-size: 1.05rem; font-weight: 700; margin: 28px 0 10px; color: #111; }
+    h4 { font-size: 0.92rem; font-weight: 700; margin: 20px 0 8px; color: #374151; }
+    p { color: #374151; margin-bottom: 12px; }
+    ul, ol { color: #374151; padding-left: 22px; margin-bottom: 14px; }
+    li { margin-bottom: 6px; }
+    .section { margin-bottom: 56px; }
+    .section-intro { color: #6b7280; font-size: 0.9rem; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #e5e7eb; }
+    code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.85em; color: #374151; }
+    .code-block { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 14px 18px; font-family: monospace; font-size: 0.82rem; line-height: 1.7; margin: 10px 0 16px; overflow-x: auto; white-space: pre; }
+    .code-block .comment { color: #64748b; }
+    .step-list { list-style: none; padding: 0; margin: 0 0 16px; counter-reset: steps; }
+    .step-list li { counter-increment: steps; display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+    .step-list li::before { content: counter(steps); background: #1a56db; color: #fff; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.78rem; flex-shrink: 0; margin-top: 1px; }
+    .step-list li div { flex: 1; }
+    .step-list li strong { display: block; margin-bottom: 2px; }
+    .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 18px 20px; margin-bottom: 14px; }
+    .card.green { border-left: 4px solid #16a34a; }
+    .card.blue { border-left: 4px solid #1a56db; }
+    .card.yellow { border-left: 4px solid #f59e0b; }
+    .card.red { border-left: 4px solid #dc2626; }
+    .card-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 6px; }
+    .tag { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-right: 6px; }
+    .tag-auto { background: #d1fae5; color: #065f46; }
+    .tag-manual { background: #fef3c7; color: #92400e; }
+    .tag-pro { background: #dbeafe; color: #1e40af; }
+    .flow { display: flex; flex-direction: column; gap: 2px; margin: 12px 0 18px; }
+    .flow-row { display: flex; align-items: center; gap: 10px; font-size: 0.88rem; }
+    .flow-box { background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 6px; padding: 6px 12px; font-weight: 600; }
+    .flow-box.highlight { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+    .flow-box.green { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+    .flow-arrow { color: #9ca3af; font-size: 0.8rem; }
+    table.ref { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 0.87rem; }
+    table.ref th { background: #f3f4f6; text-align: left; padding: 10px 14px; font-weight: 700; color: #374151; border-bottom: 2px solid #e5e7eb; }
+    table.ref td { padding: 10px 14px; border-bottom: 1px solid #f3f4f6; color: #374151; vertical-align: top; }
+    table.ref tr:last-child td { border-bottom: none; }
+    .warn { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 12px 16px; margin-bottom: 14px; font-size: 0.88rem; color: #92400e; }
+    .tip { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px 16px; margin-bottom: 14px; font-size: 0.88rem; color: #166534; }
+    @media (max-width: 768px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .content { padding: 24px 20px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Swiftbooked — Operations Guide</h1>
+  <nav>
+    <a href="/admin">← Admin Panel</a>
+    <a href="/admin/leads">Leads</a>
+  </nav>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Overview</div>
+      <a href="#how-it-works">How Everything Works</a>
+      <a href="#client-lifecycle">Client Lifecycle</a>
+      <a href="#what-is-automated">What's Automated</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Setup Tasks</div>
+      <a href="#zapier-inbound">Zapier — Form → AI Text</a>
+      <a href="#zapier-outbound">Zapier — Booking → CRM</a>
+      <a href="#call-forwarding">Call Forwarding Help</a>
+      <a href="#manual-twilio">Manual Twilio Number</a>
+      <a href="#widget-setup">Website Widget</a>
+      <a href="#calendar">Calendar Setup</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Reference</div>
+      <a href="#endpoints">Webhook Endpoints</a>
+      <a href="#env-vars">Environment Variables</a>
+      <a href="#database">Database Fields</a>
+      <a href="#troubleshooting">Troubleshooting</a>
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <!-- ── How Everything Works ── -->
+    <div class="section" id="how-it-works">
+      <h2>How Everything Works</h2>
+      <p class="section-intro">End-to-end flow from a new lead calling to a job being booked in the calendar.</p>
+
+      <h3>The Full Flow</h3>
+      <div class="flow">
+        <div class="flow-row"><div class="flow-box">Customer calls business number</div><span class="flow-arrow">→</span><div class="flow-box highlight">Unanswered call hits Twilio</div></div>
+        <div class="flow-row" style="padding-left:20px;"><span class="flow-arrow">↓</span></div>
+        <div class="flow-row"><div class="flow-box highlight">Twilio fires <code>/webhook/voice</code></div><span class="flow-arrow">→</span><div class="flow-box">Call rejected (silent), SMS triggered</div></div>
+        <div class="flow-row" style="padding-left:20px;"><span class="flow-arrow">↓</span></div>
+        <div class="flow-row"><div class="flow-box highlight">Claude AI generates first reply</div><span class="flow-arrow">→</span><div class="flow-box">SMS sent from client's Twilio number</div></div>
+        <div class="flow-row" style="padding-left:20px;"><span class="flow-arrow">↓</span></div>
+        <div class="flow-row"><div class="flow-box">Customer replies</div><span class="flow-arrow">→</span><div class="flow-box highlight"><code>/webhook/sms</code> → AI continues conversation</div></div>
+        <div class="flow-row" style="padding-left:20px;"><span class="flow-arrow">↓</span></div>
+        <div class="flow-row"><div class="flow-box green">Booking confirmed → Google Calendar event created</div></div>
+        <div class="flow-row" style="padding-left:20px;"><span class="flow-arrow">↓</span></div>
+        <div class="flow-row"><div class="flow-box">Client gets SMS + email alert</div><span class="flow-arrow">→</span><div class="flow-box">Lead logged in portal</div><span class="flow-arrow">→</span><div class="flow-box">Zapier webhook fires (if set up)</div></div>
+      </div>
+
+      <h3>Other Entry Points</h3>
+      <div class="card blue">
+        <div class="card-title">Google Form / Contact Form via Zapier <span class="tag tag-pro">Pro</span></div>
+        <p style="margin:0;font-size:0.88rem;">Zapier sends a POST to <code>/webhook/zapier/:widgetKey</code> — AI texts the customer back using the client's number and config. Same conversation flow as a missed call.</p>
+      </div>
+      <div class="card blue">
+        <div class="card-title">Website Chat Widget <span class="tag tag-pro">Pro</span></div>
+        <p style="margin:0;font-size:0.88rem;">Visitor chats on the client's website → <code>/api/widget/chat</code> → AI responds in real time. No SMS — web only. Bookings land in calendar.</p>
+      </div>
+    </div>
+
+    <!-- ── Client Lifecycle ── -->
+    <div class="section" id="client-lifecycle">
+      <h2>Client Lifecycle</h2>
+      <p class="section-intro">What happens at each stage from signup to live bot.</p>
+
+      <ol class="step-list">
+        <li>
+          <div><strong>Client fills signup form + pays via Stripe</strong>
+          Stripe fires <code>checkout.session.completed</code> → partial client record created in DB → setup email sent with a 7-day token link.</div>
+        </li>
+        <li>
+          <div><strong>Client fills setup form at <code>/setup?token=…</code></strong>
+          They enter trade, hours, area, pricing, FAQs, and create a portal password. Takes ~3 minutes.</div>
+        </li>
+        <li>
+          <div><strong>Auto-provisioning fires</strong>
+          Twilio number purchased (780/825 area code) → bot activated → widget key generated (Pro) → "you're live" email sent with number + call forwarding instructions.</div>
+        </li>
+        <li>
+          <div><strong>Client sets up call forwarding</strong>
+          They forward unanswered calls from their business phone to their Swiftbooked number. This is the only manual step for the client — see <a href="#call-forwarding">Call Forwarding Help</a>.</div>
+        </li>
+        <li>
+          <div><strong>You connect their Google Form (Pro, if they have one)</strong>
+          Client replies to the "you're live" email with their form link. You set up Zapier — see <a href="#zapier-inbound">Zapier Setup</a>. Takes ~10 minutes.</div>
+        </li>
+        <li>
+          <div><strong>Bot is running 24/7</strong>
+          Every missed call and form submission gets an instant AI response. You get weekly digest emails showing lead and booking counts.</div>
+        </li>
+      </ol>
+
+      <h3>When a Subscription Cancels</h3>
+      <p>Stripe fires <code>customer.subscription.deleted</code> → client's <code>active</code> flag set to <code>false</code> → bot stops responding → you get an email notification. The Twilio number stays assigned — release it manually in the Twilio console if you want to reuse it.</p>
+    </div>
+
+    <!-- ── What's Automated ── -->
+    <div class="section" id="what-is-automated">
+      <h2>What's Automated vs Manual</h2>
+
+      <table class="ref">
+        <tr><th>Task</th><th>How</th><th>Your action</th></tr>
+        <tr><td>Setup email after Stripe payment</td><td><span class="tag tag-auto">Auto</span> Stripe webhook</td><td>Nothing</td></tr>
+        <tr><td>Twilio number purchase</td><td><span class="tag tag-auto">Auto</span> On setup form submit</td><td>Nothing (unless it fails — see below)</td></tr>
+        <tr><td>Widget key generation</td><td><span class="tag tag-auto">Auto</span> Pro clients on setup</td><td>Nothing</td></tr>
+        <tr><td>"You're live" email + SMS</td><td><span class="tag tag-auto">Auto</span> On setup form submit</td><td>Nothing</td></tr>
+        <tr><td>Booking alerts to client</td><td><span class="tag tag-auto">Auto</span> When AI books</td><td>Nothing</td></tr>
+        <tr><td>Subscription cancellation</td><td><span class="tag tag-auto">Auto</span> Stripe webhook</td><td>Release Twilio number if needed</td></tr>
+        <tr><td>Weekly digest emails</td><td><span class="tag tag-auto">Auto</span> Every Monday 8am</td><td>Nothing</td></tr>
+        <tr><td>Google Form connection</td><td><span class="tag tag-manual">Manual</span></td><td>Set up Zapier when client sends you their form link</td></tr>
+        <tr><td>Call forwarding</td><td><span class="tag tag-manual">Manual</span> Client does it</td><td>Confirm they've done it if leads aren't coming in</td></tr>
+        <tr><td>Google Calendar connection</td><td><span class="tag tag-manual">Manual</span> Client does it via setup form</td><td>Check the admin panel — green calendar badge = connected</td></tr>
+      </table>
+    </div>
+
+    <!-- ── Zapier Inbound ── -->
+    <div class="section" id="zapier-inbound">
+      <h2>Zapier Setup — Google Form → AI Text</h2>
+      <p class="section-intro">When a Pro client replies with their Google Form link, follow these steps. Takes about 10 minutes. You'll need access to their Google account (or they can share the form with you).</p>
+
+      <div class="tip">First, get the client's widget key from the <a href="/admin">Admin Panel</a>. Their webhook URL is: <code>https://swiftbooked.ca/webhook/zapier/{widgetKey}</code></div>
+
+      <ol class="step-list">
+        <li>
+          <div><strong>Log in to zapier.com</strong>
+          Use your Zapier account (one account can run Zaps for all clients).</div>
+        </li>
+        <li>
+          <div><strong>Click "Create Zap"</strong></div>
+        </li>
+        <li>
+          <div><strong>Trigger: Google Forms → New Form Response</strong>
+          Connect to the Google account that owns the form → select the client's specific form from the dropdown. Click "Test trigger" — it needs at least one previous submission to test with.</div>
+        </li>
+        <li>
+          <div><strong>Action: Webhooks by Zapier → POST</strong>
+          In the URL field, paste the client's webhook URL. Set Content Type to <code>application/json</code>.</div>
+        </li>
+        <li>
+          <div><strong>Map the Data fields</strong>
+          In the "Data" section, add these key-value pairs:
+          <div class="code-block">name    → [Form field: Name / Full Name]
+phone   → [Form field: Phone / Phone Number]
+message → [Form field: Message / Notes]   <span class="comment">(optional)</span>
+service → [Form field: Service Type]      <span class="comment">(optional)</span></div>
+          Only <code>phone</code> is required — the AI can still run without name/message.</div>
+        </li>
+        <li>
+          <div><strong>Test the action</strong>
+          Zapier will POST to the webhook. You should see a 200 response with <code>{"success":true}</code>. If you see 404, the widget key is wrong.</div>
+        </li>
+        <li>
+          <div><strong>Publish the Zap</strong>
+          Name it something clear like "Apex HVAC — Form → Swiftbooked".</div>
+        </li>
+      </ol>
+
+      <div class="warn">Webhooks by Zapier requires a paid Zapier Starter plan (~$20/mo USD). If you don't want to pay, use <strong>Make (make.com)</strong> instead — it's free, supports webhooks, and works the same way. The Zap structure is identical.</div>
+
+      <h3>What the AI receives</h3>
+      <p>The inbound webhook builds an opening message like: <em>"I need help with: HVAC repair. My furnace isn't working. My name is Mike"</em> — then runs it through the client's AI config. The customer gets a text from the client's Twilio number within seconds.</p>
+    </div>
+
+    <!-- ── Zapier Outbound ── -->
+    <div class="section" id="zapier-outbound">
+      <h2>Zapier Setup — Booking Confirmed → CRM / Google Sheets</h2>
+      <p class="section-intro">When the AI confirms a booking, Swiftbooked can automatically push the details to a Google Sheet, HubSpot, QuickBooks, or any app Zapier supports.</p>
+
+      <ol class="step-list">
+        <li>
+          <div><strong>In Zapier, create a new Zap</strong>
+          Trigger: <strong>Webhooks by Zapier → Catch Hook</strong>. Copy the unique webhook URL Zapier gives you — it looks like <code>https://hooks.zapier.com/hooks/catch/…</code></div>
+        </li>
+        <li>
+          <div><strong>Save that URL to the client's record</strong>
+          Use this API call (or add a field in the admin panel):
+          <div class="code-block">PATCH /api/portal/integrations
+Authorization: Bearer {client JWT}
+Body: { "zapier_webhook_url": "https://hooks.zapier.com/..." }</div>
+          Or just update it directly in the database via the admin panel's edit modal once you add the field.</div>
+        </li>
+        <li>
+          <div><strong>Set up the Zapier action</strong>
+          The payload Swiftbooked sends on each booking:
+          <div class="code-block">{
+  "event":          "booking_confirmed",
+  "business":       "Apex Heating & Cooling",
+  "customer_phone": "+17805551234",
+  "booking_id":     "BK7X2R",
+  "timestamp":      "2026-04-24T14:32:00.000Z"
+}</div>
+          Map these to whatever app you're connecting — Google Sheets row, HubSpot contact, QuickBooks invoice, etc.</div>
+        </li>
+        <li>
+          <div><strong>Test with a real booking</strong>
+          The webhook only fires when the AI confirms a booking (<code>result.booked = true</code>), not on every message.</div>
+        </li>
+      </ol>
+    </div>
+
+    <!-- ── Call Forwarding ── -->
+    <div class="section" id="call-forwarding">
+      <h2>Call Forwarding Help</h2>
+      <p class="section-intro">This is the one thing clients need to do themselves. If a client says their bot isn't responding to calls, this is almost always the issue.</p>
+
+      <div class="card green">
+        <div class="card-title">iPhone (any carrier)</div>
+        <p style="margin:0;font-size:0.88rem;">Settings → Phone → Call Forwarding → toggle on → enter the Swiftbooked number. Only "When Busy" or "No Answer" forwarding is needed — not unconditional.</p>
+      </div>
+
+      <div class="card green">
+        <div class="card-title">Bell / Telus (any phone)</div>
+        <p style="margin:0 0 6px;font-size:0.88rem;">Dial and press call: <code>*61*+1{swiftbooked_number_without_plus}#</code></p>
+        <p style="margin:0;font-size:0.88rem;">To disable voicemail first (so bot answers before voicemail): dial <code>#404#</code> and press call.</p>
+      </div>
+
+      <div class="card green">
+        <div class="card-title">Rogers (any phone)</div>
+        <p style="margin:0 0 6px;font-size:0.88rem;">Dial and press call: <code>*61*+1{swiftbooked_number_without_plus}#</code></p>
+        <p style="margin:0;font-size:0.88rem;">To disable voicemail: dial <code>#BAL#</code> and press call.</p>
+      </div>
+
+      <div class="card yellow">
+        <div class="card-title">Business VoIP / Ring Central / 8x8</div>
+        <p style="margin:0;font-size:0.88rem;">Each system is different. Have the client log into their VoIP dashboard → Call Forwarding → "When unanswered" → enter the Swiftbooked number. If they're stuck, ask them which VoIP provider they use and look up the specific steps.</p>
+      </div>
+
+      <h3>Testing It</h3>
+      <p>Call the client's business number from a different phone. Let it ring until it would normally go to voicemail. Within 30 seconds, the phone you called from should receive a text from the Swiftbooked number. If it doesn't, call forwarding isn't set up correctly.</p>
+    </div>
+
+    <!-- ── Manual Twilio ── -->
+    <div class="section" id="manual-twilio">
+      <h2>Manual Twilio Number Assignment</h2>
+      <p class="section-intro">Auto-provisioning works almost every time. If it fails, here's what to do.</p>
+
+      <div class="warn">You'll get an email notification if auto-provisioning fails, with an "Open Admin Panel" link. The client's account is set up but inactive until a number is assigned.</div>
+
+      <ol class="step-list">
+        <li>
+          <div><strong>Log in to console.twilio.com</strong>
+          Go to Phone Numbers → Manage → Buy a number → Canada → search for 780 or 825 area code → buy one.</div>
+        </li>
+        <li>
+          <div><strong>Configure the number</strong>
+          Set Voice webhook to: <code>https://swiftbooked.ca/webhook/voice</code> (POST)<br>
+          Set SMS webhook to: <code>https://swiftbooked.ca/webhook/sms</code> (POST)</div>
+        </li>
+        <li>
+          <div><strong>Assign it in the admin panel</strong>
+          Find the client → Edit → enter the Twilio number in E.164 format: <code>+17805551234</code> → set Active to true → save.</div>
+        </li>
+        <li>
+          <div><strong>Email the client their number</strong>
+          Send them the number and call forwarding instructions manually (copy from <a href="#call-forwarding">Call Forwarding Help</a>).</div>
+        </li>
+      </ol>
+    </div>
+
+    <!-- ── Widget ── -->
+    <div class="section" id="widget-setup">
+      <h2>Website Chat Widget <span class="tag tag-pro">Pro Only</span></h2>
+      <p class="section-intro">The widget is auto-generated on setup completion for Pro clients. Their "you're live" email already contains the code snippet. Here's what to do if they need help installing it.</p>
+
+      <h3>The snippet</h3>
+      <div class="code-block">&lt;script src="https://swiftbooked.ca/widget.js" data-key="sb_xxxxxxxx"&gt;&lt;/script&gt;</div>
+      <p>Goes just before <code>&lt;/body&gt;</code> on any page they want the chat to appear. Works on WordPress, Wix, Squarespace, Webflow, or any custom site.</p>
+
+      <h3>WordPress (most common)</h3>
+      <ol class="step-list">
+        <li><div>In WordPress admin: Appearance → Theme Editor (or use a plugin like "Insert Headers and Footers")</div></li>
+        <li><div>Paste the script tag in the footer section</div></li>
+        <li><div>Save. The chat bubble should appear on all pages immediately.</div></li>
+      </ol>
+
+      <h3>Finding a client's widget key</h3>
+      <p>Go to the <a href="/admin">Admin Panel</a> → find the client → their <code>widget_key</code> is shown in the table. To regenerate a key, use the API: <code>POST /api/admin/clients/{id}/widget-key</code> (requires admin auth). Note: regenerating breaks any existing installation until they update the snippet.</p>
+
+      <h3>The widget talks to</h3>
+      <p><code>GET /api/widget/config?key=…</code> — fetches business name for greeting<br>
+      <code>POST /api/widget/chat</code> — handles chat messages (same rate limiting as demo chat)</p>
+    </div>
+
+    <!-- ── Calendar ── -->
+    <div class="section" id="calendar">
+      <h2>Calendar Setup</h2>
+
+      <h3>Google Calendar (most common)</h3>
+      <p>Clients connect their calendar during the setup form. The setup page has a "Connect Google Calendar" button that runs the OAuth flow. Once connected, a refresh token is stored in the DB — the AI uses it to check availability and create events.</p>
+      <p>To check if a client has it connected: Admin Panel → look for the green calendar badge. No badge = no token = bookings won't go to their calendar (AI will still respond, just won't auto-book).</p>
+      <p>To reconnect a calendar: send them to <code>/connect-calendar/{clientId}</code> — they'll go through Google OAuth again.</p>
+
+      <h3>Calendly</h3>
+      <p>Client provides their Calendly URL during setup (e.g. <code>calendly.com/theirbusiness/service</code>). The AI shares this link in the conversation instead of booking directly. No OAuth needed — just the URL.</p>
+
+      <h3>Outlook / other</h3>
+      <p>Not directly integrated yet. Workaround: set up a Calendly account connected to their Outlook and use the Calendly URL method.</p>
+    </div>
+
+    <!-- ── Endpoints ── -->
+    <div class="section" id="endpoints">
+      <h2>Webhook Endpoints Reference</h2>
+
+      <table class="ref">
+        <tr><th>Endpoint</th><th>What calls it</th><th>What it does</th></tr>
+        <tr><td><code>POST /webhook/voice</code></td><td>Twilio (inbound call)</td><td>Silently rejects the call, then fires an AI text to the caller</td></tr>
+        <tr><td><code>POST /webhook/sms</code></td><td>Twilio (inbound SMS)</td><td>Feeds the message to Claude, replies via SMS, logs lead</td></tr>
+        <tr><td><code>POST /webhook/zapier/:widgetKey</code></td><td>Zapier</td><td>Inbound form lead → AI texts the customer from client's number</td></tr>
+        <tr><td><code>POST /webhook/form</code></td><td>Generic (legacy)</td><td>Same as Zapier webhook but no client-specific config or Twilio number</td></tr>
+        <tr><td><code>POST /webhook/lsa</code></td><td>Google Local Services</td><td>LSA lead → AI texts back (no client routing yet)</td></tr>
+        <tr><td><code>POST /api/stripe-webhook</code></td><td>Stripe</td><td>Handles <code>checkout.session.completed</code> and subscription cancellations</td></tr>
+      </table>
+
+      <h3>Client-facing API</h3>
+      <table class="ref">
+        <tr><th>Endpoint</th><th>Auth</th><th>What it does</th></tr>
+        <tr><td><code>POST /api/portal/login</code></td><td>None</td><td>Returns a JWT for portal auth (7-day expiry)</td></tr>
+        <tr><td><code>GET /api/portal/me</code></td><td>JWT</td><td>Returns the client's full record (minus password hash)</td></tr>
+        <tr><td><code>GET /api/portal/leads</code></td><td>JWT</td><td>Returns all leads for the client</td></tr>
+        <tr><td><code>PATCH /api/portal/integrations</code></td><td>JWT</td><td>Saves the client's outbound Zapier webhook URL</td></tr>
+        <tr><td><code>POST /api/portal/billing</code></td><td>JWT</td><td>Creates a Stripe billing portal session</td></tr>
+        <tr><td><code>GET /api/widget/config</code></td><td>Widget key</td><td>Returns business name for widget greeting</td></tr>
+        <tr><td><code>POST /api/widget/chat</code></td><td>Widget key</td><td>Handles chat messages from embedded widget</td></tr>
+      </table>
+    </div>
+
+    <!-- ── Env Vars ── -->
+    <div class="section" id="env-vars">
+      <h2>Environment Variables</h2>
+      <p>Set in Railway → your project → Variables tab.</p>
+
+      <table class="ref">
+        <tr><th>Variable</th><th>Required</th><th>Notes</th></tr>
+        <tr><td><code>DATABASE_URL</code></td><td>Yes</td><td>PostgreSQL connection string from Railway</td></tr>
+        <tr><td><code>ANTHROPIC_API_KEY</code></td><td>Yes</td><td>Claude API key — all AI responses use this</td></tr>
+        <tr><td><code>TWILIO_ACCOUNT_SID</code></td><td>Yes</td><td>From Twilio console → Account Info</td></tr>
+        <tr><td><code>TWILIO_AUTH_TOKEN</code></td><td>Yes</td><td>From Twilio console → Account Info</td></tr>
+        <tr><td><code>STRIPE_SECRET_KEY</code></td><td>Yes</td><td>Stripe Dashboard → Developers → API Keys (use live key in prod)</td></tr>
+        <tr><td><code>STRIPE_WEBHOOK_SECRET</code></td><td>Yes</td><td>Stripe → Webhooks → your endpoint → Signing Secret</td></tr>
+        <tr><td><code>RESEND_API_KEY</code></td><td>Yes</td><td>Resend dashboard → API Keys</td></tr>
+        <tr><td><code>RESEND_FROM_EMAIL</code></td><td>Yes</td><td>e.g. <code>Swiftbooked &lt;noreply@swiftbooked.ca&gt;</code> — domain must be verified in Resend</td></tr>
+        <tr><td><code>JWT_SECRET</code></td><td>Yes</td><td>Any long random string — used to sign portal auth tokens</td></tr>
+        <tr><td><code>ADMIN_PASSWORD</code></td><td>Yes</td><td>Password for /admin (HTTP Basic Auth)</td></tr>
+        <tr><td><code>OWNER_EMAIL</code></td><td>Yes</td><td>Jordan's email — receives all admin notifications</td></tr>
+        <tr><td><code>OWNER_PHONE</code></td><td>Yes</td><td>Jordan's phone — used in fallback error messages</td></tr>
+        <tr><td><code>GOOGLE_CLIENT_ID</code></td><td>For calendar</td><td>Google Cloud Console → OAuth 2.0 credentials</td></tr>
+        <tr><td><code>GOOGLE_CLIENT_SECRET</code></td><td>For calendar</td><td>Same as above</td></tr>
+        <tr><td><code>BASE_URL</code></td><td>Yes</td><td><code>https://www.swiftbooked.ca</code> — used in all email links and webhook URLs</td></tr>
+      </table>
+
+      <h3>Stripe Webhook Events to Enable</h3>
+      <p>In Stripe Dashboard → Developers → Webhooks → your endpoint, make sure these events are checked:</p>
+      <ul>
+        <li><code>checkout.session.completed</code></li>
+        <li><code>customer.subscription.deleted</code></li>
+        <li><code>customer.subscription.paused</code></li>
+      </ul>
+    </div>
+
+    <!-- ── Database ── -->
+    <div class="section" id="database">
+      <h2>Database Fields</h2>
+
+      <h3>clients table</h3>
+      <table class="ref">
+        <tr><th>Field</th><th>What it means</th></tr>
+        <tr><td><code>twilio_number</code></td><td>The phone number the bot texts from. NULL until setup completes.</td></tr>
+        <tr><td><code>active</code></td><td>false = bot is off (not yet set up, or subscription cancelled)</td></tr>
+        <tr><td><code>setup_completed</code></td><td>true once the client submits the setup form</td></tr>
+        <tr><td><code>is_demo</code></td><td>true = demo client, skips Twilio provisioning and widget key</td></tr>
+        <tr><td><code>plan</code></td><td><code>essential</code> or <code>pro</code></td></tr>
+        <tr><td><code>widget_key</code></td><td>Pro clients only — used for widget auth and Zapier webhook URL</td></tr>
+        <tr><td><code>google_refresh_token</code></td><td>OAuth token for Google Calendar. NULL = no calendar connected</td></tr>
+        <tr><td><code>calendly_url</code></td><td>Calendly booking link. AI shares this instead of direct booking.</td></tr>
+        <tr><td><code>zapier_webhook_url</code></td><td>Outbound webhook — fired when AI confirms a booking</td></tr>
+        <tr><td><code>stripe_customer_id</code></td><td>Stripe customer ID — used for billing portal and cancellation handling</td></tr>
+        <tr><td><code>setup_token</code></td><td>One-time token in the setup email link. NULL after setup completes.</td></tr>
+        <tr><td><code>password_hash</code></td><td>bcrypt hash of portal password. NULL until setup completes.</td></tr>
+      </table>
+
+      <h3>leads table</h3>
+      <table class="ref">
+        <tr><th>Field</th><th>What it means</th></tr>
+        <tr><td><code>status</code></td><td><code>active</code> = in progress, <code>booked</code> = appointment confirmed, <code>escalated</code> = needs human</td></tr>
+        <tr><td><code>messages</code></td><td>Full conversation history as JSON array — <code>[{role, content}, …]</code></td></tr>
+        <tr><td><code>booking_id</code></td><td>Short confirmation code like BK7X2R. NULL unless status = booked.</td></tr>
+        <tr><td><code>customer_phone</code></td><td>E.164 format: <code>+17805551234</code></td></tr>
+      </table>
+    </div>
+
+    <!-- ── Troubleshooting ── -->
+    <div class="section" id="troubleshooting">
+      <h2>Troubleshooting</h2>
+
+      <div class="card red">
+        <div class="card-title">Bot isn't texting back after missed calls</div>
+        <ol style="margin:8px 0 0;padding-left:20px;font-size:0.88rem;">
+          <li>Check the client's call forwarding is set up correctly</li>
+          <li>Check their <code>active</code> flag is true and they have a <code>twilio_number</code> assigned (admin panel)</li>
+          <li>Call the Swiftbooked number directly — if it texts back, call forwarding is the issue</li>
+          <li>Check Railway logs for errors on <code>/webhook/voice</code></li>
+        </ol>
+      </div>
+
+      <div class="card red">
+        <div class="card-title">Emails not sending</div>
+        <ol style="margin:8px 0 0;padding-left:20px;font-size:0.88rem;">
+          <li>Check <code>RESEND_FROM_EMAIL</code> env var is set correctly</li>
+          <li>In Resend dashboard → Domains — confirm swiftbooked.ca is verified (green)</li>
+          <li>Check Railway logs for <code>[Email error]</code></li>
+          <li>Temporary fallback: change <code>RESEND_FROM_EMAIL</code> to <code>Swiftbooked &lt;onboarding@resend.dev&gt;</code> — only delivers to your verified Resend email address</li>
+        </ol>
+      </div>
+
+      <div class="card red">
+        <div class="card-title">Twilio auto-provision failed</div>
+        <p style="margin:8px 0 0;font-size:0.88rem;">You'll get an email. Follow <a href="#manual-twilio">Manual Twilio Number Assignment</a> steps above.</p>
+      </div>
+
+      <div class="card red">
+        <div class="card-title">Zapier inbound webhook returning 404</div>
+        <p style="margin:8px 0 0;font-size:0.88rem;">The widget key in the URL is wrong. Double-check the client's <code>widget_key</code> in the admin panel. Remember — only Pro clients have widget keys.</p>
+      </div>
+
+      <div class="card red">
+        <div class="card-title">Client can't log into portal</div>
+        <ol style="margin:8px 0 0;padding-left:20px;font-size:0.88rem;">
+          <li>Check <code>setup_completed</code> is true — if false, setup form wasn't submitted</li>
+          <li>Check <code>password_hash</code> is not null</li>
+          <li>Use the admin panel to reset their password: <code>POST /api/admin/clients/{id}/password</code></li>
+        </ol>
+      </div>
+
+      <div class="card red">
+        <div class="card-title">Booking confirmed but not showing in Google Calendar</div>
+        <ol style="margin:8px 0 0;padding-left:20px;font-size:0.88rem;">
+          <li>Check <code>google_refresh_token</code> is not null (admin panel)</li>
+          <li>If null, send client to <code>/connect-calendar/{clientId}</code> to reconnect</li>
+          <li>Check Railway logs for <code>[Calendar]</code> errors</li>
+          <li>If they use Calendly, make sure <code>calendly_url</code> is filled in — that takes priority over Google Calendar direct booking</li>
+        </ol>
+      </div>
+
+      <div class="card yellow">
+        <div class="card-title">Checking Railway logs</div>
+        <p style="margin:8px 0 0;font-size:0.88rem;">Railway Dashboard → your project → Deployments → click the active deployment → Logs. Filter by keywords like <code>[Email error]</code>, <code>[Twilio]</code>, <code>[Zapier]</code>, <code>[Calendar]</code>.</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
