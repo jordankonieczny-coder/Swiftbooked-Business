@@ -1348,6 +1348,16 @@ app.get("/api/portal/me", requirePortalAuth, async (req, res) => {
   }
 });
 
+app.patch("/api/portal/integrations", requirePortalAuth, async (req, res) => {
+  const { zapier_webhook_url } = req.body;
+  try {
+    const client = await setZapierWebhookUrl(req.portalUser.clientId, zapier_webhook_url || null);
+    res.json({ success: true, zapier_webhook_url: client.zapier_webhook_url });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.post("/api/portal/billing", requirePortalAuth, async (req, res) => {
   if (!stripe) return res.status(503).json({ error: "Billing not configured" });
 
