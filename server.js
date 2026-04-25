@@ -701,6 +701,21 @@ app.post("/api/create-checkout-session", async (req, res) => {
   }
 });
 
+// ── Zapier outbound webhook ───────────────────────────────────────────────────
+async function fireZapierWebhook(webhookUrl, payload) {
+  if (!webhookUrl) return;
+  try {
+    const resp = await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    console.log(`[Zapier out] → ${webhookUrl} (${resp.status})`);
+  } catch (err) {
+    console.error(`[Zapier out error]`, err.message);
+  }
+}
+
 // ── Client alert: escalation or booking notification ─────────────────────────
 async function sendClientAlerts({ client, customerPhone, fromNumber, result, lastCustomerMsg }) {
   const isEscalation = result.escalated;
