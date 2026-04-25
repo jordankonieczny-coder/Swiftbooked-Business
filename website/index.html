@@ -2912,10 +2912,8 @@
       setTimeout(playStep, 800);
     }
 
-    // Only auto-play on desktop — mobile uses the overlay
-    if (window.innerWidth > 768) {
-      setTimeout(playStep, 1200);
-    }
+    // Auto-play on both desktop and mobile
+    setTimeout(playStep, 1200);
   })();
   </script>
 
