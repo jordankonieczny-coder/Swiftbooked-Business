@@ -378,6 +378,14 @@
     }
   }
 
+  async function resendSetup(id, name) {
+    if (!confirm(`Resend setup email to ${name}? This generates a fresh 7-day link.`)) return;
+    const res = await fetch(`/api/admin/resend-setup/${id}`, { method: 'POST' });
+    const data = await res.json();
+    if (res.ok) alert(`Setup email resent to ${name} ✓`);
+    else alert(`Error: ${data.error}`);
+  }
+
   async function deleteClientById(id, name) {
     if (!confirm(`Delete ${name}? This cannot be undone.`)) return;
     await fetch(`/api/admin/clients/${id}`, { method: 'DELETE' });
