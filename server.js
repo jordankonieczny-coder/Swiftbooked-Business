@@ -808,7 +808,7 @@ async function sendClientAlerts({ client, customerPhone, fromNumber, result, las
 }
 
 // ── Setup email sent to new clients after Stripe payment ─────────────────────
-async function sendSetupEmail({ client, token, plan }) {
+async function sendSetupEmail({ client, token, plan, tempPassword }) {
   const setupUrl = `${BASE_URL}/setup?token=${token}`;
   const firstName = (client.owner_name || "there").split(" ")[0];
   const planLabel = plan === "pro" ? "Pro — $299/mo" : "Essential — $199/mo";
