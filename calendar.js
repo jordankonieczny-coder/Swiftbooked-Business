@@ -14,7 +14,7 @@ function makeAuth(refreshToken) {
 }
 
 // Create a confirmed booking event on the client's Google Calendar
-export async function createBookingEvent(refreshToken, { summary, description, date, startTime, endTime }) {
+export async function createBookingEvent(refreshToken, { summary, description, location, date, startTime, endTime }) {
   const auth = makeAuth(refreshToken);
   const cal = google.calendar({ version: "v3", auth });
 
@@ -23,6 +23,7 @@ export async function createBookingEvent(refreshToken, { summary, description, d
     resource: {
       summary,
       description,
+      ...(location ? { location } : {}),
       start: { dateTime: `${date}T${startTime}:00`, timeZone: TIMEZONE },
       end:   { dateTime: `${date}T${endTime}:00`,   timeZone: TIMEZONE },
       reminders: {
