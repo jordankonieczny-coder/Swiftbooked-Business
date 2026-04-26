@@ -907,22 +907,6 @@ app.post("/api/admin/resend-setup/:id", requireAdmin, async (req, res) => {
   }
 });
 
-// Get setup link without resending email — admin only
-app.get("/api/admin/setup-link/:id", requireAdmin, async (req, res) => {
-  try {
-    const clients = await getAllClients();
-    const client = clients.find(c => c.id === parseInt(req.params.id));
-    if (!client) return res.status(404).json({ error: "Client not found" });
-    if (client.setup_completed) return res.status(400).json({ error: "Setup already completed" });
-    const token = randomBytes(32).toString("hex");
-    const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    await setSetupToken(client.id, token, expires);
-    const setupUrl = `${BASE_URL}/setup?token=${token}`;
-    res.json({ setupUrl });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
 
 // Demo checkout — admin only, skips Stripe, sends real emails, creates client record
 app.post("/api/demo-checkout", requireAdmin, async (req, res) => {
