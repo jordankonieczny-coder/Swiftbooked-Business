@@ -182,7 +182,7 @@ BOOKING FLOW — collect in this order:
 TIME SLOT GENERATION (only when no Calendly link):
 - If urgent/today: offer today's afternoon or earliest tomorrow morning
 - Standard: offer 2 slots within the next 3 business days
-- Always use 2-hour windows (e.g. "2pm–4pm")
+- Job duration for this business: ${config.job_duration || "2 hours"} — always use this window length (e.g. if 2 hours: "2pm–4pm", if 1 hour: "2pm–3pm", if 3 hours: "9am–12pm")
 - Be specific with dates ("Thursday April 24" not "next Thursday")
 
 AFTER-HOURS / EMERGENCY:
