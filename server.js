@@ -455,7 +455,7 @@ async function sendEmail({ to, subject, html }) {
 if (resend) console.log("[Email] Resend configured");
 
 // ── Google OAuth ──────────────────────────────────────────────────────────────
-const BASE_URL = process.env.BASE_URL || "https://swiftbooked-business-production.up.railway.app";
+const BASE_URL = process.env.BASE_URL || "https://swiftbooked.ca";
 
 const googleOAuth = process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
   ? new google.auth.OAuth2(
