@@ -232,7 +232,44 @@ service → [Form field: Service Type]      <span class="comment">(optional)</sp
         </li>
       </ol>
 
-      <div class="warn">Webhooks by Zapier requires a paid Zapier Starter plan (~$20/mo USD). If you don't want to pay, use <strong>Make (make.com)</strong> instead — it's free, supports webhooks, and works the same way. The Zap structure is identical.</div>
+      <div class="warn">Webhooks by Zapier requires a paid Zapier Starter plan (~$20/mo USD). Use <strong>Make (make.com)</strong> instead — it's free, supports webhooks, and works just as well. See the Make setup below.</div>
+
+      <h3>Alternative: Make (make.com) — Free</h3>
+      <p>Make is the recommended free option. 1,000 operations/month on the free plan — plenty for any client starting out. Make calls workflows "scenarios" instead of "Zaps" but the logic is identical.</p>
+
+      <ol class="step-list">
+        <li>
+          <div><strong>Go to make.com and sign up free</strong>
+          Create an account — no credit card needed.</div>
+        </li>
+        <li>
+          <div><strong>Click "Create a new scenario"</strong></div>
+        </li>
+        <li>
+          <div><strong>Add the first module: Google Forms → Watch Responses</strong>
+          Search for "Google Forms" → select <strong>Watch Responses</strong> → connect the client's Google account → select their form. Set the limit to 1 (process one response at a time).</div>
+        </li>
+        <li>
+          <div><strong>Add the second module: HTTP → Make a Request</strong>
+          Click the + after Google Forms → search "HTTP" → select <strong>Make a Request</strong>. Fill in:
+          <div class="code-block">URL:             https://swiftbooked.ca/webhook/zapier/{widgetKey}
+Method:          POST
+Body type:       Raw
+Content type:    application/json
+Request content: {"name":"{{1.Name}}","phone":"{{1.Phone Number}}","message":"{{1.Message}}"}</div>
+          Replace the field names in <code>{{ }}</code> with the actual field names from the client's form — Make will show you available fields as you type.</div>
+        </li>
+        <li>
+          <div><strong>Click "Run once" to test</strong>
+          Make will process the most recent form submission. You should see a green tick on both modules and a 200 response from the HTTP module.</div>
+        </li>
+        <li>
+          <div><strong>Turn the scenario on</strong>
+          Toggle the switch in the bottom left to ON. Set the schedule to "Immediately" or every 15 minutes — immediately means it checks for new responses in real time.</div>
+        </li>
+      </ol>
+
+      <div class="tip">Make's free plan runs scenarios every 15 minutes by default. To get near-instant responses, set the scheduling interval to the minimum (15 min is fine — client gets a text within 15 min of submitting, which is still much faster than a human checking email).</div>
 
       <h3>What the AI receives</h3>
       <p>The inbound webhook builds an opening message like: <em>"I need help with: HVAC repair. My furnace isn't working. My name is Mike"</em> — then runs it through the client's AI config. The customer gets a text from the client's Twilio number within seconds.</p>
