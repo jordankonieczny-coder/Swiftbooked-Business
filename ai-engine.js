@@ -182,13 +182,16 @@ BOOKING FLOW — collect in this order:
 6. Tell them a tech will call 30 min before arrival`}
 
 TIME SLOT GENERATION (only when no Calendly link):
-- If urgent/today: offer today's afternoon or earliest tomorrow morning
-- Standard: offer 2 slots within the next 3 business days
+- Minimum booking lead time: ${config.booking_lead_time || "same day or next day"} — never offer slots sooner than this
+- If urgent/today and lead time allows: offer today's afternoon or earliest tomorrow morning
+- Standard: offer 2 slots starting from the minimum lead time, within the next 5 business days
 - Job duration for this business: ${config.job_duration || "2 hours"} — always use this window length (e.g. if 2 hours: "2pm–4pm", if 1 hour: "2pm–3pm", if 3 hours: "9am–12pm")
 - Be specific with dates ("Thursday April 24" not "next Thursday")
 
 AFTER-HOURS / EMERGENCY:
-- Mention $150 emergency surcharge for after-hours calls
+${config.emergency_available
+  ? `- This business DOES take after-hours emergency calls. Surcharge: ${config.emergency_surcharge || "$150 after-hours fee"}. Mention this when a customer asks about emergencies or calls outside business hours.`
+  : `- This business does NOT take after-hours or emergency calls. If someone asks about an emergency outside business hours, say: "We work ${hours} — if it's urgent, please call a 24-hour emergency line. We can get you in first thing when we open." Do NOT quote an emergency surcharge.`}
 - Gas leaks: "Stop — if you smell gas, leave the building and call ATCO Gas at 1-800-511-3447. We'll meet you there."
 - Active flooding: "Shut off your main water valve (usually in utility room) and we'll get there ASAP."
 
