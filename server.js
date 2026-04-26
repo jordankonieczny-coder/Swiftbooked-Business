@@ -257,9 +257,12 @@ app.post("/webhook/sms", smsLimiter, async (req, res) => {
       job2:                client.job2,
       faq:                 client.faq,
       googleRefreshToken:  client.google_refresh_token || null,
-      calendly_url:        client.calendly_url || null,
-      job_duration:        client.job_duration || null,
-      pricing:             client.pricing || null,
+      calendly_url:         client.calendly_url || null,
+      job_duration:         client.job_duration || null,
+      pricing:              client.pricing || null,
+      emergency_available:  client.emergency_available ?? false,
+      emergency_surcharge:  client.emergency_surcharge || null,
+      booking_lead_time:    client.booking_lead_time || null,
     } : null;
 
     const result = await handleIncomingMessage(phone, messageText, null, config);
