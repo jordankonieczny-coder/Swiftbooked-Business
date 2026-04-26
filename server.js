@@ -86,7 +86,9 @@ app.post("/api/stripe-webhook", express.raw({ type: "application/json" }), async
       const token = randomBytes(32).toString("hex");
       const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
       await setSetupToken(client.id, token, expires);
-      await sendSetupEmail({ client, token, plan: m.plan });
+      const tempPassword = randomBytes(4).toString("hex");
+      await setClientPassword(client.id, await bcrypt.hash(tempPassword, 10));
+      await sendSetupEmail({ client, token, plan: m.plan, tempPassword });
     } catch (err) {
       console.error("[Stripe webhook] Setup error:", err.message);
     }
