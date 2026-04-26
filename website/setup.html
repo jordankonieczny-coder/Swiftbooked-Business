@@ -254,6 +254,23 @@ Q: How long does installation take? A: Most rooms take 1–2 days. Full homes ta
           <input type="text" id="f-job2" placeholder="AC installation — $4,000–$6,000">
         </div>
         <div class="field">
+          <label>Typical Job Duration <span class="optional-tag">(optional)</span></label>
+          <select id="f-job_duration">
+            <option value="">Select duration…</option>
+            <option value="1 hour">1 hour</option>
+            <option value="1–2 hours">1–2 hours</option>
+            <option value="2 hours">2 hours</option>
+            <option value="2–3 hours">2–3 hours</option>
+            <option value="3 hours">3 hours</option>
+            <option value="3–4 hours">3–4 hours</option>
+            <option value="4 hours">4 hours</option>
+            <option value="half day (4–5 hours)">Half day (4–5 hours)</option>
+            <option value="full day">Full day</option>
+            <option value="multi-day">Multi-day</option>
+          </select>
+          <div class="hint">Used so the AI books the right-length slot on your calendar.</div>
+        </div>
+        <div class="field">
           <label>Calendly Booking Link <span class="optional-tag">(optional)</span></label>
           <input type="url" id="f-calendly_url" placeholder="https://calendly.com/your-business/service">
           <div class="hint">The AI will send customers your Calendly link so they pick a time themselves.</div>
