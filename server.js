@@ -839,9 +839,15 @@ async function sendSetupEmail({ client, token, plan, tempPassword }) {
               <li>Your client portal password</li>
             </ul>
           </div>
-          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px 20px;margin:20px 0;">
-            <p style="margin:0 0 6px;font-weight:700;color:#166534;">Your Client Portal</p>
-            <p style="margin:0;font-size:0.9rem;color:#166534;">After setup, track your leads and manage billing at: <a href="${BASE_URL}/portal" style="color:#15803d;font-weight:700;">${BASE_URL}/portal</a></p>
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:20px 24px;margin:20px 0;">
+            <p style="margin:0 0 10px;font-weight:700;color:#166534;font-size:1rem;">🔐 Your Client Portal — Ready Now</p>
+            <p style="margin:0 0 12px;font-size:0.9rem;color:#166534;">Track your leads, view conversations, and manage billing at any time.</p>
+            <table style="width:100%;border-collapse:collapse;font-size:0.88rem;margin-bottom:12px;">
+              <tr><td style="padding:6px 0;color:#166534;font-weight:700;width:36%;">Portal URL</td><td><a href="${BASE_URL}/portal" style="color:#15803d;font-weight:700;">${BASE_URL}/portal</a></td></tr>
+              <tr><td style="padding:6px 0;color:#166534;font-weight:700;">Email</td><td style="color:#166534;">${client.owner_email}</td></tr>
+              <tr><td style="padding:6px 0;color:#166534;font-weight:700;">Temporary password</td><td><code style="background:#dcfce7;padding:3px 8px;border-radius:4px;font-size:0.9rem;letter-spacing:0.05em;">${tempPassword || "Set during setup"}</code></td></tr>
+            </table>
+            <p style="margin:0;font-size:0.82rem;color:#166534;">You can change your password anytime from the setup form or by contacting Jordan.</p>
           </div>
           <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:20px 24px;margin:20px 0;">
             <p style="margin:0 0 12px;font-weight:700;font-size:1rem;color:#1e40af;">📞 Set Up Call Forwarding</p>
