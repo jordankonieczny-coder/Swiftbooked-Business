@@ -824,20 +824,23 @@ async function sendSetupEmail({ client, token, plan, tempPassword }) {
         </div>
         <div style="background:#f9fafb;padding:28px 32px;border-radius:0 0 10px 10px;border:1px solid #e5e7eb;border-top:none;">
           <p style="margin-top:0;">Hi ${firstName},</p>
-          <p>To get your bot live, we just need a few details about <strong>${client.business_name}</strong> — your hours, services, and pricing. Takes about 3 minutes.</p>
-          <div style="text-align:center;margin:28px 0;">
-            <a href="${setupUrl}" style="display:inline-block;background:#1a56db;color:#fff;padding:16px 36px;border-radius:10px;text-decoration:none;font-weight:700;font-size:1.05rem;">Set Up My Bot →</a>
-            <p style="color:#6b7280;font-size:0.85rem;margin:12px 0 0;">Takes 3 minutes · This link expires in 7 days</p>
+          <p>You're almost live. There are only <strong>two things you need to do</strong> — we handle everything else.</p>
+          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:20px 24px;margin:20px 0;">
+            <p style="margin:0 0 14px;font-weight:700;font-size:1rem;color:#374151;">✅ Step 1 — Fill out the 3-minute setup form</p>
+            <p style="margin:0 0 16px;font-size:0.9rem;color:#4b5563;">This tells the AI everything about your business — your hours, services, pricing, and how to book jobs. Takes about 3 minutes.</p>
+            <div style="text-align:center;margin:4px 0 8px;">
+              <a href="${setupUrl}" style="display:inline-block;background:#1a56db;color:#fff;padding:14px 32px;border-radius:10px;text-decoration:none;font-weight:700;font-size:1rem;">Set Up My Bot →</a>
+              <p style="color:#6b7280;font-size:0.82rem;margin:10px 0 0;">This link expires in 7 days</p>
+            </div>
           </div>
-          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:18px 24px;margin:20px 0;">
-            <p style="margin:0 0 10px;font-weight:700;font-size:0.95rem;color:#374151;">The form covers:</p>
-            <ul style="margin:0;padding-left:20px;color:#6b7280;font-size:0.9rem;line-height:1.9;">
-              <li>Trade type &amp; business hours</li>
-              <li>Service area</li>
-              <li>Your services &amp; pricing</li>
-              <li>Common customer questions</li>
-              <li>Your client portal password</li>
+          <div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:20px 24px;margin:20px 0;">
+            <p style="margin:0 0 14px;font-weight:700;font-size:1rem;color:#374151;">✅ Step 2 — Forward unanswered calls to your Swiftbooked number</p>
+            <p style="margin:0 0 10px;font-size:0.9rem;color:#4b5563;">Jordan will send you your dedicated Swiftbooked number once your account is activated. When you get it, forward missed calls to that number using one of these:</p>
+            <ul style="margin:0 0 10px;padding-left:20px;color:#4b5563;font-size:0.88rem;line-height:2.1;">
+              <li><strong>iPhone:</strong> Settings → Phone → Call Forwarding → enter your Swiftbooked number</li>
+              <li><strong>Any carrier (Rogers / Bell / Telus):</strong> Dial <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">*61*+1YOURNUMBER#</code> and press call</li>
             </ul>
+            <p style="margin:0;font-size:0.85rem;color:#6b7280;"><strong>Optional:</strong> Disable carrier voicemail so the bot gets calls first — dial <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">#404#</code> (Bell/Telus) or <code style="background:#f3f4f6;padding:1px 5px;border-radius:3px;">#BAL#</code> (Rogers), or ask your carrier.</p>
           </div>
           <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:20px 24px;margin:20px 0;">
             <p style="margin:0 0 10px;font-weight:700;color:#166534;font-size:1rem;">🔐 Your Client Portal — Ready Now</p>
@@ -845,35 +848,19 @@ async function sendSetupEmail({ client, token, plan, tempPassword }) {
             <table style="width:100%;border-collapse:collapse;font-size:0.88rem;margin-bottom:12px;">
               <tr><td style="padding:6px 0;color:#166534;font-weight:700;width:36%;">Portal URL</td><td><a href="${BASE_URL}/portal" style="color:#15803d;font-weight:700;">${BASE_URL}/portal</a></td></tr>
               <tr><td style="padding:6px 0;color:#166534;font-weight:700;">Email</td><td style="color:#166534;">${client.owner_email}</td></tr>
-              <tr><td style="padding:6px 0;color:#166534;font-weight:700;">Temporary password</td><td><code style="background:#dcfce7;padding:3px 8px;border-radius:4px;font-size:0.9rem;letter-spacing:0.05em;">${tempPassword || "Set during setup"}</code></td></tr>
+              <tr><td style="padding:6px 0;color:#166534;font-weight:700;">Temp password</td><td><code style="background:#dcfce7;padding:3px 8px;border-radius:4px;font-size:0.9rem;letter-spacing:0.05em;">${tempPassword || "Set during setup"}</code></td></tr>
             </table>
-            <p style="margin:0;font-size:0.82rem;color:#166534;">You can change your password anytime from the setup form or by contacting Jordan.</p>
-          </div>
-          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:20px 24px;margin:20px 0;">
-            <p style="margin:0 0 12px;font-weight:700;font-size:1rem;color:#1e40af;">📞 Set Up Call Forwarding</p>
-            <p style="margin:0 0 10px;font-size:0.9rem;color:#1e3a8a;">When you miss a call, your AI bot automatically texts that person back within seconds. To enable this, forward unanswered calls from your business phone to your Swiftbooked number (we'll send it once your account is activated).</p>
-            <p style="margin:0 0 6px;font-weight:600;font-size:0.88rem;color:#1e40af;">How to set it up:</p>
-            <ul style="margin:0 0 10px;padding-left:20px;color:#1e3a8a;font-size:0.88rem;line-height:2;">
-              <li><strong>iPhone:</strong> Settings → Phone → Call Forwarding → enter your Swiftbooked number</li>
-              <li><strong>Any phone (Rogers / Bell / Telus):</strong> Dial <code style="background:#dbeafe;padding:1px 5px;border-radius:3px;">*61*+1YOURNUMBER#</code> and press call</li>
-            </ul>
-            <p style="margin:0;font-size:0.85rem;color:#3b82f6;"><strong>Tip:</strong> Disable carrier voicemail so your bot gets the call first — dial <code style="background:#dbeafe;padding:1px 5px;border-radius:3px;">#404#</code> (Bell/Telus) or <code style="background:#dbeafe;padding:1px 5px;border-radius:3px;">#BAL#</code> (Rogers), or contact your carrier.</p>
+            <p style="margin:0;font-size:0.82rem;color:#166534;">You can change your password anytime — just contact Jordan.</p>
           </div>
           ${plan === "pro" ? `
           <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:20px 24px;margin:20px 0;">
-            <p style="margin:0 0 12px;font-weight:700;font-size:1rem;color:#1e40af;">💬 Chat Widget for Your Website</p>
-            <p style="margin:0 0 10px;font-size:0.9rem;color:#1e3a8a;">Your Pro plan includes an AI chat widget for your website. Once your account is activated, Jordan will send you a one-line code snippet. Paste it anywhere before the <code style="background:#dbeafe;padding:1px 5px;border-radius:3px;">&lt;/body&gt;</code> tag — works on WordPress, Wix, Squarespace, or any custom site.</p>
-            <p style="margin:0;font-size:0.88rem;color:#1e3a8a;">It looks like this: <code style="background:#dbeafe;padding:2px 8px;border-radius:3px;font-size:0.82rem;">&lt;script src="https://swiftbooked.ca/widget.js" data-key="YOUR_KEY"&gt;&lt;/script&gt;</code></p>
-          </div>
-          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:20px 24px;margin:20px 0;">
-            <p style="margin:0 0 12px;font-weight:700;font-size:1rem;color:#1e40af;">📋 Contact Form — AI Auto-Response</p>
-            <p style="margin:0 0 10px;font-size:0.9rem;color:#1e3a8a;">When someone fills out your contact form, the AI will automatically text them back within 30 seconds. <strong>We handle the entire setup for you.</strong></p>
-            <p style="margin:0 0 6px;font-weight:600;font-size:0.88rem;color:#1e40af;">All we need from you:</p>
-            <ul style="margin:0 0 10px;padding-left:20px;color:#1e3a8a;font-size:0.88rem;line-height:2;">
-              <li><strong>Google Form:</strong> Share it with <a href="mailto:jordankonieczny@gmail.com" style="color:#1a56db;">jordankonieczny@gmail.com</a> as an editor and reply with the link.</li>
-              <li><strong>Website contact form:</strong> Just reply with the email address your form notifications go to. That's it.</li>
+            <p style="margin:0 0 10px;font-weight:700;font-size:1rem;color:#1e40af;">⭐ Jordan handles on your behalf (Pro plan)</p>
+            <ul style="margin:0;padding-left:20px;color:#1e3a8a;font-size:0.88rem;line-height:2.1;">
+              <li><strong>Website chat widget</strong> — Jordan sends you a one-line snippet to paste on your site</li>
+              <li><strong>Contact form AI response</strong> — reply to this email with the email your form notifications go to</li>
+              <li><strong>Facebook / Instagram lead ads</strong> — reply with your Facebook Page name to connect it</li>
             </ul>
-            <p style="margin:0;font-size:0.85rem;color:#3b82f6;">Reply to this email and we'll have it connected within 24 hours.</p>
+            <p style="margin:8px 0 0;font-size:0.85rem;color:#3b82f6;">Reply to this email with those details and everything will be live within 24 hours.</p>
           </div>` : ""}
           <p>Your first month is <strong>free</strong> — no charge for 30 days (${planLabel} after that).</p>
           <p>Questions? Call or text Jordan at <a href="tel:5875687784" style="color:#1a56db;">587-568-7784</a>.</p>
