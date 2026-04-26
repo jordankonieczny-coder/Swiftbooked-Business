@@ -432,6 +432,10 @@ After-hours emergency: +$150 surcharge"></textarea>
     }
   }
 
+  document.getElementById('f-emergency_available').addEventListener('change', function() {
+    document.getElementById('f-surcharge-wrap').style.display = this.value === 'true' ? 'block' : 'none';
+  });
+
   function onTradeChange() {
     const trade = document.getElementById('f-trade').value;
     prefillFaq(trade);
