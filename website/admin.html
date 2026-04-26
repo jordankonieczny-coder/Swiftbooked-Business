@@ -286,8 +286,7 @@
           <div class="actions">
             <button class="btn btn-secondary btn-sm" onclick="editClient(${c.id})">Edit</button>
             <button class="btn btn-secondary btn-sm" style="background:#eff6ff;color:#1e40af;" onclick="openPasswordModal(${c.id}, '${c.business_name.replace(/'/g,"\\'")}')">Password</button>
-            ${!c.setup_completed ? `<button class="btn btn-secondary btn-sm" style="background:#fefce8;color:#854d0e;" onclick="copySetupLink(${c.id}, '${c.business_name.replace(/'/g,"\\'")}')">Copy Setup Link</button>` : ''}
-            ${!c.setup_completed ? `<button class="btn btn-secondary btn-sm" style="background:#fef3c7;color:#92400e;" onclick="resendSetup(${c.id}, '${c.business_name.replace(/'/g,"\\'")}')">Resend Email</button>` : ''}
+            ${!c.setup_completed ? `<button class="btn btn-secondary btn-sm" style="background:#fef3c7;color:#92400e;" onclick="resendSetup(${c.id}, '${c.business_name.replace(/'/g,"\\'")}')">Resend Setup</button>` : ''}
             <button class="btn btn-danger btn-sm" onclick="deleteClientById(${c.id}, '${c.business_name.replace(/'/g,"\\'")}')">Delete</button>
           </div>
         </td>
