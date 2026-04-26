@@ -188,14 +188,16 @@ export async function completeSetup(clientId, data, passwordHash) {
        job1=$5, job2=$6, faq=$7, owner_phone=$8,
        password_hash=$9, setup_completed=true,
        setup_token=NULL, setup_token_expires=NULL,
-       calendly_url=$10, job_duration=$11, pricing=$12
-     WHERE id=$13 RETURNING *`,
+       calendly_url=$10, job_duration=$11, pricing=$12,
+       emergency_available=$13, emergency_surcharge=$14, booking_lead_time=$15
+     WHERE id=$16 RETURNING *`,
     [
       data.trade, data.hours, data.service_area, data.callout_fee || null,
       data.job1 || null, data.job2 || null, data.faq || null,
       data.owner_phone || null, passwordHash,
       data.calendly_url || null, data.job_duration || null,
-      data.pricing || null, clientId,
+      data.pricing || null, data.emergency_available ?? false,
+      data.emergency_surcharge || null, data.booking_lead_time || null, clientId,
     ]
   );
   return rows[0];
