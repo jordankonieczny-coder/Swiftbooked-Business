@@ -891,7 +891,6 @@ async function sendSetupEmail({ client, token, plan }) {
 // Resend setup email — admin only, generates a fresh token and resends
 app.post("/api/admin/resend-setup/:id", requireAdmin, async (req, res) => {
   try {
-    const { rows } = await (await import("./db.js")).default || {};
     const clients = await getAllClients();
     const client = clients.find(c => c.id === parseInt(req.params.id));
     if (!client) return res.status(404).json({ error: "Client not found" });
