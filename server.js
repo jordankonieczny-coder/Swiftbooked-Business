@@ -930,7 +930,9 @@ app.post("/api/demo-checkout", requireAdmin, async (req, res) => {
     const token = randomBytes(32).toString("hex");
     const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     await setSetupToken(client.id, token, expires);
-    await sendSetupEmail({ client, token, plan: planKey });
+    const tempPassword = randomBytes(4).toString("hex");
+    await setClientPassword(client.id, await bcrypt.hash(tempPassword, 10));
+    await sendSetupEmail({ client, token, plan: planKey, tempPassword });
     console.log(`[Demo signup] ${name} | ${business} | ${email}`);
     res.json({ success: true });
   } catch (err) {
