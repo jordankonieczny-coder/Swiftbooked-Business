@@ -1017,7 +1017,7 @@ app.post("/api/setup/:token", async (req, res) => {
 
   try {
     const passwordHash = await bcrypt.hash(password, 10);
-    await completeSetup(client.id, { trade, hours, service_area, callout_fee, job1, job2, faq, owner_phone, calendly_url, job_duration, pricing }, passwordHash);
+    await completeSetup(client.id, { trade, hours, service_area, callout_fee, job1, job2, faq, owner_phone, calendly_url, job_duration, pricing, emergency_available, emergency_surcharge, booking_lead_time }, passwordHash);
 
     // Auto-provision Twilio number (skipped for demo signups)
     let twilioNumber = null;
