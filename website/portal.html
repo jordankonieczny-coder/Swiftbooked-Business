@@ -68,6 +68,32 @@
     .btn-billing { background: #1a56db; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-family: inherit; font-size: 0.88rem; font-weight: 600; cursor: pointer; }
     .btn-billing:hover { background: #1342a8; }
     .btn-billing:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    @media (max-width: 640px) {
+      header { padding: 12px 16px; }
+      header h1 { font-size: 0.95rem; }
+      #header-business { display: none; }
+      .container { padding: 16px 12px; }
+      .login-box { padding: 28px 20px; }
+      .stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .stat { padding: 14px 8px; }
+      .stat-num { font-size: 1.5rem; }
+      .stat-label { font-size: 0.72rem; }
+
+      /* Lead cards: stack into two rows */
+      .lead-header { flex-wrap: wrap; padding: 12px 14px; gap: 6px; }
+      .lead-phone { font-size: 0.9rem; flex: 1; }
+      .lead-chevron { margin-left: auto; }
+      .lead-meta { width: 100%; order: 3; }
+      .lead-time { width: 100%; order: 4; margin-left: 0; font-size: 0.75rem; }
+
+      .lead-messages { padding: 14px 12px; }
+      .msg-bubble { font-size: 0.82rem; max-width: 88%; }
+
+      .billing-box { padding: 16px; }
+      .btn-billing { width: 100%; text-align: center; }
+      .support-box { padding: 16px; }
+    }
   </style>
 </head>
 <body>
