@@ -256,6 +256,7 @@ app.post("/webhook/sms", smsLimiter, async (req, res) => {
       googleRefreshToken:  client.google_refresh_token || null,
       calendly_url:        client.calendly_url || null,
       job_duration:        client.job_duration || null,
+      pricing:             client.pricing || null,
     } : null;
 
     const result = await handleIncomingMessage(phone, messageText, null, config);
