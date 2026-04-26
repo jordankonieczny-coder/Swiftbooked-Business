@@ -888,6 +888,25 @@ async function sendSetupEmail({ client, token, plan }) {
   ]).catch(err => console.error("[sendSetupEmail error]", err.message));
 }
 
+// Resend setup email — admin only, generates a fresh token and resends
+app.post("/api/admin/resend-setup/:id", requireAdmin, async (req, res) => {
+  try {
+    const { rows } = await (await import("./db.js")).default || {};
+    const clients = await getAllClients();
+    const client = clients.find(c => c.id === parseInt(req.params.id));
+    if (!client) return res.status(404).json({ error: "Client not found" });
+    if (client.setup_completed) return res.status(400).json({ error: "Setup already completed" });
+    const token = randomBytes(32).toString("hex");
+    const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    await setSetupToken(client.id, token, expires);
+    await sendSetupEmail({ client, token, plan: client.plan });
+    res.json({ success: true });
+  } catch (err) {
+    console.error("[resend-setup error]", err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Demo checkout — admin only, skips Stripe, sends real emails, creates client record
 app.post("/api/demo-checkout", requireAdmin, async (req, res) => {
   const { name, business, email, phone, trade, trade_other, plan } = req.body;
