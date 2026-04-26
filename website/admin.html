@@ -391,7 +391,7 @@
     if (!confirm(`Resend setup email to ${name}? This generates a fresh 7-day link.`)) return;
     const res = await fetch(`/api/admin/resend-setup/${id}`, { method: 'POST' });
     const data = await res.json();
-    if (res.ok) alert(`Setup email resent to ${name} ✓`);
+    if (res.ok) alert(`Setup email resent to ${name} ✓\n\nSetup link:\n${data.setupUrl}`);
     else alert(`Error: ${data.error}`);
   }
 
