@@ -1011,7 +1011,7 @@ app.post("/api/setup/:token", async (req, res) => {
   if (!client) return res.status(404).json({ error: "Invalid or expired setup link." });
   if (client.setup_completed) return res.status(410).json({ error: "Already completed." });
 
-  const { trade, hours, service_area, callout_fee, job1, job2, faq, owner_phone, password, calendly_url, job_duration, pricing } = req.body;
+  const { trade, hours, service_area, callout_fee, job1, job2, faq, owner_phone, password, calendly_url, job_duration, pricing, emergency_available, emergency_surcharge, booking_lead_time } = req.body;
   if (!trade || !hours || !service_area) return res.status(400).json({ error: "Trade, hours, and service area are required." });
   if (!password || password.length < 6) return res.status(400).json({ error: "Password must be at least 6 characters." });
 
