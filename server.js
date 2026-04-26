@@ -1095,9 +1095,18 @@ app.post("/api/setup/:token", async (req, res) => {
           </div>` : "";
 
       const zapierSection = widgetKey ? `
-          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px 20px;margin:20px 0;">
-            <p style="margin:0 0 6px;font-weight:700;color:#166534;">⚡ Have a Google Form or contact form on your website?</p>
-            <p style="margin:0;font-size:0.9rem;color:#166534;">Reply to this email with the link and we'll connect it for you within 24 hours — no setup needed on your end. Every form submission will get an AI text back within 30 seconds.</p>
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:20px 24px;margin:20px 0;">
+            <p style="margin:0 0 10px;font-weight:700;color:#166534;font-size:1rem;">⚡ Want the AI to respond to your contact form submissions too?</p>
+            <p style="margin:0 0 14px;font-size:0.88rem;color:#166534;">We handle the entire connection for you — just do one small thing depending on your form type and reply to this email:</p>
+            <div style="background:#dcfce7;border-radius:6px;padding:12px 16px;margin-bottom:8px;">
+              <p style="margin:0 0 4px;font-weight:700;color:#166534;font-size:0.85rem;">If you use Google Forms:</p>
+              <p style="margin:0;font-size:0.85rem;color:#166534;">Share the form with <strong>jordankonieczny@gmail.com</strong> as an editor, then reply with the form link.</p>
+            </div>
+            <div style="background:#dcfce7;border-radius:6px;padding:12px 16px;margin-bottom:12px;">
+              <p style="margin:0 0 4px;font-weight:700;color:#166534;font-size:0.85rem;">If you have a contact form on your website (Squarespace, Wix, WordPress, etc.):</p>
+              <p style="margin:0;font-size:0.85rem;color:#166534;">Just reply with the email address your form notifications get sent to. No website access needed — we take it from there.</p>
+            </div>
+            <p style="margin:0;font-size:0.82rem;color:#166534;">Once connected, every form submission triggers an AI text to that customer within 30 seconds — automatically, 24/7.</p>
           </div>` : "";
 
       await sendEmail({
