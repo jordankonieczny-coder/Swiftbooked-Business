@@ -212,6 +212,7 @@ async function processMissedCall(callerPhone, twilioNumber) {
     googleRefreshToken: client.google_refresh_token || null,
     calendly_url:       client.calendly_url || null,
     job_duration:       client.job_duration || null,
+    pricing:            client.pricing || null,
   } : null;
 
   const result = await handleIncomingMessage(callerPhone, "__missed_call__", null, config);
