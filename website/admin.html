@@ -379,6 +379,14 @@
     }
   }
 
+  async function copySetupLink(id, name) {
+    const res = await fetch(`/api/admin/setup-link/${id}`);
+    const data = await res.json();
+    if (!res.ok) { alert(`Error: ${data.error}`); return; }
+    await navigator.clipboard.writeText(data.setupUrl);
+    alert(`Setup link for ${name} copied to clipboard!\n\n${data.setupUrl}`);
+  }
+
   async function resendSetup(id, name) {
     if (!confirm(`Resend setup email to ${name}? This generates a fresh 7-day link.`)) return;
     const res = await fetch(`/api/admin/resend-setup/${id}`, { method: 'POST' });
