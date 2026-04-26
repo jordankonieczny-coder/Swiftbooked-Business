@@ -271,6 +271,42 @@ Request content: {"name":"{{1.Name}}","phone":"{{1.Phone Number}}","message":"{{
 
       <div class="tip">Make's free plan runs scenarios every 15 minutes by default. To get near-instant responses, set the scheduling interval to the minimum (15 min is fine — client gets a text within 15 min of submitting, which is still much faster than a human checking email).</div>
 
+      <h3>Website Contact Form — Email Notification Method</h3>
+      <p>If a client has a website contact form (Squarespace, Wix, WordPress, etc.) and doesn't want to give you website access, the easiest path is the <strong>Email Parser by Zapier</strong> method. The client just forwards their form notification emails — you handle everything else.</p>
+
+      <div class="tip"><strong>What to ask the client:</strong> "What email address do your contact form notifications get sent to?" That's all you need from them.</div>
+
+      <ol class="step-list">
+        <li>
+          <div><strong>Go to parser.zapier.com and create a mailbox</strong>
+          Zapier gives you a unique email address like <code>abc123@robot.zapier.com</code>. Copy it.</div>
+        </li>
+        <li>
+          <div><strong>Ask the client to forward form emails to that address</strong>
+          They go into their email settings (Gmail, Outlook, etc.) and set up a forwarding rule: any email from their website form gets forwarded to the Zapier mailbox. Usually takes them 2 minutes — send them this:<br><br>
+          <em>"In your email, set up a rule/filter to forward any emails from [their form notification address] to: [zapier mailbox address]. That's all you need to do."</em></div>
+        </li>
+        <li>
+          <div><strong>Train the Email Parser on a sample email</strong>
+          Trigger a test form submission so an email lands in the Zapier mailbox. Open parser.zapier.com → click the email → highlight the customer's name, phone number, and message and label each one. Zapier learns the format and will extract those fields automatically from every future email.</div>
+        </li>
+        <li>
+          <div><strong>Create a Zap: Email Parser → Webhook POST</strong>
+          Trigger: <strong>Email Parser by Zapier → New Email</strong> → select your mailbox.<br>
+          Action: <strong>Webhooks by Zapier → POST</strong> → URL: <code>https://swiftbooked.ca/webhook/zapier/{widgetKey}</code><br>
+          Data:
+          <div class="code-block">name    → [Parsed field: Name]
+phone   → [Parsed field: Phone]
+message → [Parsed field: Message]</div></div>
+        </li>
+        <li>
+          <div><strong>Test and publish</strong>
+          Send a test form submission → confirm a 200 response → publish the Zap. Done.</div>
+        </li>
+      </ol>
+
+      <div class="warn">Email Parser works on any Zapier paid plan. The free plan doesn't include it — use the $20/mo Starter plan which covers all clients in one account.</div>
+
       <h3>WordPress / Wix / Squarespace / Webflow</h3>
       <p>All major website builders have a native Zapier integration. The Zap is the same — just change the trigger from "Google Forms" to their platform:</p>
       <ul>
