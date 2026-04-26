@@ -136,7 +136,9 @@ function buildSystemPrompt(config = {}) {
   const ownerPhone = process.env.OWNER_PHONE || "587-568-7784";
 
   let customPricing = "";
-  if (callout || job1 || job2) {
+  if (config.pricing) {
+    customPricing = `\nPRICING — USE ONLY THESE NUMBERS. Do not use ranges from the knowledge base. Do not guess.\n${config.pricing}\n- Always add: "Exact quote confirmed on-site after assessment — no surprises."\n`;
+  } else if (callout || job1 || job2) {
     customPricing = `\nCUSTOM PRICING FOR THIS BUSINESS (always use these exact numbers):`;
     if (callout) customPricing += `\n- Service/callout fee: ${callout}`;
     if (job1) customPricing += `\n- ${job1}`;
