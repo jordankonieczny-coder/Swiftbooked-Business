@@ -909,7 +909,9 @@ app.post("/api/admin/resend-setup/:id", requireAdmin, async (req, res) => {
     const token = randomBytes(32).toString("hex");
     const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     await setSetupToken(client.id, token, expires);
-    await sendSetupEmail({ client, token, plan: client.plan });
+    const tempPassword = randomBytes(4).toString("hex");
+    await setClientPassword(client.id, await bcrypt.hash(tempPassword, 10));
+    await sendSetupEmail({ client, token, plan: client.plan, tempPassword });
     const setupUrl = `${BASE_URL}/setup?token=${token}`;
     res.json({ success: true, setupUrl });
   } catch (err) {
