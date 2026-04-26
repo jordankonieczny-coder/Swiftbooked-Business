@@ -271,6 +271,37 @@ Request content: {"name":"{{1.Name}}","phone":"{{1.Phone Number}}","message":"{{
 
       <div class="tip">Make's free plan runs scenarios every 15 minutes by default. To get near-instant responses, set the scheduling interval to the minimum (15 min is fine — client gets a text within 15 min of submitting, which is still much faster than a human checking email).</div>
 
+      <h3>WordPress / Wix / Squarespace / Webflow</h3>
+      <p>All major website builders have a native Zapier integration. The Zap is the same — just change the trigger from "Google Forms" to their platform:</p>
+      <ul>
+        <li><strong>WordPress (WPForms / Gravity Forms / Contact Form 7):</strong> WPForms and Gravity Forms have direct Zapier triggers. Contact Form 7 needs a plugin called "CF7 Zapier" (free, install from WordPress plugins).</li>
+        <li><strong>Wix:</strong> Zapier → trigger: Wix → New Form Submission</li>
+        <li><strong>Squarespace:</strong> Zapier → trigger: Squarespace → New Form Submission</li>
+        <li><strong>Webflow:</strong> Zapier → trigger: Webflow → Form Submission</li>
+      </ul>
+      <p>Everything after the trigger (the HTTP POST action and field mapping) stays exactly the same.</p>
+
+      <h3>Custom-Built Website</h3>
+      <p>If the client has a custom site, their web developer just needs to add one line to the form's submit handler. Send them this message:</p>
+      <div class="code-block"><span class="comment">// Send this to their developer:</span>
+When the contact form submits, POST the form data to this URL:
+
+https://swiftbooked.ca/webhook/zapier/{widgetKey}
+
+Expected fields (JSON):
+  name    — customer's name
+  phone   — customer's phone number (required)
+  message — their message or notes (optional)
+  service — service type if you have that field (optional)
+
+Example fetch call:
+fetch("https://swiftbooked.ca/webhook/zapier/{widgetKey}", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ name, phone, message, service })
+});</div>
+      <p>Takes a developer about 5 minutes. The client texts you their developer's contact and you send them the above.</p>
+
       <h3>What the AI receives</h3>
       <p>The inbound webhook builds an opening message like: <em>"I need help with: HVAC repair. My furnace isn't working. My name is Mike"</em> — then runs it through the client's AI config. The customer gets a text from the client's Twilio number within seconds.</p>
     </div>
