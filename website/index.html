@@ -2978,5 +2978,61 @@
   })();
   </script>
 
+  <script>
+  // Scroll reveal
+  const revealStyle = document.createElement('style');
+  revealStyle.textContent = `
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+  `;
+  document.head.appendChild(revealStyle);
+
+  const revealTargets = [
+    '.problem-card',
+    '.diff-card',
+    '.step-card',
+    '.feature-card',
+    '.stat',
+    '.price-card',
+    '.faq-item',
+    '.stat-item',
+    '.sms-comp-row',
+    '.billing-box',
+    '.support-box',
+    '.about-local',
+  ];
+
+  document.querySelectorAll(revealTargets.join(',')).forEach((el, i) => {
+    el.classList.add('reveal');
+    const delay = i % 3;
+    if (delay === 1) el.classList.add('reveal-delay-1');
+    if (delay === 2) el.classList.add('reveal-delay-2');
+  });
+
+  // Also reveal section headings
+  document.querySelectorAll('section h2').forEach(el => el.classList.add('reveal'));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
 </body>
 </html>
