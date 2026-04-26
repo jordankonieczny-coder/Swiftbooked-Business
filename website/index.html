@@ -1734,55 +1734,61 @@
         </div>
       </div>
 
-      <div class="feature-cards-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:40px;max-width:1100px;margin-left:auto;margin-right:auto;">
-        <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;gap:12px;align-items:flex-start;">
-          <span style="font-size:1.4rem;flex-shrink:0;">📅</span>
-          <div>
-            <strong style="font-size:0.88rem;">Calendar sync</strong>
-            <p style="font-size:0.8rem;color:var(--text-muted);margin:4px 0 0;">Bookings go straight in — no double-booking, ever.</p>
-            <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
-              <span style="background:#f3f4f6;border-radius:6px;padding:3px 8px;font-size:0.72rem;font-weight:600;color:#374151;">Google</span>
-              <span style="background:#f3f4f6;border-radius:6px;padding:3px 8px;font-size:0.72rem;font-weight:600;color:#374151;">Outlook</span>
-              <span style="background:#f3f4f6;border-radius:6px;padding:3px 8px;font-size:0.72rem;font-weight:600;color:#374151;">Calendly</span>
+      <div style="margin-top:40px;max-width:1100px;margin-left:auto;margin-right:auto;">
+        <!-- Row 1: Essential features -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px;">
+          <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:1.4rem;flex-shrink:0;">📅</span>
+            <div>
+              <strong style="font-size:0.88rem;">Calendar sync</strong>
+              <p style="font-size:0.8rem;color:var(--text-muted);margin:4px 0 0;">Bookings go straight in — no double-booking, ever.</p>
+              <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+                <span style="background:#f3f4f6;border-radius:6px;padding:3px 8px;font-size:0.72rem;font-weight:600;color:#374151;">Google</span>
+                <span style="background:#f3f4f6;border-radius:6px;padding:3px 8px;font-size:0.72rem;font-weight:600;color:#374151;">Outlook</span>
+                <span style="background:#f3f4f6;border-radius:6px;padding:3px 8px;font-size:0.72rem;font-weight:600;color:#374151;">Calendly</span>
+              </div>
             </div>
           </div>
-        </div>
-        <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;gap:12px;align-items:flex-start;">
-          <span style="font-size:1.4rem;flex-shrink:0;">🔔</span>
-          <div><strong style="font-size:0.88rem;">Instant escalation alerts</strong><p style="font-size:0.8rem;color:var(--text-muted);margin:4px 0 0;">You're texted the moment a customer needs a real person.</p></div>
-        </div>
-        <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;gap:12px;align-items:flex-start;">
-          <span style="font-size:1.4rem;flex-shrink:0;">📊</span>
-          <div><strong style="font-size:0.88rem;">Client portal</strong><p style="font-size:0.8rem;color:var(--text-muted);margin:4px 0 0;">Every lead, conversation, and booking in one dashboard — 24/7.</p></div>
-        </div>
-        <div style="background:#fff;border:2px solid #1a56db;border-radius:12px;padding:18px 20px;display:flex;gap:12px;align-items:flex-start;position:relative;">
-          <span style="font-size:1.4rem;flex-shrink:0;">💬</span>
-          <div>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-              <strong style="font-size:0.88rem;">AI website chat widget</strong>
-              <span style="background:#1a56db;color:#fff;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:20px;">PRO</span>
-            </div>
-            <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Embed an AI chat on your own website. Visitors book directly from your site — appointments land in your calendar automatically.</p>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:1.4rem;flex-shrink:0;">🔔</span>
+            <div><strong style="font-size:0.88rem;">Instant escalation alerts</strong><p style="font-size:0.8rem;color:var(--text-muted);margin:4px 0 0;">You're texted the moment a customer needs a real person.</p></div>
+          </div>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:1.4rem;flex-shrink:0;">📊</span>
+            <div><strong style="font-size:0.88rem;">Client portal</strong><p style="font-size:0.8rem;color:var(--text-muted);margin:4px 0 0;">Every lead, conversation, and booking in one dashboard — 24/7.</p></div>
           </div>
         </div>
-        <div style="background:#fff;border:2px solid #1a56db;border-radius:12px;padding:18px 20px;display:flex;gap:12px;align-items:flex-start;position:relative;">
-          <span style="font-size:1.4rem;flex-shrink:0;">📋</span>
-          <div>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-              <strong style="font-size:0.88rem;">Google Form &amp; website contact form capture</strong>
-              <span style="background:#1a56db;color:#fff;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:20px;">PRO</span>
+        <!-- Row 2: Pro features -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+          <div style="background:#fff;border:2px solid #1a56db;border-radius:12px;padding:18px 20px;display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:1.4rem;flex-shrink:0;">💬</span>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <strong style="font-size:0.88rem;">AI website chat widget</strong>
+                <span style="background:#1a56db;color:#fff;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:20px;">PRO</span>
+              </div>
+              <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Embed an AI chat on your own website. Visitors book directly from your site — appointments land in your calendar automatically.</p>
             </div>
-            <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Someone fills out your website contact form or Google Form — the AI texts them back within 30 seconds. We handle the connection for you.</p>
           </div>
-        </div>
-        <div style="background:#fff;border:2px solid #1a56db;border-radius:12px;padding:18px 20px;display:flex;gap:12px;align-items:flex-start;position:relative;">
-          <span style="font-size:1.4rem;flex-shrink:0;">🎯</span>
-          <div>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-              <strong style="font-size:0.88rem;">Facebook &amp; Instagram ad lead capture</strong>
-              <span style="background:#1a56db;color:#fff;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:20px;">PRO</span>
+          <div style="background:#fff;border:2px solid #1a56db;border-radius:12px;padding:18px 20px;display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:1.4rem;flex-shrink:0;">📋</span>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <strong style="font-size:0.88rem;">Google Form &amp; website contact form capture</strong>
+                <span style="background:#1a56db;color:#fff;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:20px;">PRO</span>
+              </div>
+              <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Someone fills out your website contact form or Google Form — the AI texts them back within 30 seconds. We handle the connection for you.</p>
             </div>
-            <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Run a Facebook or Instagram ad? When someone submits your lead form, the AI texts them back in 30 seconds — before they forget they clicked. We connect it for you.</p>
+          </div>
+          <div style="background:#fff;border:2px solid #1a56db;border-radius:12px;padding:18px 20px;display:flex;gap:12px;align-items:flex-start;">
+            <span style="font-size:1.4rem;flex-shrink:0;">🎯</span>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <strong style="font-size:0.88rem;">Facebook &amp; Instagram ad lead capture</strong>
+                <span style="background:#1a56db;color:#fff;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:20px;">PRO</span>
+              </div>
+              <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Run a Facebook or Instagram ad? When someone submits your lead form, the AI texts them back in 30 seconds — before they forget they clicked. We connect it for you.</p>
+            </div>
           </div>
         </div>
       </div>
