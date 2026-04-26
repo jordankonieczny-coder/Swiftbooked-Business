@@ -282,7 +282,8 @@ async function executeTool(toolName, toolInput, context = {}) {
       if (context.googleRefreshToken && toolInput.date && toolInput.start_time && toolInput.end_time) {
         try {
           await createBookingEvent(context.googleRefreshToken, {
-            summary: `${emergency ? "⚡ EMERGENCY: " : ""}${toolInput.service_type} — ${toolInput.customer_name}`,
+            summary: `${emergency ? "⚡ EMERGENCY: " : ""}${toolInput.service_type} — ${toolInput.customer_name} (${toolInput.address || "address TBD"})`,
+            location: toolInput.address || undefined,
             description: [
               `Booking ID: ${bookingId}`,
               `Customer: ${toolInput.customer_name}`,
