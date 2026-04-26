@@ -266,6 +266,30 @@ After-hours emergency: +$150 surcharge"></textarea>
           <div class="hint">The AI will quote these exact numbers and stop estimating. The more complete, the better.</div>
         </div>
         <div class="field">
+          <label>Do you take emergency / after-hours calls? <span class="optional-tag">(optional)</span></label>
+          <select id="f-emergency_available">
+            <option value="false">No — we only work during business hours</option>
+            <option value="true">Yes — we take after-hours emergency calls</option>
+          </select>
+        </div>
+        <div class="field" id="f-surcharge-wrap" style="display:none;">
+          <label>After-hours surcharge <span class="optional-tag">(optional)</span></label>
+          <input type="text" id="f-emergency_surcharge" placeholder="e.g. $150 after-hours fee">
+          <div class="hint">The AI will quote this automatically when a customer asks about emergency calls.</div>
+        </div>
+        <div class="field">
+          <label>Minimum booking lead time <span class="optional-tag">(optional)</span></label>
+          <select id="f-booking_lead_time">
+            <option value="">Same day / next day (default)</option>
+            <option value="1 day">At least 1 day notice</option>
+            <option value="2 days">At least 2 days notice</option>
+            <option value="3 days">At least 3 days notice</option>
+            <option value="1 week">At least 1 week notice</option>
+            <option value="2 weeks">At least 2 weeks notice</option>
+          </select>
+          <div class="hint">How far out does the AI offer time slots?</div>
+        </div>
+        <div class="field">
           <label>Typical Job Duration <span class="optional-tag">(optional)</span></label>
           <select id="f-job_duration">
             <option value="">Select duration…</option>
