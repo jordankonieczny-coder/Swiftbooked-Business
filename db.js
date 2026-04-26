@@ -53,6 +53,7 @@ export async function initDB() {
     ALTER TABLE clients ADD COLUMN IF NOT EXISTS is_demo BOOLEAN DEFAULT false;
     ALTER TABLE clients ADD COLUMN IF NOT EXISTS zapier_webhook_url TEXT;
     ALTER TABLE clients ADD COLUMN IF NOT EXISTS job_duration VARCHAR(50);
+    ALTER TABLE clients ADD COLUMN IF NOT EXISTS pricing TEXT;
   `);
   console.log("[DB] tables ready");
 }
