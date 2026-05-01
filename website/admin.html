@@ -400,7 +400,7 @@
 
   async function deleteClientById(id, name) {
     if (!confirm(`Delete ${name}? This cannot be undone.`)) return;
-    await fetch(`/api/admin/clients/${id}`, { method: 'DELETE' });
+    await fetch(`/api/admin/clients/${id}`, { method: 'DELETE', credentials: 'same-origin' });
     await loadClients();
     showToast('Client deleted.');
   }
