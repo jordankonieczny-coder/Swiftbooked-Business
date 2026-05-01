@@ -22,7 +22,7 @@ import jwt from "jsonwebtoken";
 import cron from "node-cron";
 import { handleChat, handleIncomingMessage, getSession } from "./ai-engine.js";
 import { initDB, getClientByNumber, getAllClients, createClient, updateClient, deleteClient, saveCalendarToken, getClientByEmail, setClientPassword, upsertLead, getAllLeads, getLeadsByClient, getClientByWidgetKey, setWidgetKey, setStripeCustomerId, createPartialClient, setSetupToken, getClientBySetupToken, completeSetup, activateClientWithNumber, deactivateClientByStripeId, setZapierWebhookUrl } from "./db.js";
-import { randomBytes } from "crypto";
+import { randomBytes, timingSafeEqual } from "crypto";
 import { makeConnectUrl } from "./calendar.js";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
