@@ -1232,7 +1232,7 @@ app.post("/api/widget/chat", demoLimiter, async (req, res) => {
 
 // Generate (or regenerate) a widget key for a client
 app.post("/api/admin/clients/:id/widget-key", requireAdmin, async (req, res) => {
-  const key = "sb_" + Math.random().toString(36).slice(2, 10);
+  const key = "sb_" + randomBytes(8).toString("hex");
   try {
     const client = await setWidgetKey(parseInt(req.params.id), key);
     res.json({ widget_key: client.widget_key });
