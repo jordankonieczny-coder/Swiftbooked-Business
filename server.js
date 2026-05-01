@@ -1007,10 +1007,11 @@ async function sendNewSignupEmails({ name, business, email, phone, trade, plan, 
 // ═════════════════════════════════════════════════════════════════════════════
 // GET /connect-calendar/:id — sends client through Google OAuth for a specific client record
 // ═════════════════════════════════════════════════════════════════════════════
-app.get("/connect-calendar/:id", (req, res) => {
+app.get("/connect-calendar/:id", requirePortalAuth, (req, res) => {
   if (!googleOAuth) return res.status(503).send("Google OAuth not configured.");
   const { id } = req.params;
   if (!id || isNaN(parseInt(id))) return res.status(400).send("Invalid client ID.");
+  if (req.portalUser.clientId !== parseInt(id)) return res.status(403).send("Forbidden.");
   const { url } = makeConnectUrl(id);
   res.redirect(url);
 });
