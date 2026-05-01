@@ -380,10 +380,21 @@
 
   async function resendSetup(id, name) {
     if (!confirm(`Resend setup email to ${name}? This generates a fresh 7-day link.`)) return;
-    const res = await fetch(`/api/admin/resend-setup/${id}`, { method: 'POST' });
-    const data = await res.json();
-    if (res.ok) alert(`Setup email resent to ${name} ✓\n\nSetup link:\n${data.setupUrl}`);
-    else alert(`Error: ${data.error}`);
+    try {
+      const res = await fetch(`/api/admin/resend-setup/${id}`, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert(`Setup email resent to ${name} ✓\n\nSetup link:\n${data.setupUrl}`);
+      } else {
+        alert(`Failed to resend: ${data.error}`);
+      }
+    } catch (err) {
+      alert(`Network error: ${err.message}`);
+    }
   }
 
   async function deleteClientById(id, name) {
