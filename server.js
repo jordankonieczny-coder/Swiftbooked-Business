@@ -1394,7 +1394,8 @@ app.get("/api/portal/leads", requirePortalAuth, async (req, res) => {
     const leads = await getLeadsByClient(req.portalUser.clientId);
     res.json(leads);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("[portal/leads error]", err.message);
+    res.status(500).json({ error: "Could not load leads." });
   }
 });
 
