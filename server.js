@@ -1004,12 +1004,19 @@ async function sendNewSignupEmails({ name, business, email, phone, trade, plan, 
 // ═════════════════════════════════════════════════════════════════════════════
 // GET /connect-calendar/:id — sends client through Google OAuth for a specific client record
 // ═════════════════════════════════════════════════════════════════════════════
-app.get("/connect-calendar/:id", requirePortalAuth, (req, res) => {
+app.get("/connect-calendar/:id", async (req, res) => {
   if (!googleOAuth) return res.status(503).send("Google OAuth not configured.");
-  const { id } = req.params;
-  if (!id || isNaN(parseInt(id))) return res.status(400).send("Invalid client ID.");
-  if (req.portalUser.clientId !== parseInt(id)) return res.status(403).send("Forbidden.");
-  const { url } = makeConnectUrl(id);
+  const clientId = parseInt(req.params.id);
+  if (!clientId) return res.status(400).send("Invalid client ID.");
+  const clients = await getAllClients().catch(() => []);
+  if (!clients.find(c => c.id === clientId)) return res.status(404).send("Client not found.");
+  const state = generateState({ clientId });
+  const url = googleOAuth.generateAuthUrl({
+    access_type: "offline",
+    prompt: "consent",
+    scope: ["https://www.googleapis.com/auth/calendar.readonly", "https://www.googleapis.com/auth/calendar.events"],
+    state,
+  });
   res.redirect(url);
 });
 
