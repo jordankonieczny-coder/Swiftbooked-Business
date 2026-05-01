@@ -512,17 +512,14 @@ app.get("/auth/google/callback", async (req, res) => {
 
     let clientName = session?.business || "Unknown";
 
-    // If state is a direct client-connect flow (cal:clientId:token), save token to DB
-    if (state && state.startsWith("cal:")) {
-      const clientId = state.split(":")[1];
-      if (clientId && tokens.refresh_token) {
-        try {
-          const updated = await saveCalendarToken(parseInt(clientId), tokens.refresh_token);
-          if (updated) clientName = updated.business_name;
-          console.log(`[Calendar] Token saved for client ${clientId} (${clientName})`);
-        } catch (err) {
-          console.error("[Calendar] Failed to save token:", err.message);
-        }
+    if (session.clientId && tokens.refresh_token) {
+      // Direct client-connect flow (setup wizard or portal)
+      try {
+        const updated = await saveCalendarToken(session.clientId, tokens.refresh_token);
+        if (updated) clientName = updated.business_name;
+        console.log(`[Calendar] Token saved for client ${session.clientId} (${clientName})`);
+      } catch (err) {
+        console.error("[Calendar] Failed to save token:", err.message);
       }
     } else if (session?.email && tokens.refresh_token) {
       // Legacy signup flow: try to find client by email and save token
