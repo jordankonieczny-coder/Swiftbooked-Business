@@ -475,7 +475,7 @@ setInterval(() => {
 }, 10 * 60 * 1000);
 
 function generateState(data) {
-  const state = Math.random().toString(36).slice(2) + Date.now().toString(36);
+  const state = randomBytes(16).toString("hex");
   oauthSessions.set(state, { ...data, createdAt: Date.now() });
   return state;
 }
