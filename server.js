@@ -1025,12 +1025,20 @@ app.get("/api/setup/validate/:token", async (req, res) => {
   const client = await getClientBySetupToken(req.params.token).catch(() => null);
   if (!client) return res.status(404).json({ error: "This setup link is invalid or has expired. Contact Jordan at 587-568-7784." });
   if (client.setup_completed) return res.status(410).json({ error: "Setup is already complete. Log in at swiftbooked.ca/portal" });
+  const calState = googleOAuth ? generateState({ clientId: client.id }) : null;
+  const calendar_url = calState ? googleOAuth.generateAuthUrl({
+    access_type: "offline",
+    prompt: "consent",
+    scope: ["https://www.googleapis.com/auth/calendar.readonly", "https://www.googleapis.com/auth/calendar.events"],
+    state: calState,
+  }) : null;
+
   res.json({
     business_name: client.business_name,
     owner_name: client.owner_name,
     trade: client.trade,
     owner_phone: client.owner_phone || "",
-    calendar_url: `${BASE_URL}/connect-calendar/${client.id}`,
+    calendar_url,
     has_calendar: !!client.google_refresh_token,
   });
 });
