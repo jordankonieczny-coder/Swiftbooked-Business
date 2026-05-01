@@ -242,7 +242,7 @@
   let editingId = null;
 
   async function loadClients() {
-    const res = await fetch('/api/admin/clients');
+    const res = await fetch('/api/admin/clients', { credentials: 'same-origin' });
     clients = await res.json();
     renderTable();
   }
