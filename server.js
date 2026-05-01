@@ -1257,7 +1257,11 @@ function requireAdmin(req, res, next) {
   const [scheme, encoded] = auth.split(" ");
   if (scheme === "Basic" && encoded) {
     const [, pass] = Buffer.from(encoded, "base64").toString().split(":");
-    if (pass === ADMIN_PASSWORD) return next();
+    if (pass && pass.length === ADMIN_PASSWORD.length) {
+      const a = Buffer.from(pass);
+      const b = Buffer.from(ADMIN_PASSWORD);
+      if (timingSafeEqual(a, b)) return next();
+    }
   }
   res.set("WWW-Authenticate", 'Basic realm="Swiftbooked Admin"');
   res.status(401).send("Unauthorized");
