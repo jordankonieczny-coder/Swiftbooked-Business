@@ -317,7 +317,7 @@ app.post("/webhook/form", async (req, res) => {
     .filter(Boolean)
     .join(". ");
 
-  console.log(`[Form lead] ${name || "Unknown"} ${cleanPhone}: "${initialMsg}"`);
+  console.log(`[Form lead] ${name || "Unknown"} ${cleanPhone}`);
 
   try {
     const result = await handleIncomingMessage(
