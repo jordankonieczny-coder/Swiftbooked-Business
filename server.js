@@ -244,7 +244,7 @@ app.post("/webhook/sms", smsLimiter, async (req, res) => {
     return res.type("text/xml").send("<Response/>");
   }
 
-  console.log(`[SMS in] ${phone} → ${toNumber}: "${messageText}"`);
+  console.log(`[SMS in] ${phone} → ${toNumber} (${messageText.length} chars)`);
 
   try {
     // Look up which client owns this Twilio number
