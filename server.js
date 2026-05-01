@@ -1407,7 +1407,8 @@ app.get("/api/portal/me", requirePortalAuth, async (req, res) => {
     const { password_hash, google_refresh_token, ...safe } = client;
     res.json(safe);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("[portal/me error]", err.message);
+    res.status(500).json({ error: "Could not load account." });
   }
 });
 
@@ -1417,7 +1418,8 @@ app.patch("/api/portal/integrations", requirePortalAuth, async (req, res) => {
     const client = await setZapierWebhookUrl(req.portalUser.clientId, zapier_webhook_url || null);
     res.json({ success: true, zapier_webhook_url: client.zapier_webhook_url });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("[portal/integrations error]", err.message);
+    res.status(500).json({ error: "Could not save integration settings." });
   }
 });
 
@@ -1452,7 +1454,7 @@ app.post("/api/portal/billing", requirePortalAuth, async (req, res) => {
     res.json({ url: portalSession.url });
   } catch (err) {
     console.error("[Billing portal error]", err.message);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Could not open billing portal. Contact Jordan at 587-568-7784." });
   }
 });
 
