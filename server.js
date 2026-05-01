@@ -1212,14 +1212,21 @@ app.post("/api/widget/chat", demoLimiter, async (req, res) => {
   if (!client) return res.status(404).json({ error: "Widget not found" });
 
   const config = {
-    bizName:  client.business_name,
-    trade:    client.trade,
-    hours:    client.hours,
-    area:     client.service_area,
-    callout:  client.callout_fee,
-    job1:     client.job1,
-    job2:     client.job2,
-    faq:      client.faq,
+    bizName:             client.business_name,
+    trade:               client.trade,
+    hours:               client.hours,
+    area:                client.service_area,
+    callout:             client.callout_fee,
+    job1:                client.job1,
+    job2:                client.job2,
+    faq:                 client.faq,
+    googleRefreshToken:  client.google_refresh_token || null,
+    calendly_url:        client.calendly_url || null,
+    job_duration:        client.job_duration || null,
+    pricing:             client.pricing || null,
+    emergency_available: client.emergency_available ?? false,
+    emergency_surcharge: client.emergency_surcharge || null,
+    booking_lead_time:   client.booking_lead_time || null,
   };
 
   try {
