@@ -1068,7 +1068,7 @@ app.post("/api/setup/:token", async (req, res) => {
     let widgetKey = null;
     if (client.plan === "pro" && !client.is_demo) {
       try {
-        widgetKey = "sb_" + Math.random().toString(36).slice(2, 10);
+        widgetKey = "sb_" + randomBytes(8).toString("hex");
         await setWidgetKey(client.id, widgetKey);
         console.log(`[Widget] Key generated for ${client.business_name}: ${widgetKey}`);
       } catch (err) {
