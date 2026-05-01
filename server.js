@@ -1185,7 +1185,7 @@ app.post("/api/setup/:token", async (req, res) => {
     res.json({ success: true, twilioNumber, widgetKey });
   } catch (err) {
     console.error("[Setup complete error]", err.message);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Setup could not be completed. Please contact Jordan at 587-568-7784." });
   }
 });
 
