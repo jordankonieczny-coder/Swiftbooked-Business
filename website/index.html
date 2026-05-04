@@ -2977,15 +2977,21 @@
     });
   })();
 
-  // ─── Sticky CTA hide when signup is visible ───────────────────────────────────
+  // ─── Sticky CTA: hide when hero or signup is visible ─────────────────────────
   (function() {
     const stickyCta = document.getElementById('sticky-cta');
     const signup = document.getElementById('signup');
-    if (!stickyCta || !signup) return;
-    const obs = new IntersectionObserver(entries => {
-      stickyCta.style.display = entries[0].isIntersecting ? 'none' : '';
-    }, { threshold: 0.1 });
-    obs.observe(signup);
+    const hero = document.querySelector('.hero');
+    if (!stickyCta) return;
+    let heroVisible = true, signupVisible = false;
+    const update = () => { stickyCta.style.display = (heroVisible || signupVisible) ? 'none' : ''; };
+    if (hero) {
+      new IntersectionObserver(entries => { heroVisible = entries[0].isIntersecting; update(); }, { threshold: 0.1 }).observe(hero);
+    }
+    if (signup) {
+      new IntersectionObserver(entries => { signupVisible = entries[0].isIntersecting; update(); }, { threshold: 0.1 }).observe(signup);
+    }
+    update();
   })();
 
   // ─── Form submission → Stripe Checkout ───────────────────────────────────────
