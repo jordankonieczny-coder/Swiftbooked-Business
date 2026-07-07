@@ -2407,8 +2407,7 @@
       const label = document.getElementById('plan-label-' + key);
       if (!label) return;
       const isSelected = (p === plan);
-      label.style.borderColor = isSelected ? 'var(--brand)' : 'var(--border)';
-      label.style.background = isSelected ? 'var(--brand-light)' : '';
+      label.classList.toggle('selected', isSelected);
       const radio = label.querySelector('input');
       if (radio) radio.checked = isSelected;
     });
