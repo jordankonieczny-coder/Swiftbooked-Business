@@ -2444,12 +2444,6 @@
       document.getElementById('demo-step-1').style.display = 'block';
     });
 
-    // Plan radio UI sync
-    document.querySelectorAll('input[name="plan_display"]').forEach(radio => {
-      radio.closest('label').addEventListener('click', () => {
-        setSignupPlan(radio.value);
-      });
-    });
   });
 
   // ─── Floating Widget Demo ─────────────────────────────────────────────────────
