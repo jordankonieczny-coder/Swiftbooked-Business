@@ -454,44 +454,6 @@
     .step h3 { font-size: 1.1rem; margin-bottom: 8px; font-weight: 700; }
     .step p { color: var(--text-muted); font-size: 0.93rem; line-height: 1.65; }
 
-    /* ── Social proof / Google Reviews ───────────── */
-    .proof { background: var(--bg); text-align: center; }
-    .proof h2 { font-size: 2rem; margin-bottom: 8px; }
-    .proof .sub { color: var(--text-muted); margin-bottom: 48px; font-size: 1rem; }
-    .quotes {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      max-width: 960px;
-      margin: 0 auto;
-    }
-    .quote-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 24px;
-      text-align: left;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-      display: flex; flex-direction: column; gap: 14px;
-    }
-    .tcard-top {
-      display: flex; align-items: center; gap: 12px;
-    }
-    .tcard-avatar {
-      width: 44px; height: 44px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 1.05rem; flex-shrink: 0; color: #fff;
-    }
-    .tcard-info { flex: 1; }
-    .tcard-name { font-weight: 700; font-size: 0.95rem; color: var(--text); }
-    .tcard-role { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
-    .tcard-stars {
-      display: flex; gap: 3px;
-    }
-    .tcard-stars svg { width: 16px; height: 16px; }
-    .quote-card p {
-      font-size: 0.9rem; color: #374151; line-height: 1.75; margin: 0;
-    }
     /* Mobile tap overlay for demo phone */
     .mobile-tap-overlay {
       display: none;
@@ -508,7 +470,6 @@
       text-align: center; padding: 0 20px;
       text-shadow: 0 1px 4px rgba(0,0,0,0.5);
     }
-    .mobile-tap-overlay .tap-icon { font-size: 1.4rem; }
     /* Steps section */
     .steps-section { background: var(--bg-off); }
     .steps-grid {
@@ -530,18 +491,12 @@
     }
     .step-card h4 { font-size: 0.95rem; font-weight: 700; margin: 0; }
     .step-card p { font-size: 0.83rem; color: var(--text-muted); line-height: 1.6; margin: 0; }
-    .step-arrow {
-      display: flex; align-items: center; justify-content: center;
-      color: var(--brand); font-size: 1.4rem; font-weight: 700;
-      padding-top: 28px;
-    }
     @media (max-width: 900px) {
       .feature-cards-grid { grid-template-columns: repeat(3, 1fr) !important; }
     }
     @media (max-width: 640px) {
       .feature-cards-grid { grid-template-columns: 1fr 1fr !important; }
       .steps-grid { grid-template-columns: 1fr; max-width: 380px; }
-      .step-arrow { display: none; }
       .step-card { padding: 22px 16px 18px; }
       .about-local { flex-direction: column; text-align: center; }
       .about-local h2 { font-size: 1.4rem; }
@@ -549,82 +504,17 @@
     @media (max-width: 480px) {
       .feature-cards-grid { grid-template-columns: 1fr !important; }
     }
-    /* Deprecated styles kept for safety */
-    .quote-stars { display: none; }
-    .quote-outcome { display: none; }
-    .quote-author { display: none; }
-    .quote-avatar { display: none; }
-    .name { display: none; }
-    .role { display: none; }
 
     /* ── SMS vs Email ────────────────────────────── */
     .sms-vs-email { background: var(--bg-off); }
     .sms-vs-email h2 { font-size: 2rem; text-align: center; margin-bottom: 12px; }
     .sms-vs-email .sub { text-align: center; color: var(--text-muted); margin-bottom: 48px; font-size: 1.05rem; }
-    .sms-comparison {
-      display: grid;
-      grid-template-columns: 1.4fr 1fr 1fr;
-      max-width: 820px;
-      margin: 0 auto;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-    }
-    .sms-comp-header {
-      padding: 16px 20px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      text-align: center;
-      background: var(--bg);
-      border-bottom: 2px solid var(--border);
-    }
-    .sms-col-bg { background: #eef4ff; }
-    .email-col-bg { background: var(--bg-off); }
-    .channel-badge {
-      display: inline-block;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 700;
-    }
-    .sms-badge { background: var(--brand); color: #fff; }
-    .email-badge { background: #e5e7eb; color: var(--text-muted); }
-    .sms-comp-label {
-      padding: 20px 20px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg);
-    }
-    .sms-comp-val {
-      padding: 20px 16px;
-      text-align: center;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    .sms-comparison > *:nth-last-child(-n+3) { border-bottom: none; }
-    .stat-big { font-size: 2rem; font-weight: 800; color: var(--brand); line-height: 1; }
-    .stat-big.muted { color: var(--text-muted); }
-    .bar-wrap { width: 100%; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
-    .bar { height: 100%; border-radius: 4px; }
-    .sms-bar { background: var(--brand); }
-    .email-bar { background: #9ca3af; }
     .sms-source { text-align: center; margin-top: 24px; font-size: 0.8rem; color: var(--text-muted); font-style: italic; }
 
     /* ── Interactive Demo ────────────────────────── */
     .demo { background: var(--bg); }
     .demo h2 { font-size: 2rem; text-align: center; margin-bottom: 12px; }
     .demo .sub { text-align: center; color: var(--text-muted); margin-bottom: 40px; font-size: 1.05rem; }
-    .demo-trade-picker { max-width: 720px; margin: 0 auto; text-align: center; }
-    .demo-prompt { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; color: var(--text); }
-    .trade-note { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px; }
     .trade-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
@@ -662,31 +552,12 @@
       width: 280px;
       outline: none;
     }
-    .demo-chat-window { max-width: 520px; margin: 0 auto; }
     .chat-window {
       background: #fff;
       border-radius: 16px;
       border: 1px solid var(--border);
       overflow: hidden;
       box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-    }
-    .chat-header {
-      background: var(--brand);
-      color: #fff;
-      padding: 16px 20px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .demo-online-dot {
-      width: 8px; height: 8px;
-      background: #4ade80;
-      border-radius: 50%;
-      display: inline-block;
-      margin-left: auto;
-      box-shadow: 0 0 0 2px rgba(74,222,128,0.35);
     }
     .chat-body {
       padding: 20px;
@@ -763,46 +634,7 @@
       text-align: center; margin-top: 16px;
       font-size: 0.82rem; color: var(--text-muted); font-style: italic;
     }
-    .demo-reset-btn {
-      display: block; margin: 16px auto 0;
-      background: none; border: none;
-      color: var(--brand); font-family: inherit;
-      font-size: 0.9rem; font-weight: 600;
-      cursor: pointer; text-decoration: underline;
-    }
 
-    /* ── Demo config step ────────────────────────── */
-    .demo-config {
-      max-width: 520px;
-      margin: 0 auto;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-    }
-    .demo-config h3 { font-size: 1.15rem; margin-bottom: 6px; }
-    .demo-config .config-sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px; }
-    .config-field { margin-bottom: 14px; }
-    .config-field label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 5px; color: var(--text); }
-    .config-field input {
-      width: 100%; padding: 10px 14px;
-      border: 2px solid var(--border); border-radius: 8px;
-      font-size: 0.95rem; font-family: inherit; outline: none;
-      transition: border-color 0.2s;
-    }
-    .config-field input:focus { border-color: var(--brand); }
-    .config-field .config-hint { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
-    .config-actions { display: flex; gap: 12px; margin-top: 20px; }
-    .config-actions .btn-primary { flex: 1; padding: 13px; font-size: 0.95rem; }
-    .config-skip {
-      background: none; border: 2px solid var(--border);
-      color: var(--text-muted); border-radius: 10px;
-      padding: 13px 20px; font-family: inherit;
-      font-size: 0.95rem; font-weight: 600; cursor: pointer;
-      transition: border-color 0.2s;
-    }
-    .config-skip:hover { border-color: var(--text-muted); }
     .demo-knows {
       display: flex; flex-wrap: wrap; gap: 8px;
       margin: 0 0 20px;
@@ -813,23 +645,6 @@
       font-size: 0.8rem; font-weight: 600;
     }
 
-    /* ── Social proof ────────────────────────────── */
-    .proof { background: var(--bg-off); text-align: center; }
-    .proof h2 { font-size: 2rem; margin-bottom: 40px; }
-    .quotes {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    .quote-card {
-      background: #fff; border: 1px solid var(--border);
-      border-radius: 12px; padding: 28px; text-align: left;
-    }
-    .quote-card p { font-size: 0.95rem; color: var(--text-muted); font-style: italic; margin-bottom: 16px; line-height: 1.7; }
-    .quote-card .name { font-weight: 600; color: var(--text); font-size: 0.9rem; }
-    .quote-card .role { color: var(--text-muted); font-size: 0.85rem; }
 
     /* ── Pricing ─────────────────────────────────── */
     .pricing h2 { font-size: 2rem; text-align: center; margin-bottom: 12px; }
@@ -927,13 +742,6 @@
       font-size: 0.88rem; font-weight: 600;
     }
 
-    /* ── Quote avatars ────────────────────────────── */
-    .quote-author { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
-    .quote-avatar {
-      width: 40px; height: 40px; border-radius: 50%;
-      display: inline-flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 0.95rem; flex-shrink: 0;
-    }
 
     /* ── Floating Chat Widget Demo ───────────────── */
     .widget-launcher {
@@ -1555,16 +1363,6 @@
             </div>
           </div>
 
-          <!-- Hidden config fields kept for JS compatibility -->
-          <div id="demo-step-config" style="display:none;">
-            <input type="hidden" id="cfg-bizname">
-            <input type="hidden" id="cfg-job1">
-            <input type="hidden" id="cfg-area">
-            <button id="cfg-start" style="display:none;"></button>
-            <button id="cfg-skip" style="display:none;"></button>
-          </div>
-
-          <div id="demo-step-2-controls" style="display:none;"></div>
         </div>
 
         <!-- Right: iOS phone mockup -->
@@ -2334,225 +2132,6 @@
     return 'demo_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
   }
 
-  function containsAny(text, kws) { const l=text.toLowerCase(); return kws.some(k=>l.includes(k)); }
-
-  const EMERGENCY_UNIVERSAL = ['emergency','urgent','asap','right now','immediately','help me','serious','disaster','flooding','no heat','burst','power out'];
-  const THANKS_KEYWORDS = ['thank','thanks','appreciate','great','awesome','perfect','amazing','wonderful'];
-
-  // Realistic pricing ranges per trade
-  const TRADE_PRICING = {
-    hvac:        'Service calls start at $120\u2013$180 (applied toward the repair). Furnace repairs average $300\u2013$800. Full furnace replacement runs $3,500\u2013$6,000. AC units start at $4,000 installed. We quote everything upfront \u2014 no surprises.',
-    plumbing:    'Service calls start at $100\u2013$150. Drain clearing runs $150\u2013$350. Water heater replacement averages $900\u2013$1,800. For bigger jobs like sewer line work, we do a free on-site assessment first.',
-    electrical:  'Service calls start at $100\u2013$150. Panel upgrades run $1,500\u2013$3,500. Outlet and fixture work is typically $150\u2013$400 per item. We give you a firm written quote before any work starts.',
-    contracting: 'It depends on the project. Basement developments typically run $40,000\u2013$80,000. Bathroom renos average $8,000\u2013$20,000. Decks start around $8,000. We offer free on-site estimates with no obligation.',
-    landscaping: 'Lawn maintenance starts at $50\u2013$80 per cut. Sod installation runs $2\u2013$4/sq ft installed. Full yard designs and installs start at $3,000. Free quotes for all larger projects.',
-    roofing:     'Roof inspections are free. Shingle replacements run $5,000\u2013$15,000 depending on size. Repairs start at $300. We always provide a written quote before touching anything.',
-    painting:    'Interior rooms average $300\u2013$600 per room. Full home exteriors run $3,000\u2013$8,000. We measure and price everything on-site \u2014 free quotes with no pressure.',
-    appliance:   'Service calls start at $80\u2013$120, which gets credited toward the repair cost. Most repairs run $150\u2013$400. We diagnose first and quote before any parts are ordered.',
-    garage:      'Spring replacements run $180\u2013$280. Opener installs start at $350. Full door replacements average $900\u2013$2,500 depending on style. Free estimates for new installs.',
-    windows:     'Window replacements typically run $400\u2013$800 per window installed. Door replacements start at $800. We do free in-home measurements and quotes.',
-    pest:        'Initial inspection and treatment starts at $150\u2013$250. Ongoing prevention plans start at $60/month. We also offer free phone consultations to describe the problem first.',
-    cleaning:    'Regular home cleaning starts at $120\u2013$200 per visit. Deep cleans and move-outs start at $250. Commercial cleaning is quoted by square footage \u2014 free quotes.',
-    pool:        'Weekly maintenance starts at $80\u2013$150/visit. Seasonal openings and closings run $200\u2013$400. Equipment repairs vary by part. Free estimates for larger work.',
-    snow:        'Residential driveways start at $50\u2013$80 per visit. Seasonal contracts give you the best rate. Commercial lots are priced by size \u2014 free quotes.',
-    tree:        'Small tree removal starts at $300. Large trees run $800\u2013$2,500+. Stump grinding is $150\u2013$400. Emergency fallen-tree service is available. Free on-site estimates.',
-    flooring:    'Installation starts at $3\u2013$8/sq ft depending on the material. A typical room install runs $1,500\u2013$4,000 supply and install. Free in-home quotes.',
-    drywall:     'Patch repairs start at $150\u2013$300. New installs run $1.50\u2013$3/sq ft. Texture matching is included. Free estimates for any project over one room.',
-    insulation:  'Attic top-ups typically run $1,500\u2013$3,500. Spray foam starts at $1.50\u2013$3/sq ft. We do a free energy assessment before quoting.',
-    concrete:    'Driveway replacement averages $5,000\u2013$12,000. Pads and walkways start at $1,500. Stamped concrete runs higher. Free on-site quotes.',
-    fencing:     'Wood fencing runs $25\u2013$45/linear ft installed. Vinyl is $30\u2013$55/ft. Gates start at $400. Free quotes \u2014 we measure the yard ourselves.',
-  };
-
-  function isEmergency(text, trade) {
-    return containsAny(text, EMERGENCY_UNIVERSAL) ||
-           (trade.emergencyHints.length > 0 && containsAny(text, trade.emergencyHints));
-  }
-
-  function getTimeSlots() {
-    const hour = new Date().getHours();
-    const slots = [];
-    if (hour < 19) { const s = Math.max(hour+2,9); slots.push(`Today ${s}:00\u2013${s+2}:00`); }
-    slots.push('Tomorrow 8:00\u201310:00 AM');
-    slots.push('Tomorrow 1:00\u20133:00 PM');
-    return slots.slice(0,3);
-  }
-
-  function genConfirm() {
-    const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let s='BK';
-    for(let i=0;i<4;i++) s+=c[Math.floor(Math.random()*c.length)];
-    return s;
-  }
-
-  function getBotResponse(userText) {
-    const text = userText.trim();
-    const lower = text.toLowerCase();
-    const t = demoState.trade;
-    const biz = demoState.bizName;
-    const inBookingFlow = demoState.currentState === STATE.GATHER_ADDRESS ||
-                          demoState.currentState === STATE.GATHER_TIMESLOT ||
-                          demoState.currentState === STATE.CONFIRM;
-
-    // ── Q&A intercepts — answered at any point in the conversation ───────────
-
-    // Is this AI / am I talking to a bot?
-    if (!inBookingFlow && containsAny(lower, ['are you a bot','are you ai','is this a bot','is this ai','real person','are you real','are you human','robot','automated','talking to a machine'])) {
-      return `I'm the Swiftbooked AI \u2014 I handle all incoming messages for ${biz} so you get an instant response any time of day. I can answer questions and book appointments. If you'd prefer to speak with someone directly, just say so and I'll make sure someone calls you back.`;
-    }
-
-    // Pricing / cost
-    if (!inBookingFlow && containsAny(lower, ['how much','what does it cost','what does this cost','what\'s the cost','cost?','pricing','price','quote','rate','charge','fee','estimate','expensive','cheap','affordable','ballpark'])) {
-      const c = demoState.custom;
-      if (c.callout || c.job1 || c.job2) {
-        let msg = `Here's our pricing:\n\n`;
-        if (c.callout) msg += `\u2022 Service call fee: ${c.callout}\n`;
-        if (c.job1)    msg += `\u2022 ${c.job1}\n`;
-        if (c.job2)    msg += `\u2022 ${c.job2}\n`;
-        msg += `\nAll pricing is confirmed on-site before any work begins \u2014 no surprises. Want to book a free estimate?`;
-        return msg;
-      }
-      const p = TRADE_PRICING[t.key] || `We provide free on-site quotes \u2014 our tech will assess the job and give you a firm price before any work begins. No obligation.`;
-      return `${p}\n\nWant to book a free estimate?`;
-    }
-
-    // Hours / availability
-    if (!inBookingFlow && containsAny(lower, ['hours','open','when are you','available','availability','do you work weekends','do you work evenings','after hours','24/7','sunday','saturday','tonight','night time','on weekends'])) {
-      const h = demoState.custom.hours;
-      if (h) return `Our hours are: ${h}. Want to book a time that works for you?`;
-      return `We're available 7 days a week including evenings and weekends. For urgent situations we offer same-day and after-hours emergency service \u2014 just let us know it's urgent and we prioritize accordingly. Want to check availability for a specific time?`;
-    }
-
-    // Service area / location
-    if (!inBookingFlow && containsAny(lower, ['area','areas','location','where do you','edmonton','sherwood park','spruce grove','st albert','leduc','beaumont','fort saskatchewan','stony plain','strathcona','do you serve','do you cover','do you travel','service area'])) {
-      const a = demoState.custom.area;
-      if (a) return `We serve ${a}. What's your address? I can confirm we cover your area.`;
-      return `We cover Edmonton and the surrounding region \u2014 including Sherwood Park, St. Albert, Spruce Grove, Stony Plain, Leduc, Beaumont, and Fort Saskatchewan. What's your area? I can confirm we cover you.`;
-    }
-
-    // What services do you offer?
-    if (!inBookingFlow && containsAny(lower, ['what do you do','what do you offer','what can you do','what can you fix','what services','do you do','do you fix','do you handle','do you install','do you repair','do you replace'])) {
-      const svcs = t.services.length > 0
-        ? t.services.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ')
-        : 'a wide range of jobs in this trade';
-      return `We handle: ${svcs} \u2014 and more. If you've got a specific job in mind, just describe it and I'll let you know if we can help, or get a tech out to take a look.`;
-    }
-
-    // Licensed / insured / certified
-    if (!inBookingFlow && containsAny(lower, ['licensed','insured','insurance','certified','bonded','credentials','qualifications','are you qualified','are your guys'])) {
-      return `Yes \u2014 fully licensed, insured, and bonded. All our technicians are certified and carry full liability coverage. You're covered on every job.`;
-    }
-
-    // Warranty / guarantee
-    if (!inBookingFlow && containsAny(lower, ['warrant','guarantee','guarant','warranty','if something goes wrong','come back','fix it again'])) {
-      return `All our work comes with a workmanship guarantee. Parts and materials carry manufacturer warranty. If something isn't right after we've been there, we come back and fix it \u2014 no charge, no hassle.`;
-    }
-
-    // How long / timing / wait time
-    if (!inBookingFlow && containsAny(lower, ['how long','how soon','when can you come','same day','wait time','turnaround','how fast','quick','how quickly','when do you have'])) {
-      return `For urgent jobs we often have same-day availability. For non-emergency work, most customers get booked within 1\u20133 days. Want me to check what's open this week for you?`;
-    }
-
-    // Reviews / reputation / experience
-    if (!inBookingFlow && containsAny(lower, ['review','rating','reputation','how long have you been','years in business','experience','google','stars','yelp','trustpilot','feedback','testimonial'])) {
-      return `We've built our reputation on fast response and quality workmanship \u2014 most of our business comes from repeat customers and referrals. You can check our Google reviews for an honest look. Want to book a visit so you can judge for yourself?`;
-    }
-
-    // Talk to a person / call me back
-    if (!inBookingFlow && containsAny(lower, ['call me','phone','speak to','talk to someone','talk to a person','real person','human','someone call','call back','reach you','contact number'])) {
-      return `Of course \u2014 just leave me your name and phone number and I'll have someone call you back within the hour. Or if you prefer to reach us directly, you can call our main line any time.`;
-    }
-
-    // Payment methods
-    if (!inBookingFlow && containsAny(lower, ['payment','pay','cash','credit','debit','etransfer','e-transfer','visa','mastercard','invoice','financing'])) {
-      return `We accept cash, credit card, debit, and e-transfer. For larger projects we also offer payment plans \u2014 ask your tech about financing options when they're on-site.`;
-    }
-
-    // What's included / what's the process
-    if (!inBookingFlow && containsAny(lower, ['what\'s included','what is included','what happens','how does it work','what\'s the process','process','steps','next steps'])) {
-      return `Here's how it works: 1) We schedule a time that suits you. 2) Our tech arrives on time and assesses the job. 3) We give you a firm quote before doing anything. 4) Once you approve, we do the work. 5) We clean up and make sure you're 100% happy before we leave.`;
-    }
-
-    // Simple yes (agreeing to book)
-    if (!inBookingFlow && /^(yes|yeah|yep|yup|sure|ok|okay|sounds good|absolutely|definitely|please|let's do it|go ahead|let's go)$/i.test(lower)) {
-      if (demoState.currentState === STATE.GREETING) {
-        demoState.currentState = STATE.GATHER_PROBLEM;
-        return `Great! What's the issue you're dealing with?`;
-      }
-    }
-
-    // Simple no
-    if (/^(no|nope|not really|no thanks|nah|i'm good|all good)$/i.test(lower)) {
-      if (demoState.currentState === STATE.DONE || demoState.currentState === STATE.CONFIRM) {
-        return `No problem at all! Don't hesitate to reach out if you need anything. Have a great day!`;
-      }
-    }
-
-    // ── Emergency detection ──────────────────────────────────────────────────
-
-    if (!inBookingFlow && isEmergency(text, t)) {
-      demoState.isEmergency = true;
-      demoState.problem = text;
-      demoState.currentState = STATE.GATHER_ADDRESS;
-      return `That sounds urgent \u2014 we'll get someone out as fast as possible. What's your address?`;
-    }
-
-    // ── Booking state machine ────────────────────────────────────────────────
-
-    switch(demoState.currentState) {
-      case STATE.GREETING:
-        demoState.currentState = STATE.GATHER_PROBLEM;
-        return `Hi! You've reached ${biz}. Thanks for reaching out \u2014 what can we help you with today?`;
-
-      case STATE.GATHER_PROBLEM:
-        demoState.problem = text;
-        demoState.currentState = STATE.GATHER_ADDRESS;
-        if (containsAny(lower, ['not sure','don\'t know','unsure','maybe','not certain'])) {
-          return `No worries at all \u2014 our tech can assess on arrival and walk you through everything. What's your address so we can get someone out?`;
-        }
-        return `Got it \u2014 that's something we can definitely take care of. What's your address so we can get a tech booked for you?`;
-
-      case STATE.GATHER_ADDRESS:
-        if (text.length < 4) return `Could you share your full address (street number + street name)?`;
-        demoState.address = text;
-        demoState.currentState = STATE.GATHER_TIMESLOT;
-        const slots = getTimeSlots();
-        demoState._slots = slots;
-        const slotList = slots.map((s,i) => `${i+1}. ${s}`).join('\n');
-        const urg = demoState.isEmergency ? `Given the urgency, we've prioritized you. ` : '';
-        return `${urg}We have these openings near you:\n\n${slotList}\n\nWhich works best for you?`;
-
-      case STATE.GATHER_TIMESLOT:
-        const s2 = demoState._slots || [];
-        let chosen = '';
-        if (/\b1\b|first|option 1/i.test(text)) chosen = s2[0];
-        else if (/\b2\b|second|option 2/i.test(text)) chosen = s2[1];
-        else if (/\b3\b|third|option 3/i.test(text)) chosen = s2[2];
-        else if (containsAny(lower,['tonight','today','now','soon','earliest','first'])) chosen = s2[0];
-        else if (containsAny(lower,['tomorrow','morning','am'])) chosen = s2[1];
-        else if (containsAny(lower,['afternoon','pm','later'])) chosen = s2[2]||s2[1];
-        else return `Just to confirm \u2014 which time works? Reply with "1", "2", or "3".`;
-
-        demoState.slot = chosen || s2[0];
-        demoState.currentState = STATE.CONFIRM;
-        demoState.confirmNum = genConfirm();
-        return demoState.isEmergency
-          ? `Booked! Your tech will be there ${demoState.slot} and will call 20 min before arrival. Confirmation #${demoState.confirmNum}. Help is on the way.`
-          : `Perfect \u2014 you're booked for ${demoState.slot}. Your tech will call 30 min before arrival. Confirmation #${demoState.confirmNum}. See you then!`;
-
-      case STATE.CONFIRM:
-        demoState.currentState = STATE.DONE;
-        if (containsAny(lower, THANKS_KEYWORDS)) return `Happy to help! Anything else before your appointment?`;
-        return `Is there anything else I can help you with?`;
-
-      case STATE.DONE:
-        if (containsAny(lower,['yes','yeah','another','also','actually'])) return `Of course \u2014 what else can I help you with?`;
-        return `Great! We'll see you at your appointment. You'll get a reminder text the morning of. Have a great day!`;
-
-      default:
-        return `Thanks for reaching out! Let me connect you with the team.`;
-    }
-  }
-
   function appendMsg(text, type) {
     const body = document.getElementById(activeChatBodyId);
     const el = document.createElement('div');
@@ -2694,23 +2273,6 @@
     }
 
     document.getElementById(activeChatInputId).focus({ preventScroll: true });
-  }
-
-  function showConfigStep(trade, customLabel) {
-    document.getElementById('cfg-bizname').value = customLabel || trade.bizName || '';
-    document.getElementById('demo-step-1').style.display = 'none';
-    document.getElementById('demo-step-config').style.display = 'block';
-    document.getElementById('demo-chat-body').innerHTML = '';
-
-    document.getElementById('cfg-start').onclick = () => {
-      launchChat(trade, {
-        bizName:  document.getElementById('cfg-bizname').value.trim(),
-        job1:     document.getElementById('cfg-job1').value.trim(),
-        area:     document.getElementById('cfg-area').value.trim(),
-      }, customLabel);
-    };
-
-    document.getElementById('cfg-skip').onclick = () => launchChat(trade, {}, customLabel);
   }
 
   function startDemoWithTrade(trade, customLabel) {
