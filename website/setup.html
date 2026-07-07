@@ -55,11 +55,14 @@
 
     /* Done screen */
     .done-box { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 40px 32px; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
-    .done-icon { font-size: 3.5rem; margin-bottom: 16px; }
+    .done-icon { width: 56px; height: 56px; border-radius: 50%; background: #dcfce7; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px; }
     .done-box h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; }
     .done-box p { color: #6b7280; line-height: 1.6; margin-bottom: 12px; }
     .done-steps { background: #f9fafb; border-radius: 10px; padding: 18px 20px; margin: 20px 0; text-align: left; }
     .done-steps p { margin: 0; font-size: 0.88rem; color: #374151; line-height: 2; }
+    .done-steps p::before { display: inline-block; width: 20px; font-weight: 700; }
+    .done-steps .ds-done::before { content: '✓'; color: #16a34a; }
+    .done-steps .ds-wait::before { content: '·'; color: #9ca3af; }
     .btn-portal { display: inline-block; margin-top: 16px; background: #1a56db; color: #fff; padding: 13px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.95rem; }
     .btn-portal:hover { background: #1342a8; }
 
