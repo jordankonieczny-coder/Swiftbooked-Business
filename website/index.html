@@ -2229,14 +2229,8 @@
   }
 
   function startDemoWithTrade(trade, customLabel) {
-    if (window.innerWidth <= 768) {
-      document.getElementById('demo-step-1').style.display = 'none';
-      launchChat(trade, {}, customLabel);
-    } else {
-      // Desktop: skip config, launch directly
-      document.getElementById('demo-step-1').style.display = 'none';
-      launchChat(trade, {}, customLabel);
-    }
+    document.getElementById('demo-step-1').style.display = 'none';
+    launchChat(trade, {}, customLabel);
   }
 
   function demoSend() {
