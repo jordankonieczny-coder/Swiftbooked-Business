@@ -262,9 +262,9 @@
         <td><span class="badge badge-${c.plan}">${c.plan}</span></td>
         <td>
           ${!c.setup_completed
-            ? '<span class="badge badge-setup">⏳ Awaiting Setup</span>'
+            ? '<span class="badge badge-setup">Awaiting Setup</span>'
             : !c.twilio_number
-              ? '<span class="badge badge-ready">🔢 Needs Number</span>'
+              ? '<span class="badge badge-ready">Needs Number</span>'
               : `<span class="badge ${c.active ? 'badge-active' : 'badge-inactive'}">${c.active ? 'Active' : 'Inactive'}</span>`
           }
         </td>
