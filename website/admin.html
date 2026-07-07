@@ -389,7 +389,7 @@
       });
       const data = await res.json();
       if (res.ok) {
-        alert(`Setup email resent to ${name} ✓\n\nSetup link:\n${data.setupUrl}`);
+        alert(`Setup email resent to ${name}.\n\nSetup link:\n${data.setupUrl}`);
       } else {
         alert(`Failed to resend: ${data.error}`);
       }
