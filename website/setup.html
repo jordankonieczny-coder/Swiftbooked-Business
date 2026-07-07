@@ -234,7 +234,7 @@ Q: How long does installation take? A: Most rooms take 1–2 days. Full homes ta
         </div>
         <div class="error-msg" id="err-1"></div>
         <div class="btn-row">
-          <button class="btn btn-primary" onclick="nextStep(1)">Next →</button>
+          <button class="btn btn-primary" onclick="nextStep(1)">Next</button>
         </div>
       </div>
 
@@ -315,8 +315,8 @@ After-hours emergency: +$150 surcharge"></textarea>
         </div>
         <div class="error-msg" id="err-2"></div>
         <div class="btn-row">
-          <button class="btn btn-secondary" onclick="prevStep(2)">← Back</button>
-          <button class="btn btn-primary" onclick="nextStep(2)">Next →</button>
+          <button class="btn btn-secondary" onclick="prevStep(2)">Back</button>
+          <button class="btn btn-primary" onclick="nextStep(2)">Next</button>
         </div>
         <p class="skip-note"><button class="btn-skip" onclick="showStep(3)">Skip this step — fill in later from portal</button></p>
       </div>
@@ -334,8 +334,8 @@ After-hours emergency: +$150 surcharge"></textarea>
         </div>
         <div class="error-msg" id="err-3"></div>
         <div class="btn-row">
-          <button class="btn btn-secondary" onclick="prevStep(3)">← Back</button>
-          <button class="btn btn-primary" onclick="nextStep(3)">Next →</button>
+          <button class="btn btn-secondary" onclick="prevStep(3)">Back</button>
+          <button class="btn btn-primary" onclick="nextStep(3)">Next</button>
         </div>
         <p class="skip-note"><button class="btn-skip" onclick="showStep(4)">Skip this step — fill in later from portal</button></p>
       </div>
@@ -367,7 +367,7 @@ After-hours emergency: +$150 surcharge"></textarea>
 
         <div class="error-msg" id="err-4"></div>
         <div class="btn-row">
-          <button class="btn btn-secondary" onclick="prevStep(4)">← Back</button>
+          <button class="btn btn-secondary" onclick="prevStep(4)">Back</button>
         </div>
         <p class="skip-note"><button class="btn-skip" onclick="showStep(5)">Skip — connect calendar later from portal</button></p>
       </div>
@@ -387,8 +387,8 @@ After-hours emergency: +$150 surcharge"></textarea>
         </div>
         <div class="error-msg" id="err-5"></div>
         <div class="btn-row">
-          <button class="btn btn-secondary" onclick="prevStep(5)">← Back</button>
-          <button class="btn btn-primary" id="submit-btn" onclick="submitSetup()">Complete Setup →</button>
+          <button class="btn btn-secondary" onclick="prevStep(5)">Back</button>
+          <button class="btn btn-primary" id="submit-btn" onclick="submitSetup()">Complete Setup</button>
         </div>
       </div>
 
@@ -557,12 +557,12 @@ After-hours emergency: +$150 surcharge"></textarea>
         body: JSON.stringify(payload),
       });
       const data = await res.json();
-      if (!res.ok) { showError(5, data.error || 'Something went wrong.'); btn.disabled = false; btn.textContent = 'Complete Setup →'; return; }
+      if (!res.ok) { showError(5, data.error || 'Something went wrong.'); btn.disabled = false; btn.textContent = 'Complete Setup'; return; }
       showStep(6);
     } catch (e) {
       showError(5, 'Could not connect. Please try again.');
       btn.disabled = false;
-      btn.textContent = 'Complete Setup →';
+      btn.textContent = 'Complete Setup';
     }
   }
 
