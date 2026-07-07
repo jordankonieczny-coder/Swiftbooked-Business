@@ -1938,25 +1938,25 @@
       <h2>Try it free for a month — zero risk</h2>
       <p class="sub">Fill out the form and we'll have your AI text bot live within 48 hours.</p>
       <form id="signup-form" style="text-align: left;">
-        <div style="margin-bottom: 16px;">
-          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:6px;">Your name</label>
-          <input type="text" name="name" required placeholder="John Smith" style="width:100%; padding:12px 16px; border:2px solid var(--border); border-radius:8px; font-size:1rem; font-family:inherit; outline:none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--border)'">
+        <div class="form-field">
+          <label>Your name</label>
+          <input type="text" name="name" required placeholder="John Smith">
         </div>
-        <div style="margin-bottom: 16px;">
-          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:6px;">Business name</label>
-          <input type="text" name="business" required placeholder="Apex Heating &amp; Plumbing" style="width:100%; padding:12px 16px; border:2px solid var(--border); border-radius:8px; font-size:1rem; font-family:inherit; outline:none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--border)'">
+        <div class="form-field">
+          <label>Business name</label>
+          <input type="text" name="business" required placeholder="Apex Heating &amp; Plumbing">
         </div>
-        <div style="margin-bottom: 16px;">
-          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:6px;">Email</label>
-          <input type="email" name="email" required placeholder="john@apexheating.ca" style="width:100%; padding:12px 16px; border:2px solid var(--border); border-radius:8px; font-size:1rem; font-family:inherit; outline:none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--border)'">
+        <div class="form-field">
+          <label>Email</label>
+          <input type="email" name="email" required placeholder="john@apexheating.ca">
         </div>
-        <div style="margin-bottom: 16px;">
-          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:6px;">Phone</label>
-          <input type="tel" name="phone" required placeholder="(780) 555-1234" style="width:100%; padding:12px 16px; border:2px solid var(--border); border-radius:8px; font-size:1rem; font-family:inherit; outline:none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--brand)'" onblur="this.style.borderColor='var(--border)'">
+        <div class="form-field">
+          <label>Phone</label>
+          <input type="tel" name="phone" required placeholder="(780) 555-1234">
         </div>
-        <div style="margin-bottom: 16px;">
-          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:6px;">Trade type</label>
-          <select name="trade" id="form-trade" required onchange="handleTradeSelect(this)" style="width:100%; padding:12px 16px; border:2px solid var(--border); border-radius:8px; font-size:1rem; font-family:inherit; outline:none; background:#fff; cursor:pointer;">
+        <div class="form-field">
+          <label>Trade type</label>
+          <select name="trade" id="form-trade" required onchange="handleTradeSelect(this)">
             <option value="">Select your trade...</option>
             <option value="hvac">HVAC / Heating &amp; Cooling</option>
             <option value="plumbing">Plumbing</option>
